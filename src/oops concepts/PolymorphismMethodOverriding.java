@@ -4,6 +4,7 @@ class Parent{
     }
 }
 class Child extends Parent{
+    @Override
     public void show(){  // overriding the show method
         System.out.println("Child show method");
     }

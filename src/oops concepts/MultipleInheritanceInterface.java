@@ -9,6 +9,8 @@ interface C extends A, B{  // Interface extends other interfaces
 }
 
 class MyClass implements C{  // Class implements interface
+
+    @Override
     public void display(){
         System.out.println("display method from MyClass");
     }
