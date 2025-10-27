@@ -1,4 +1,6 @@
+
 //functional interface is an interface that contains only one abstract method also known as Single Abstract Method(SAM) interface
+@FunctionalInterface          //this annotation is optional but it is good practice to use it
 interface LivingThings{           //functional interface
     public void canBreathe();      //abstract method
 }
@@ -24,6 +26,13 @@ class Dog implements Mammals{
     public void canWalk(){
         System.out.println("Dog can walk");
     }
+}
+
+//functional interface extends functional interface
+@FunctionalInterface
+interface Canine extends LivingThings{
+    //public void canBark();//if we uncomment this will give error because functional interface can have only one abstract method
+    public void canBreathe();//this will not give error because it is same as canBreathe() method of LivingThings interface
 }
 
 public class FunctionalInterfaceExample{
