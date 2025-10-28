@@ -67,4 +67,64 @@ Each concept includes explanations and hands-on examples for better understandin
 ## 📂 Repository Structure
 
 Each topic is organized into folders with `.java` files and examples.
+├── CoreJava/
+│ ├── LoopsExample.java
+│ ├── StringManipulation.java
+│
+├── OOPs/
+│ ├── InheritanceDemo.java
+│ ├── PolymorphismExample.java
+│
+├── Collections/
+│ ├── HashMapExample.java
+│ ├── ArrayListDemo.java
+│
+├── Multithreading/
+│ ├── ThreadExample.java
+│ ├── SynchronizedBlock.java
+│
+└── FileHandling/
+├── ReadWriteExample.java
+
+
+---
+
+## 🎯 Purpose
+
+- Build strong conceptual understanding of **Java**  
+- Prepare for **technical interviews** and **college exams**  
+- Serve as a quick **reference guide** for Java learners  
+
+---
+
+## 🧑‍💻 Tools & Environment
+
+> **Language:** Java (JDK 8+)  
+> **IDE:** IntelliJ IDEA / Eclipse / VS Code  
+> **Version Control:** Git & GitHub  
+
+---
+
+## 🏆 Who Can Use This Repo
+
+- Beginners learning Java from scratch  
+- Students revising for exams  
+- Developers preparing for **Java interviews**  
+- Anyone revisiting **core + advanced Java concepts**
+
+---
+
+## 🤝 Contributions
+
+Contributions are welcome!  
+You can:
+- Add new Java programs or examples  
+- Improve existing explanations  
+- Update syntax for newer Java versions (JDK 17+)
+
+---
+
+### 🚀 Learn Java the Practical Way ☕  
+> *“Master Java by understanding concepts, not memorizing syntax.”*
+
 
