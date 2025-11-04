@@ -1,3 +1,5 @@
+package variableTypes;
+
 //HERE are the different types of variables in Java
 public class diffenerent_java_variables {
     // Instance variable
@@ -13,6 +15,7 @@ public class diffenerent_java_variables {
 
     // Final variable
     final int finalVar = 10;
+
     public static void main(String[] args) {
         diffenerent_java_variables obj = new diffenerent_java_variables();
         obj.instanceVar = 1;
@@ -23,7 +26,9 @@ public class diffenerent_java_variables {
 
         // Local variable
         obj.method();
-        // System.out.println("Local Variable: " + localVar); // This will cause an error
+        // System.out.println("Local Variable: " + localVar); // This will cause an
+        // error
 
         System.out.println("Final Variable: " + obj.finalVar);
-    }   
+    }
+}

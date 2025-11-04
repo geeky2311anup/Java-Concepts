@@ -12,7 +12,7 @@ class Eagle{
 }
 public class ReflectionOfMethods{
     public static void main(String args[]){
-           Class EagleClass = Eagle.class;
+           Class<Eagle> EagleClass = Eagle.class;
            Method[] methods = EagleClass.getMethods(); // All public methods including inherited
            // if you want private methods also you will need to use getDeclaredMethods()
            for(Method method : methods){
