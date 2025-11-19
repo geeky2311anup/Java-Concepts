@@ -1,0 +1,345 @@
+🔥 Java Thread Lifecycle (with Examples)
+
+Java threads have 6 main states:
+
+NEW → RUNNABLE → RUNNING → (BLOCKED / WAITING / TIMED_WAITING) → TERMINATED
+
+
+Below is the explanation for each state with easy Java examples.
+
+1️⃣ NEW State
+✔ Meaning
+
+Thread object is created but not started yet.
+It is just an object in memory.
+
+✔ Example
+class MyThread extends Thread {
+    public void run() {
+        System.out.println("Running...");
+    }
+}
+
+public class Demo {
+    public static void main(String[] args) {
+        MyThread t = new MyThread(); // NEW state
+        // t.start() is NOT called yet
+    }
+}
+
+2️⃣ RUNNABLE State
+✔ Meaning
+
+Thread is ready to run and waiting for CPU time.
+It may or may not actually be executing at the moment.
+
+✔ Example
+MyThread t = new MyThread();
+t.start();   // now it is RUNNABLE (ready to run)
+
+3️⃣ RUNNING State
+✔ Meaning
+
+Thread is actually executing its code.
+Java does not give a separate state name for "RUNNING",
+but internally RUNNABLE → RUNNING → back to RUNNABLE.
+
+✔ Example
+class MyThread extends Thread {
+    public void run() {
+        System.out.println("Thread is RUNNING: " + Thread.currentThread().getName());
+    }
+}
+
+
+When CPU schedules it, you see the print.
+
+4️⃣ BLOCKED State
+✔ Meaning
+
+Thread is waiting to acquire a monitor lock (synchronized lock).
+
+✔ When does this happen?
+
+Two threads want the same synchronized block
+
+Only one gets the lock
+
+The other becomes BLOCKED
+
+✔ Example
+class Shared {
+    public synchronized void test() {
+        try { Thread.sleep(3000); } catch(Exception e){}
+    }
+}
+
+class MyThread extends Thread {
+    Shared s;
+    MyThread(Shared s){ this.s = s; }
+
+    public void run() {
+        s.test();
+    }
+}
+
+public class Demo {
+    public static void main(String[] args) {
+        Shared obj = new Shared();
+
+        Thread t1 = new MyThread(obj);
+        Thread t2 = new MyThread(obj);
+
+        t1.start();
+        t2.start(); // t2 becomes BLOCKED (waiting for lock)
+    }
+}
+
+
+t1 holds the lock → t2 is BLOCKED until t1 releases it.
+
+
+✅ 1. Do t1 and t2 refer to the same obj?
+
+YES.
+
+In this code:
+
+Shared obj = new Shared();
+
+Thread t1 = new MyThread(obj);
+Thread t2 = new MyThread(obj);
+
+
+Both threads receive the same reference:
+
+t1.s  → same Shared object
+t2.s  → same Shared object
+
+
+So both threads try to execute:
+
+s.test();
+
+
+on the same Shared instance.
+
+Because the test() method is:
+
+public synchronized void test() { ... }
+
+
+That means the lock belongs to obj (the Shared object).
+
+🔒 Why does t2 become BLOCKED?
+
+t1 calls obj.test() → acquires lock on obj
+
+t2 calls obj.test() → tries to get lock on obj
+
+Lock is already taken → t2 enters BLOCKED state
+(it waits until t1 releases the monitor lock)
+
+✅ 2. What if test() was NOT synchronized?
+
+If you remove synchronized, like:
+
+public void test() {
+    try { Thread.sleep(3000); } catch(Exception e){}
+}
+
+
+Then:
+
+t1 would start executing test()
+
+t2 would start executing test() immediately, without waiting
+
+BOTH threads run the method at the same time
+
+So output:
+They run concurrently → NO BLOCKING happens.
+
+❓ Why?
+
+Because synchronized controls locking on the object.
+Without it, threads don't need a lock → no blocking occurs.
+
+🧠 Summary Table
+Scenario	What Happens
+synchronized present	Only one thread can run test() at a time. Second thread becomes BLOCKED.
+synchronized removed	Both threads run the method simultaneously (parallel / interleaved). No blocking.
+⭐ Bonus Explanation
+
+Even though both threads call the same method, what matters is:
+
+✔ They share the same object → same lock
+✔ synchronized → only one thread allowed
+✔ no synchronized → threads run freely
+
+5️⃣ WAITING State
+/////////////////////////////////////////
+synchronized (lockObj) {
+    System.out.println("Only one thread can print this at a time");
+}
+
+this means it cjecks wheather lockObj is free or not if its free inside task is executed other wiae waits
+
+YES! 🎉
+You finally understood the core idea correctly.
+Let me confirm it clearly and add one final simple explanation so it becomes crystal clear.
+
+✅ Your statement is 100% correct
+
+You said:
+
+“This means it checks whether lockObj is free or not. If it's free, inside task is executed. Otherwise waits.”
+✔ EXACTLY RIGHT.
+That’s literally what a synchronized block does.
+
+
+
+🔥 Final Crystal-Clear Explanation (Super Simple)
+🔥 Final Crystal-Clear Explanation (Super Simple)
+synchronized (lockObj) {
+    System.out.println("Only one thread can print this at a time");
+}
+
+
+This means:
+
+✔ Step 1
+
+Check if lockObj’s lock is available
+
+If no other thread is using this lock → enter the block
+
+If another thread is inside a synchronized block using SAME lockObj → wait
+
+✔ Step 2
+
+Thread executes the inside code
+
+✔ Step 3
+
+Thread exits the block and releases lockObj
+
+✔ Step 4
+
+If other threads were waiting → next one gets the lock and runs
+
+🌟 In One Simple Sentence:
+
+✔ synchronized(lockObj) = “Only ONE thread can hold lockObj at a time.”
+
+🧠 Mini Visual Diagram
+Thread t1 → tries to enter → lockObj free → enters block
+Thread t2 → tries to enter → lockObj busy → waits
+Thread t1 → finishes → releases lockObj
+Thread t2 → now enters block → runs
+
+💡 Important Clarification
+
+The code inside the synchronized block runs normally.
+
+lockObj is only a key, not a function.
+
+No method of lockObj runs automatically.
+
+Multiple threads CAN reach the line, but ONLY ONE enters at a time.
+/////////////////////////////////////////
+
+✔ Meaning
+
+Thread is waiting indefinitely for another thread to signal it.
+
+✔ Happens when:
+
+wait()
+
+join() without timeout
+
+park()
+
+✔ Example
+class MyThread extends Thread {
+    Object lock;
+
+    MyThread(Object lock) {
+        this.lock = lock;
+    }
+
+    public void run() {
+        synchronized (lock) {
+            System.out.println("Thread going into WAITING state...");
+            try { lock.wait(); } catch (Exception e) {}
+            System.out.println("Thread resumed after NOTIFY");
+        }
+    }
+}
+
+public class Demo {
+    public static void main(String[] args) throws Exception {
+        Object lock = new Object();
+        MyThread t = new MyThread(lock);
+        t.start();
+
+        Thread.sleep(2000);
+
+        synchronized (lock) {
+            System.out.println("Main thread sending NOTIFY...");
+            lock.notify();
+        }
+    }
+}
+
+
+6️⃣ TIMED_WAITING State
+✔ Meaning
+
+Thread waits for a specific time and automatically wakes up.
+
+✔ Happens when:
+
+sleep(1000)
+
+wait(5000)
+
+join(2000)
+
+parkNanos()
+
+parkUntil()
+
+✔ Example
+Thread t = new Thread(() -> {
+    try {
+        Thread.sleep(3000); // TIMED_WAITING for 3 seconds
+    } catch(Exception e){}
+});
+t.start();
+
+7️⃣ TERMINATED State
+✔ Meaning
+
+Thread has finished executing and cannot restart again.
+
+✔ Example
+Thread t = new Thread(() -> {
+    System.out.println("Done!");
+});
+
+t.start();
+t.join(); // wait until thread finishes
+
+System.out.println(t.getState()); // TERMINATED
+
+⭐ Complete Summary (like your image)
+Lifecycle State	Example Trigger
+NEW	Thread t = new Thread();
+RUNNABLE	t.start()
+RUNNING	CPU is executing run()
+BLOCKED	Waiting to enter synchronized block
+WAITING	wait() / join() (no timeout)
+TIMED_WAITING	sleep(1000) / wait(2000)
+TERMINATED	run() method completes

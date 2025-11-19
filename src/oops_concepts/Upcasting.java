@@ -23,6 +23,6 @@ public class Upcasting{
         Dog puppy2 = new Dog();
         puppy.sound();
         puppy.bark();
-      //  puppy.run(); give error
+        //puppy.run(); give error
     }
 }
