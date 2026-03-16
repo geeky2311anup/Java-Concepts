@@ -1,0 +1,23 @@
+Pending Items
+-------------
+
+1. Add more examples for each core JAVA contest
+2. Add a folder interview questions, add answer for most asked questions
+3. Revision plan: Tuesday morning, Thursday morning (7 am)
+4. Complete Singleton class
+5. Complete DSA
+    Heap: 20 Dec 
+    Graph: 30 Dec
+    BST: 10 Jan
+
+6. Add explanation comments with examples while revising
+7. Solid Principle: 17 Dec ****
+8. Multi-threading: Add example and explain to Mohini ****
+9. StreamAPI *****
+10. Saturday 1 hr JAVA/ DSA Mock Interviews -- Mohini (2 pm-3pm)
+11. Weekend Leetcode contest 
+12. SpringBoot/Hibernate/Microservices -- Abhi(2.5 hr)
+
+JOB Application to-do
+1. HR/employee DM
+2. Naukri (update it also), instahire, linked (apply everywhere) (focus on external links also)

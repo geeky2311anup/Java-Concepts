@@ -24,3 +24,5 @@ public class PolymorphismMethodOverriding{
         obj3.show();//it will call Parent class show method because obj3 is Parent class object
     }
 }
+
+// add ex
