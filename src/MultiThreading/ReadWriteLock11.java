@@ -1,69 +1,34 @@
 import java.util.concurrent.locks.*;
-class SharedResource{
-    boolean isAvailable = false;
-    public void producer(ReadWriteLock rwLock){
-        try{
-            rwLock.readLock().lock();
-            System.out.println("Read Lock acquired by "+Thread.currentThread().getName());
+
+class SharedResource {
+    private boolean isAvailable = false;
+
+    // Use Write Lock for modifications
+    public void produce(ReadWriteLock rwLock) {
+        rwLock.writeLock().lock(); // Modification requires Write Lock
+        try {
+            System.out.println(Thread.currentThread().getName() + " is producing...");
             isAvailable = true;
-            Thread.sleep(8000);
-
-        }
-        catch(Exception e){
-            System.out.println("Exception in producer method"); 
-        }
-        finally{
-           
-            System.out.println("Read Lock released by "+Thread.currentThread().getName());
-             rwLock.readLock().unlock();
+            Thread.sleep(1000); 
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+        } finally {
+            System.out.println(Thread.currentThread().getName() + " released Write Lock.");
+            rwLock.writeLock().unlock();
         }
     }
 
-    public void consumer(ReadWriteLock rwLock){
-   try{
-     rwLock.writeLock().lock();
-     System.out.println("write lock acquired by "+ Thread.currentThread().getName());
-     isAvailable = false;
-
-   }
-   catch(Exception e){
-    System.out.println("Exception occured");
-   }
-   finally{
-   
-    System.out.println("Write lock released by:"+ Thread.currentThread().getName()+"after 2 sec");
-    try{
-        Thread.sleep(2000);
+    // Use Read Lock for checking state
+    public void checkStatus(ReadWriteLock rwLock) {
+        rwLock.readLock().lock(); // Shared access for reading
+        try {
+            System.out.println(Thread.currentThread().getName() + " checked status: " + isAvailable);
+            Thread.sleep(2000); // Simulate long read
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+        } finally {
+            System.out.println(Thread.currentThread().getName() + " released Read Lock.");
+            rwLock.readLock().unlock();
+        }
     }
-    catch(Exception e){
-        System.out.println("error occured");
-    }
-
-     rwLock.writeLock().unlock();
-
-   }     
-   
-    }
-}
-
-public  class ReadWriteLock11{
-    public static void main(String[] args){
-        SharedResource resObj = new SharedResource();
-        ReadWriteLock rwLock  = new  ReentrantReadWriteLock();
-        Thread t1 = new Thread(()->{
-            resObj.producer(rwLock);
-        });
-         Thread t2 = new Thread(()->{
-            resObj.producer(rwLock);
-        });
-        //SharedResource resObj2 = new SharedResource();//it write lock should also be used on same shared object for best practice
-        Thread t3 = new Thread(()->{
-            resObj.consumer(rwLock);
-        });
-        t1.start();
-        t2.start();
-        t3.start();
-
-    }
-    
 }
