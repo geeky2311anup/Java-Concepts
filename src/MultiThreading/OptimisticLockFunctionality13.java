@@ -1,66 +1,135 @@
-import java.util.concurrent.locks.*;
+import java.util.concurrent.locks.StampedLock;
+
 class SharedResource {
-    int a=10;
-    StampedLock  stampobj = new StampedLock();
-    public void producer(){
-        long stamp = stampobj.tryOptimisticRead();
-        try{
-            System.out.println("taken optimistic lock by "+Thread.currentThread().getName());
-            a=20;
-            Thread.sleep(8000);
-            if(stampobj.validate(stamp)){
-                System.out.println("output the value successfully "+a);
 
-            }
-            else{
-                System.out.println("rollback to work");
-                a=10;//rollback
-            }
+    private int value = 10;
+    private final StampedLock lock = new StampedLock();
+
+    // Optimistic Read
+    public void optimisticReader() {
+
+        long stamp = lock.tryOptimisticRead();
+        int currentValue = value;
+
+        System.out.println(Thread.currentThread().getName()
+                + " acquired optimistic read");
+
+        try {
+            Thread.sleep(4000);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-        catch(Exception e){
-            System.out.println("Exception in producer method"); 
+
+        if (lock.validate(stamp)) {
+            System.out.println(Thread.currentThread().getName()
+                    + " validation success, value = " + currentValue);
+        } else {
+            System.out.println(Thread.currentThread().getName()
+                    + " validation failed, data changed");
         }
-        
     }
-    public void consumer(){
-        long stamp = stampobj.writeLock();
-        System.out.println("write lock acquired by "+ Thread.currentThread().getName());
-        try{
-            System.out.println("performing write operation");
-            a=9;
 
+    // Read Lock
+    public void readData() {
+
+        long stamp = lock.readLock();
+
+        try {
+            System.out.println(Thread.currentThread().getName()
+                    + " acquired READ lock");
+
+            Thread.sleep(3000);
+
+            System.out.println(Thread.currentThread().getName()
+                    + " reading value = " + value);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            lock.unlockRead(stamp);
+            System.out.println(Thread.currentThread().getName()
+                    + " released READ lock");
         }
-       finally{
-    
-        System.out.println("Write lock released by:"+ Thread.currentThread().getName()+"after 2 sec");
-        try{
+    }
+
+    // Write Lock
+    public void writeData(int newValue) {
+
+        long stamp = lock.writeLock();
+
+        try {
+            System.out.println(Thread.currentThread().getName()
+                    + " acquired WRITE lock");
+
             Thread.sleep(2000);
+
+            value = newValue;
+
+            System.out.println(Thread.currentThread().getName()
+                    + " updated value to " + value);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            lock.unlockWrite(stamp);
+            System.out.println(Thread.currentThread().getName()
+                    + " released WRITE lock");
         }
-        catch(Exception e){
-            System.out.println("error occured");
-        }   
-        stampobj.unlockWrite(stamp);    
+    }
+
+    // Lock Conversion Example
+    public void readThenWrite() {
+
+        long stamp = lock.readLock();
+
+        try {
+            System.out.println(Thread.currentThread().getName()
+                    + " acquired READ lock");
+
+            long writeStamp = lock.tryConvertToWriteLock(stamp);
+
+            if (writeStamp != 0L) {
+                stamp = writeStamp;
+
+                System.out.println(Thread.currentThread().getName()
+                        + " upgraded to WRITE lock");
+
+                value += 100;
+
+                System.out.println("New Value = " + value);
+            } else {
+                System.out.println("Lock upgrade failed");
+            }
+
+        } finally {
+            lock.unlock(stamp);
+        }
     }
 }
-}
-public class OptimisticLockFunctionality13 {
-    public static void main(String[] args){
-        SharedResource resObj = new SharedResource();
-        Thread t1 = new Thread(()->{
-            resObj.producer();
-        });
-         Thread t2 = new Thread(()->{
-            resObj.producer();
-        });
-        //SharedResource resObj2 = new SharedResource();//it write lock should also be used on same shared object for best practice
-        Thread t3 = new Thread(()->{
-            resObj.consumer();
-        });
+
+public class StampedLockDemo {
+
+    public static void main(String[] args) {
+
+        SharedResource resource = new SharedResource();
+
+        Thread t1 = new Thread(resource::optimisticReader, "OptimisticReader-1");
+
+        Thread t2 = new Thread(() -> resource.writeData(50), "Writer-1");
+
+        Thread t3 = new Thread(resource::readData, "Reader-1");
+
+        Thread t4 = new Thread(resource::readThenWrite, "Converter-1");
 
         t1.start();
+
+        try {
+            Thread.sleep(1000);
+        } catch (Exception e) {
+        }
+
         t2.start();
         t3.start();
-
-    }   
-    
+        t4.start();
+    }
 }
