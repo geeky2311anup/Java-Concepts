@@ -1,34 +1,34 @@
-import java.util.concurrent.locks.*;
+#include <iostream>
 
-class SharedResource {
-    private boolean isAvailable = false;
+using namespace std;
 
-    // Use Write Lock for modifications
-    public void produce(ReadWriteLock rwLock) {
-        rwLock.writeLock().lock(); // Modification requires Write Lock
-        try {
-            System.out.println(Thread.currentThread().getName() + " is producing...");
-            isAvailable = true;
-            Thread.sleep(1000); 
-        } catch (InterruptedException e) {
-            Thread.currentThread().interrupt();
-        } finally {
-            System.out.println(Thread.currentThread().getName() + " released Write Lock.");
-            rwLock.writeLock().unlock();
+void solve() {
+    long long n, m, p, q;
+    cin >> n >> m >> p >> q;
+
+    if (n % p == 0) {
+        if (m == (n / p) * q) {
+            cout << "YES\n";
+        } else {
+            cout << "NO\n";
+        }
+    } else {
+        // Since elements can be negative integers, we have infinite degrees of 
+        // freedom to construct the remainder sum sequence.
+        cout << "YES\n";
+    }
+}
+
+int main() {
+    // Fast I/O
+    ios_base::sync_with_stdio(false);
+    cin.tie(NULL);
+
+    int t;
+    if (cin >> t) {
+        while (t--) {
+            solve();
         }
     }
-
-    // Use Read Lock for checking state
-    public void checkStatus(ReadWriteLock rwLock) {
-        rwLock.readLock().lock(); // Shared access for reading
-        try {
-            System.out.println(Thread.currentThread().getName() + " checked status: " + isAvailable);
-            Thread.sleep(2000); // Simulate long read
-        } catch (InterruptedException e) {
-            Thread.currentThread().interrupt();
-        } finally {
-            System.out.println(Thread.currentThread().getName() + " released Read Lock.");
-            rwLock.readLock().unlock();
-        }
-    }
+    return 0;
 }
