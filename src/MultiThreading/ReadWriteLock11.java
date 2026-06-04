@@ -2,33 +2,34 @@
 
 using namespace std;
 
-void solve() {
-    long long n, m, p, q;
-    cin >> n >> m >> p >> q;
+static inline bool possible(long long n, long long m,
+                            long long p, long long q) {
 
-    if (n % p == 0) {
-        if (m == (n / p) * q) {
+    if (n % p) {
+        return true;
+    }
+
+    long long groups = n / p;
+    return groups * q == m;
+}
+
+int main() {
+    ios::sync_with_stdio(false);
+    cin.tie(nullptr);
+
+    int tc;
+    cin >> tc;
+
+    while (tc--) {
+        long long a, b, c, d;
+        cin >> a >> b >> c >> d;
+
+        if (possible(a, b, c, d)) {
             cout << "YES\n";
         } else {
             cout << "NO\n";
         }
-    } else {
-        // Since elements can be negative integers, we have infinite degrees of 
-        // freedom to construct the remainder sum sequence.
-        cout << "YES\n";
     }
-}
 
-int main() {
-    // Fast I/O
-    ios_base::sync_with_stdio(false);
-    cin.tie(NULL);
-
-    int t;
-    if (cin >> t) {
-        while (t--) {
-            solve();
-        }
-    }
     return 0;
 }
