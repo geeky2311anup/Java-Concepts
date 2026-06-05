@@ -1,156 +1,130 @@
-// ========================================
-// MULTIPLE INHERITANCE USING INTERFACES
-// ========================================
-
-// Interface A
-interface A {
-    void display();
-}
-
-// Interface B
-interface B {
-    void show();
-}
-
-// Interface D
-interface D {
-    void print();
-}
-
-// Class C implements multiple interfaces
-class C implements A, B, D {
-
-    @Override
-    public void display() {
-        System.out.println("Display method from Interface A");
-    }
-
-    @Override
-    public void show() {
-        System.out.println("Show method from Interface B");
-    }
-
-    @Override
-    public void print() {
-        System.out.println("Print method from Interface D");
-    }
-}
-
-// Main Class
-public class Main {
-
-    public static void main(String[] args) {
-
-        C obj = new C();
-
-        obj.display();
-        obj.show();
-        obj.print();
-
-        System.out.println();
-
-        // Interface Reference Variables
-        A a = obj;
-        B b = obj;
-        D d = obj;
-
-        a.display();
-        b.show();
-        d.print();
-    }
-}
-
 /*
 ========================================
-OUTPUT
+TYPES OF INTERFACES IN JAVA
 ========================================
 
-Display method from Interface A
-Show method from Interface B
-Print method from Interface D
+1. Normal Interface
 
-Display method from Interface A
-Show method from Interface B
-Print method from Interface D
+interface Animal {
+    void sound();
+}
 
-========================================
-ADVANTAGES OF INTERFACES
-========================================
+2. Functional Interface
+   (Contains exactly one abstract method)
 
-1. Supports Multiple Inheritance
+@FunctionalInterface
+interface Calculator {
+    int add(int a, int b);
+}
 
-   class C implements A, B, D
+Used with Lambda Expressions.
 
-   A class can implement multiple interfaces
-   at the same time.
+3. Marker Interface
+   (No methods)
 
-2. Achieves Abstraction
+interface Serializable {}
 
-   Interfaces provide method declarations
-   without implementation.
-
-3. Promotes Loose Coupling
-
-   Programs depend on interfaces rather
-   than concrete classes.
-
-4. Improves Reusability
-
-   Multiple classes can implement the
-   same interface.
-
-5. Supports Polymorphism
-
-   A a = new C();
-
-   The interface reference can point
-   to any implementing object.
+Used to provide metadata to JVM.
 
 ========================================
-WHY JAVA DOES NOT ALLOW
-MULTIPLE INHERITANCE USING CLASSES
+DEFAULT METHODS (Java 8)
 ========================================
 
-Suppose:
+Interfaces can have method bodies.
 
-class A {
-    void show() {
+interface A {
+    default void show() {
+        System.out.println("Default Show");
+    }
+}
+
+class Test implements A {}
+
+Test obj = new Test();
+obj.show();
+
+Output:
+Default Show
+
+Benefit:
+New methods can be added to interfaces
+without breaking existing classes.
+
+========================================
+STATIC METHODS IN INTERFACES
+========================================
+
+interface MathUtil {
+
+    static void display() {
+        System.out.println("Static Method");
+    }
+}
+
+MathUtil.display();
+
+Output:
+Static Method
+
+Static methods belong to interface itself.
+
+========================================
+PRIVATE METHODS IN INTERFACES
+(Java 9)
+========================================
+
+interface Demo {
+
+    private void helper() {
+        System.out.println("Private Method");
+    }
+
+    default void show() {
+        helper();
+    }
+}
+
+Used for code reuse inside interface.
+
+========================================
+MULTIPLE INHERITANCE WITH
+DEFAULT METHODS
+========================================
+
+interface A {
+    default void show() {
         System.out.println("A");
     }
 }
 
-class B {
-    void show() {
+interface B {
+    default void show() {
         System.out.println("B");
     }
 }
 
-class C extends A, B   // ERROR
+class C implements A, B {
 
-Now if:
+    @Override
+    public void show() {
+        System.out.println("Resolved");
+    }
+}
 
-C obj = new C();
-obj.show();
+Why Override?
 
-Java cannot decide whether to call
-A's show() or B's show().
-
-This problem is called:
-
-        DIAMOND PROBLEM
-
-To avoid ambiguity, Java does not
-support multiple inheritance through
-classes.
+Because both interfaces provide
+the same default method and Java
+cannot decide which one to use.
 
 ========================================
-INTERVIEW QUESTION
+ACCESS MODIFIERS IN INTERFACES
 ========================================
 
-Q. Can an interface extend multiple
-interfaces?
+Methods inside interface are
+implicitly:
 
-Yes.
+public abstract
 
 Example:
 
@@ -158,32 +132,226 @@ interface A {
     void display();
 }
 
-interface B {
+Actually means:
+
+interface A {
+    public abstract void display();
+}
+
+Variables inside interface are
+implicitly:
+
+public static final
+
+Example:
+
+interface A {
+    int x = 10;
+}
+
+Actually means:
+
+public static final int x = 10;
+
+========================================
+INTERFACE VS ABSTRACT CLASS
+========================================
+
+INTERFACE
+
+✔ Supports multiple inheritance
+✔ All variables are constants
+✔ No constructors
+✔ Used for capability definition
+
+ABSTRACT CLASS
+
+✔ Partial abstraction
+✔ Can have constructors
+✔ Can have instance variables
+✔ Single inheritance only
+
+Example:
+
+abstract class Vehicle {
+    abstract void start();
+
+    void stop() {
+        System.out.println("Stopped");
+    }
+}
+
+========================================
+REAL WORLD EXAMPLE
+========================================
+
+interface Flyable {
+    void fly();
+}
+
+interface Swimmable {
+    void swim();
+}
+
+class Duck implements Flyable, Swimmable {
+
+    public void fly() {
+        System.out.println("Duck Flying");
+    }
+
+    public void swim() {
+        System.out.println("Duck Swimming");
+    }
+}
+
+Duck demonstrates multiple
+inheritance through interfaces.
+
+========================================
+INTERVIEW QUESTIONS
+========================================
+
+Q1. Can we create an object of an
+interface?
+
+No.
+
+A obj = new A(); // Error
+
+Interfaces cannot be instantiated.
+
+----------------------------------------
+
+Q2. Can an interface have a constructor?
+
+No.
+
+Interfaces do not have constructors
+because objects cannot be created.
+
+----------------------------------------
+
+Q3. Can an interface extend a class?
+
+No.
+
+Interface can extend only interfaces.
+
+----------------------------------------
+
+Q4. Can a class extend a class and
+implement interfaces simultaneously?
+
+Yes.
+
+class A {}
+
+interface B {}
+
+class C extends A implements B {}
+
+----------------------------------------
+
+Q5. Can one interface extend multiple
+interfaces?
+
+Yes.
+
+interface A {}
+interface B {}
+
+interface C extends A, B {}
+
+----------------------------------------
+
+Q6. Can an abstract class implement
+an interface?
+
+Yes.
+
+interface A {
     void show();
 }
 
-interface C extends A, B {
-    void print();
+abstract class B implements A {
 }
 
-Now any class implementing C must
-implement all three methods.
+The abstract class may choose not
+to implement all methods.
+
+----------------------------------------
+
+Q7. Which is faster:
+Abstract Class or Interface?
+
+Practically no noticeable difference
+in modern JVM implementations.
+
+Choose based on design requirements,
+not performance.
 
 ========================================
-CONCLUSION
+JAVA MEMORY CONCEPT
 ========================================
 
-✔ Java does not support multiple
-  inheritance using classes.
+A a = new C();
 
-✔ Java supports multiple inheritance
-  using interfaces.
+Reference Type : A
+Object Type    : C
 
-✔ A class can implement multiple
-  interfaces.
+Compile Time:
+Only methods available in A
+can be accessed.
 
-✔ Interfaces help achieve abstraction,
-  polymorphism, and loose coupling.
+Run Time:
+Methods of C execute due to
+Dynamic Method Dispatch.
+
+========================================
+BEST PRACTICE
+========================================
+
+Program to Interfaces,
+not Implementations.
+
+Good:
+
+List<Integer> list =
+        new ArrayList<>();
+
+Bad:
+
+ArrayList<Integer> list =
+        new ArrayList<>();
+
+This increases flexibility and
+reduces coupling.
+
+========================================
+FINAL CONCLUSION
+========================================
+
+✔ Interface provides 100% abstraction
+  (before Java 8).
+
+✔ Java supports Multiple Inheritance
+  through Interfaces.
+
+✔ Interfaces support Polymorphism.
+
+✔ Methods are public abstract by
+  default.
+
+✔ Variables are public static final
+  by default.
+
+✔ Interfaces can contain Default,
+  Static and Private methods.
+
+✔ Interfaces are heavily used in
+  Frameworks, Spring, JDBC,
+  Collections Framework and
+  Enterprise Applications.
 
 ========================================
 */
