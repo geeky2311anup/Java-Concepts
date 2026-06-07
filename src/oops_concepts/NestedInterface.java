@@ -1,117 +1,162 @@
-interface Bird {
-    void fly();
+Your example already covers:
 
-    interface NonFlyingBird {
+Nested interfaces inside interfaces
+Nested interfaces inside classes
+Private nested interfaces
+Static nested interfaces
+Default methods
+Static methods
+Anonymous class implementations
+
+Here are a few more advanced things you can add.
+
+1. Interface extending a nested interface
+interface AdvancedBird extends Bird.WaterBird {
+    void dive();
+}
+
+class Penguin implements AdvancedBird {
+
+    @Override
+    public void swim() {
+        System.out.println("Penguin swims");
+    }
+
+    @Override
+    public void dive() {
+        System.out.println("Penguin dives deep");
+    }
+}
+
+Usage:
+
+Penguin p = new Penguin();
+p.swim();
+p.dive();
+2. Nested interface extending another nested interface
+interface Animal {
+
+    interface Walker {
+        void walk();
+    }
+
+    interface Runner extends Walker {
         void run();
     }
-
-    interface WaterBird {
-        void swim();
-    }
-
-    default void info() {
-        System.out.println("This is a bird.");
-    }
-
-    static void category() {
-        System.out.println("Birds belong to Aves.");
-    }
 }
 
-class Dog {
+class Horse implements Animal.Runner {
 
-    public void bark() {
-        System.out.println("Dog barks");
-    }
-
-    private interface Pet {
-        void play();
-    }
-
-    static interface GuardDog {
-        void protect();
-    }
-
-    class Puppy implements Pet {
-        @Override
-        public void play() {
-            System.out.println("Puppy plays");
-        }
-    }
-
-    static class GermanShepherd implements GuardDog {
-        @Override
-        public void protect() {
-            System.out.println("German Shepherd protects the house");
-        }
-    }
-}
-
-class Parrot implements Bird {
     @Override
-    public void fly() {
-        System.out.println("Parrot can fly");
+    public void walk() {
+        System.out.println("Horse walks");
     }
-}
 
-class Ostrich implements Bird.NonFlyingBird {
     @Override
     public void run() {
-        System.out.println("Ostrich can run");
+        System.out.println("Horse runs");
+    }
+}
+3. Lambda expression with nested interface
+
+Because nested interfaces are implicitly static, they can be used as functional interfaces.
+
+interface Machine {
+
+    interface Switch {
+        void turnOn();
     }
 }
 
-class Duck implements Bird, Bird.WaterBird {
+Usage:
+
+Machine.Switch sw = () -> System.out.println("Machine turned ON");
+
+sw.turnOn();
+4. Multiple nested interfaces implemented together
+class Swan implements Bird, Bird.WaterBird, Bird.NonFlyingBird {
 
     @Override
     public void fly() {
-        System.out.println("Duck can fly");
+        System.out.println("Swan flies");
     }
 
     @Override
     public void swim() {
-        System.out.println("Duck can swim");
+        System.out.println("Swan swims");
+    }
+
+    @Override
+    public void run() {
+        System.out.println("Swan runs");
+    }
+}
+5. Nested interface inside another nested interface
+interface Vehicle {
+
+    interface Engine {
+
+        interface Electric {
+            void charge();
+        }
     }
 }
 
-public class NestedInterfaceDemo {
+class Tesla implements Vehicle.Engine.Electric {
 
-    public static void main(String[] args) {
-
-        // Nested interface implementation
-        Parrot p = new Parrot();
-        p.fly();
-        p.info();
-
-        Ostrich o = new Ostrich();
-        o.run();
-
-        Duck d = new Duck();
-        d.fly();
-        d.swim();
-
-        // Static interface method
-        Bird.category();
-
-        // Inner class implementing private interface
-        Dog dog = new Dog();
-        dog.bark();
-
-        Dog.Puppy puppy = dog.new Puppy();
-        puppy.play();
-
-        // Static nested class implementing nested interface
-        Dog.GermanShepherd gs = new Dog.GermanShepherd();
-        gs.protect();
-
-        // Anonymous implementation of nested interface
-        Bird.NonFlyingBird penguin = new Bird.NonFlyingBird() {
-            @Override
-            public void run() {
-                System.out.println("Penguin waddles and runs");
-            }
-        };
-
-        penguin.run();
+    @Override
+    public void charge() {
+        System.out.println("Tesla charging");
     }
 }
+
+Usage:
+
+Tesla t = new Tesla();
+t.charge();
+6. Static method inside nested interface
+interface Shape {
+
+    interface Calculator {
+
+        static int square(int x) {
+            return x * x;
+        }
+    }
+}
+
+Usage:
+
+System.out.println(Shape.Calculator.square(5));
+
+Output:
+
+25
+7. Default method inside nested interface
+interface Vehicle {
+
+    interface Electric {
+
+        void charge();
+
+        default void batteryStatus() {
+            System.out.println("Battery is healthy");
+        }
+    }
+}
+
+Implementation:
+
+class EVCar implements Vehicle.Electric {
+
+    @Override
+    public void charge() {
+        System.out.println("Charging...");
+    }
+}
+
+Usage:
+
+EVCar car = new EVCar();
+car.charge();
+car.batteryStatus();
