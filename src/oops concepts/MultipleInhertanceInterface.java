@@ -1,103 +1,333 @@
 /*
 ========================================
-TYPES OF INTERFACES IN JAVA
+NESTED INTERFACES
 ========================================
 
-1. Normal Interface
+An interface can be declared inside
+another interface or class.
 
-interface Animal {
-    void sound();
+interface Outer {
+
+    interface Inner {
+        void show();
+    }
 }
 
-2. Functional Interface
-   (Contains exactly one abstract method)
+class Test implements Outer.Inner {
+
+    public void show() {
+        System.out.println("Inner Interface");
+    }
+}
+
+========================================
+INTERFACE INHERITANCE CHAIN
+========================================
+
+interface A {
+    void m1();
+}
+
+interface B extends A {
+    void m2();
+}
+
+class Test implements B {
+
+    public void m1() {
+        System.out.println("M1");
+    }
+
+    public void m2() {
+        System.out.println("M2");
+    }
+}
+
+A single interface can be extended
+through multiple levels.
+
+========================================
+WHY INTERFACE VARIABLES ARE FINAL
+========================================
+
+interface Demo {
+    int x = 10;
+}
+
+Demo.x = 20; // Compile Error
+
+Reason:
+All interface variables are
+
+public static final
+
+and cannot be modified.
+
+========================================
+EMPTY INTERFACE VS MARKER INTERFACE
+========================================
+
+Marker Interface examples:
+
+Serializable
+Cloneable
+Remote
+
+Purpose:
+Provide special information to JVM
+or Frameworks.
+
+========================================
+ANONYMOUS CLASS WITH INTERFACE
+========================================
+
+interface Greeting {
+    void hello();
+}
+
+Greeting g = new Greeting() {
+
+    public void hello() {
+        System.out.println("Hello");
+    }
+};
+
+g.hello();
+
+Used before Lambda Expressions.
+
+========================================
+LAMBDA EXPRESSIONS
+========================================
 
 @FunctionalInterface
 interface Calculator {
     int add(int a, int b);
 }
 
-Used with Lambda Expressions.
+Calculator c = (a, b) -> a + b;
 
-3. Marker Interface
-   (No methods)
-
-interface Serializable {}
-
-Used to provide metadata to JVM.
-
-========================================
-DEFAULT METHODS (Java 8)
-========================================
-
-Interfaces can have method bodies.
-
-interface A {
-    default void show() {
-        System.out.println("Default Show");
-    }
-}
-
-class Test implements A {}
-
-Test obj = new Test();
-obj.show();
+System.out.println(c.add(10, 20));
 
 Output:
-Default Show
+30
 
-Benefit:
-New methods can be added to interfaces
-without breaking existing classes.
+Works only with Functional Interfaces.
 
 ========================================
-STATIC METHODS IN INTERFACES
+BUILT-IN FUNCTIONAL INTERFACES
 ========================================
 
-interface MathUtil {
+1. Predicate<T>
 
-    static void display() {
-        System.out.println("Static Method");
+Predicate<Integer> p =
+        x -> x > 10;
+
+p.test(15);
+
+----------------------------------------
+
+2. Function<T,R>
+
+Function<Integer,Integer> f =
+        x -> x * x;
+
+f.apply(5);
+
+----------------------------------------
+
+3. Consumer<T>
+
+Consumer<String> c =
+        s -> System.out.println(s);
+
+c.accept("Hello");
+
+----------------------------------------
+
+4. Supplier<T>
+
+Supplier<String> s =
+        () -> "Java";
+
+s.get();
+
+========================================
+INTERFACE REFERENCE
+========================================
+
+interface Animal {
+    void sound();
+}
+
+class Dog implements Animal {
+
+    public void sound() {
+        System.out.println("Bark");
     }
 }
 
-MathUtil.display();
+Animal a = new Dog();
+
+a.sound();
 
 Output:
-Static Method
+Bark
 
-Static methods belong to interface itself.
+This demonstrates runtime polymorphism.
 
 ========================================
-PRIVATE METHODS IN INTERFACES
-(Java 9)
+CASTING WITH INTERFACES
 ========================================
 
-interface Demo {
+Animal a = new Dog();
 
-    private void helper() {
-        System.out.println("Private Method");
-    }
+Dog d = (Dog) a;
 
-    default void show() {
-        helper();
+Downcasting is allowed when
+the object actually belongs
+to that class.
+
+========================================
+SEALED INTERFACES (JAVA 17)
+========================================
+
+public sealed interface Shape
+permits Circle, Rectangle {
+
+}
+
+final class Circle
+implements Shape {
+
+}
+
+final class Rectangle
+implements Shape {
+
+}
+
+Only permitted classes can
+implement the interface.
+
+========================================
+RECORDS IMPLEMENTING INTERFACE
+========================================
+
+interface Shape {
+    double area();
+}
+
+record Circle(double radius)
+implements Shape {
+
+    public double area() {
+        return 3.14 * radius * radius;
     }
 }
 
-Used for code reuse inside interface.
+Records can implement interfaces.
 
 ========================================
-MULTIPLE INHERITANCE WITH
-DEFAULT METHODS
+INTERFACE AND ENUM
+========================================
+
+interface Operation {
+    int apply(int a, int b);
+}
+
+enum Calculator
+implements Operation {
+
+    ADD {
+        public int apply(int a, int b) {
+            return a + b;
+        }
+    },
+
+    SUBTRACT {
+        public int apply(int a, int b) {
+            return a - b;
+        }
+    };
+}
+
+Enums can implement interfaces.
+
+========================================
+COMPARABLE INTERFACE
+========================================
+
+class Student
+implements Comparable<Student> {
+
+    int id;
+
+    Student(int id) {
+        this.id = id;
+    }
+
+    public int compareTo(Student s) {
+        return this.id - s.id;
+    }
+}
+
+Used for natural sorting.
+
+Collections.sort(list);
+
+========================================
+COMPARATOR INTERFACE
+========================================
+
+Comparator<Student> c =
+    (a, b) -> a.id - b.id;
+
+Collections.sort(list, c);
+
+Used for custom sorting.
+
+========================================
+INTERFACE SEGREGATION PRINCIPLE
+(SOLID)
+========================================
+
+Bad:
+
+interface Worker {
+    void work();
+    void eat();
+}
+
+Robot must implement eat()
+unnecessarily.
+
+Good:
+
+interface Workable {
+    void work();
+}
+
+interface Eatable {
+    void eat();
+}
+
+Classes implement only
+required interfaces.
+
+========================================
+DIAMOND PROBLEM RESOLUTION
 ========================================
 
 interface A {
+
     default void show() {
         System.out.println("A");
     }
 }
 
 interface B {
+
     default void show() {
         System.out.println("B");
     }
@@ -107,251 +337,118 @@ class C implements A, B {
 
     @Override
     public void show() {
-        System.out.println("Resolved");
+        A.super.show();
     }
 }
 
-Why Override?
+Output:
+A
 
-Because both interfaces provide
-the same default method and Java
-cannot decide which one to use.
+Specific interface default method
+can be called using:
 
-========================================
-ACCESS MODIFIERS IN INTERFACES
-========================================
-
-Methods inside interface are
-implicitly:
-
-public abstract
-
-Example:
-
-interface A {
-    void display();
-}
-
-Actually means:
-
-interface A {
-    public abstract void display();
-}
-
-Variables inside interface are
-implicitly:
-
-public static final
-
-Example:
-
-interface A {
-    int x = 10;
-}
-
-Actually means:
-
-public static final int x = 10;
+InterfaceName.super.method()
 
 ========================================
 INTERFACE VS ABSTRACT CLASS
+(INTERVIEW TABLE)
 ========================================
 
-INTERFACE
+Interface
+--------------------------------
+Multiple Inheritance     Yes
+Constructor              No
+Instance Variables       No
+100% Abstraction*        Yes
+Static Methods           Yes
+Default Methods          Yes
 
-✔ Supports multiple inheritance
-✔ All variables are constants
-✔ No constructors
-✔ Used for capability definition
+Abstract Class
+--------------------------------
+Multiple Inheritance     No
+Constructor              Yes
+Instance Variables       Yes
+Partial Abstraction      Yes
+Static Methods           Yes
+Concrete Methods         Yes
 
-ABSTRACT CLASS
-
-✔ Partial abstraction
-✔ Can have constructors
-✔ Can have instance variables
-✔ Single inheritance only
-
-Example:
-
-abstract class Vehicle {
-    abstract void start();
-
-    void stop() {
-        System.out.println("Stopped");
-    }
-}
+(*Before Java 8)
 
 ========================================
-REAL WORLD EXAMPLE
+COMMON INTERVIEW QUESTIONS
 ========================================
 
-interface Flyable {
-    void fly();
-}
+Q. Why doesn't Java support
+multiple inheritance with classes?
 
-interface Swimmable {
-    void swim();
-}
-
-class Duck implements Flyable, Swimmable {
-
-    public void fly() {
-        System.out.println("Duck Flying");
-    }
-
-    public void swim() {
-        System.out.println("Duck Swimming");
-    }
-}
-
-Duck demonstrates multiple
-inheritance through interfaces.
-
-========================================
-INTERVIEW QUESTIONS
-========================================
-
-Q1. Can we create an object of an
-interface?
-
-No.
-
-A obj = new A(); // Error
-
-Interfaces cannot be instantiated.
+Because of the Diamond Problem.
 
 ----------------------------------------
 
-Q2. Can an interface have a constructor?
+Q. Why use interfaces?
 
-No.
-
-Interfaces do not have constructors
-because objects cannot be created.
-
-----------------------------------------
-
-Q3. Can an interface extend a class?
-
-No.
-
-Interface can extend only interfaces.
+To achieve:
+1. Abstraction
+2. Polymorphism
+3. Loose Coupling
+4. Multiple Inheritance
 
 ----------------------------------------
 
-Q4. Can a class extend a class and
-implement interfaces simultaneously?
+Q. Can interfaces have main() method?
 
 Yes.
 
-class A {}
+interface Demo {
 
-interface B {}
-
-class C extends A implements B {}
-
-----------------------------------------
-
-Q5. Can one interface extend multiple
-interfaces?
-
-Yes.
-
-interface A {}
-interface B {}
-
-interface C extends A, B {}
+    static void main(String[] args) {
+        System.out.println("Hello");
+    }
+}
 
 ----------------------------------------
 
-Q6. Can an abstract class implement
-an interface?
+Q. Can interfaces contain nested classes?
 
 Yes.
 
 interface A {
-    void show();
-}
 
-abstract class B implements A {
-}
+    class Demo {
 
-The abstract class may choose not
-to implement all methods.
+    }
+}
 
 ----------------------------------------
 
-Q7. Which is faster:
-Abstract Class or Interface?
+Q. Can we override static methods
+of interfaces?
 
-Practically no noticeable difference
-in modern JVM implementations.
+No.
 
-Choose based on design requirements,
-not performance.
-
-========================================
-JAVA MEMORY CONCEPT
-========================================
-
-A a = new C();
-
-Reference Type : A
-Object Type    : C
-
-Compile Time:
-Only methods available in A
-can be accessed.
-
-Run Time:
-Methods of C execute due to
-Dynamic Method Dispatch.
+Static methods belong to the
+interface itself.
 
 ========================================
-BEST PRACTICE
+MOST IMPORTANT JAVA INTERFACES
 ========================================
 
-Program to Interfaces,
-not Implementations.
+Runnable
+Comparable
+Comparator
+Iterable
+Collection
+List
+Set
+Queue
+Map
+AutoCloseable
+Serializable
+Cloneable
+Callable
 
-Good:
-
-List<Integer> list =
-        new ArrayList<>();
-
-Bad:
-
-ArrayList<Integer> list =
-        new ArrayList<>();
-
-This increases flexibility and
-reduces coupling.
-
-========================================
-FINAL CONCLUSION
-========================================
-
-✔ Interface provides 100% abstraction
-  (before Java 8).
-
-✔ Java supports Multiple Inheritance
-  through Interfaces.
-
-✔ Interfaces support Polymorphism.
-
-✔ Methods are public abstract by
-  default.
-
-✔ Variables are public static final
-  by default.
-
-✔ Interfaces can contain Default,
-  Static and Private methods.
-
-✔ Interfaces are heavily used in
-  Frameworks, Spring, JDBC,
-  Collections Framework and
-  Enterprise Applications.
+These are heavily used in
+real-world Java applications.
 
 ========================================
 */
