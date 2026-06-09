@@ -36,4 +36,17 @@ public class Main {
         System.out.println("Employee ID: " + e.getEmpId());
         System.out.println("Employee Name: " + e.getEmpName());
     }
+//example of encapsulation
+
+class Main {
+    public static void main(String[] args) {
+
+        Employee e = new Employee();
+
+        e.setEmpId(101);
+        e.setEmpName("Rahul");
+
+        System.out.println("Employee ID: " + e.getEmpId());
+        System.out.println("Employee Name: " + e.getEmpName());
+    }
 }
