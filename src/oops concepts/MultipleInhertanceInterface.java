@@ -1,454 +1,186 @@
-/*
+This is an excellent, comprehensive cheat sheet on Java interfaces! It covers a massive amount of ground from foundational syntax to modern features like Sealed Interfaces and Records.
+
+To make this documentation truly complete for advanced usage and technical interviews, we need to inject the missing advanced paradigms, edge-case design patterns, and JVM level behaviors.
+
+Here is the structured continuation to append directly to your notes.
+
+---
+
+```java
 ========================================
-NESTED INTERFACES
+PRIVATE INTERFACE METHODS (JAVA 9)
 ========================================
 
-An interface can be declared inside
-another interface or class.
+Interfaces can contain private and private static 
+methods to prevent code duplication across multiple 
+default or static methods.
 
-interface Outer {
+interface DatabaseConnector {
 
-    interface Inner {
-        void show();
+    default void connectMySql() {
+        logConnection("MySQL");
+        // Connection logic
+    }
+
+    default void connectPostgres() {
+        logConnection("PostgreSQL");
+        // Connection logic
+    }
+
+    // Helper method hidden from implementing classes
+    private void logConnection(String dbType) {
+        System.out.println("Initiating connection to " + dbType);
     }
 }
 
-class Test implements Outer.Inner {
-
-    public void show() {
-        System.out.println("Inner Interface");
-    }
-}
+Purpose: 
+Encapsulates shared logic within the interface without 
+exposing it as part of the public API.
 
 ========================================
-INTERFACE INHERITANCE CHAIN
+FUNCTIONAL INTERFACE INHERITANCE RULES
 ========================================
 
-interface A {
-    void m1();
-}
-
-interface B extends A {
-    void m2();
-}
-
-class Test implements B {
-
-    public void m1() {
-        System.out.println("M1");
-    }
-
-    public void m2() {
-        System.out.println("M2");
-    }
-}
-
-A single interface can be extended
-through multiple levels.
-
-========================================
-WHY INTERFACE VARIABLES ARE FINAL
-========================================
-
-interface Demo {
-    int x = 10;
-}
-
-Demo.x = 20; // Compile Error
-
-Reason:
-All interface variables are
-
-public static final
-
-and cannot be modified.
-
-========================================
-EMPTY INTERFACE VS MARKER INTERFACE
-========================================
-
-Marker Interface examples:
-
-Serializable
-Cloneable
-Remote
-
-Purpose:
-Provide special information to JVM
-or Frameworks.
-
-========================================
-ANONYMOUS CLASS WITH INTERFACE
-========================================
-
-interface Greeting {
-    void hello();
-}
-
-Greeting g = new Greeting() {
-
-    public void hello() {
-        System.out.println("Hello");
-    }
-};
-
-g.hello();
-
-Used before Lambda Expressions.
-
-========================================
-LAMBDA EXPRESSIONS
-========================================
+An interface is still a Functional Interface if it 
+overrides methods from java.lang.Object. These do 
+not count toward the single abstract method (SAM) limit.
 
 @FunctionalInterface
-interface Calculator {
-    int add(int a, int b);
-}
+interface SmartTransformer {
+    void transform(); // The single abstract method (SAM)
 
-Calculator c = (a, b) -> a + b;
-
-System.out.println(c.add(10, 20));
-
-Output:
-30
-
-Works only with Functional Interfaces.
-
-========================================
-BUILT-IN FUNCTIONAL INTERFACES
-========================================
-
-1. Predicate<T>
-
-Predicate<Integer> p =
-        x -> x > 10;
-
-p.test(15);
-
-----------------------------------------
-
-2. Function<T,R>
-
-Function<Integer,Integer> f =
-        x -> x * x;
-
-f.apply(5);
-
-----------------------------------------
-
-3. Consumer<T>
-
-Consumer<String> c =
-        s -> System.out.println(s);
-
-c.accept("Hello");
-
-----------------------------------------
-
-4. Supplier<T>
-
-Supplier<String> s =
-        () -> "Java";
-
-s.get();
-
-========================================
-INTERFACE REFERENCE
-========================================
-
-interface Animal {
-    void sound();
-}
-
-class Dog implements Animal {
-
-    public void sound() {
-        System.out.println("Bark");
-    }
-}
-
-Animal a = new Dog();
-
-a.sound();
-
-Output:
-Bark
-
-This demonstrates runtime polymorphism.
-
-========================================
-CASTING WITH INTERFACES
-========================================
-
-Animal a = new Dog();
-
-Dog d = (Dog) a;
-
-Downcasting is allowed when
-the object actually belongs
-to that class.
-
-========================================
-SEALED INTERFACES (JAVA 17)
-========================================
-
-public sealed interface Shape
-permits Circle, Rectangle {
-
-}
-
-final class Circle
-implements Shape {
-
-}
-
-final class Rectangle
-implements Shape {
-
-}
-
-Only permitted classes can
-implement the interface.
-
-========================================
-RECORDS IMPLEMENTING INTERFACE
-========================================
-
-interface Shape {
-    double area();
-}
-
-record Circle(double radius)
-implements Shape {
-
-    public double area() {
-        return 3.14 * radius * radius;
-    }
-}
-
-Records can implement interfaces.
-
-========================================
-INTERFACE AND ENUM
-========================================
-
-interface Operation {
-    int apply(int a, int b);
-}
-
-enum Calculator
-implements Operation {
-
-    ADD {
-        public int apply(int a, int b) {
-            return a + b;
-        }
-    },
-
-    SUBTRACT {
-        public int apply(int a, int b) {
-            return a - b;
-        }
-    };
-}
-
-Enums can implement interfaces.
-
-========================================
-COMPARABLE INTERFACE
-========================================
-
-class Student
-implements Comparable<Student> {
-
-    int id;
-
-    Student(int id) {
-        this.id = id;
-    }
-
-    public int compareTo(Student s) {
-        return this.id - s.id;
-    }
-}
-
-Used for natural sorting.
-
-Collections.sort(list);
-
-========================================
-COMPARATOR INTERFACE
-========================================
-
-Comparator<Student> c =
-    (a, b) -> a.id - b.id;
-
-Collections.sort(list, c);
-
-Used for custom sorting.
-
-========================================
-INTERFACE SEGREGATION PRINCIPLE
-(SOLID)
-========================================
-
-Bad:
-
-interface Worker {
-    void work();
-    void eat();
-}
-
-Robot must implement eat()
-unnecessarily.
-
-Good:
-
-interface Workable {
-    void work();
-}
-
-interface Eatable {
-    void eat();
-}
-
-Classes implement only
-required interfaces.
-
-========================================
-DIAMOND PROBLEM RESOLUTION
-========================================
-
-interface A {
-
-    default void show() {
-        System.out.println("A");
-    }
-}
-
-interface B {
-
-    default void show() {
-        System.out.println("B");
-    }
-}
-
-class C implements A, B {
-
+    // Overriding Object methods does NOT break @FunctionalInterface
     @Override
-    public void show() {
-        A.super.show();
+    boolean equals(Object obj); 
+    
+    @Override
+    String toString();
+}
+
+Rule: 
+Abstract methods that match public methods in java.lang.Object 
+are ignored by the functional interface validation compiler check.
+
+========================================
+THE EVOLUTION OF INTERFACE METADATA
+========================================
+
+How Java handles interfaces behind the scenes has changed 
+drastically to preserve backward binary compatibility.
+
+Prior to Java 8:
+Interfaces were pure structural blueprints. Compiling an 
+interface generated only abstract class definitions in the 
+bytecode.
+
+Java 8 and Beyond:
+To support `default` and `static` methods without breaking 
+older compiled JARs, the JVM introduced a special bytecode 
+instruction: `invokevirtual` for instance methods was 
+complemented with optimizations to look up default implementations 
+inside interface tables (ITables) at runtime.
+
+========================================
+INTERFACES AND THE DIAMOND PROBLEM (PART II)
+========================================
+
+What happens if a class inherits conflicting signatures 
+from BOTH an Abstract Class and an Interface?
+
+interface Walkable {
+    default void move() {
+        System.out.println("Walking...");
     }
 }
 
-Output:
-A
-
-Specific interface default method
-can be called using:
-
-InterfaceName.super.method()
-
-========================================
-INTERFACE VS ABSTRACT CLASS
-(INTERVIEW TABLE)
-========================================
-
-Interface
---------------------------------
-Multiple Inheritance     Yes
-Constructor              No
-Instance Variables       No
-100% Abstraction*        Yes
-Static Methods           Yes
-Default Methods          Yes
-
-Abstract Class
---------------------------------
-Multiple Inheritance     No
-Constructor              Yes
-Instance Variables       Yes
-Partial Abstraction      Yes
-Static Methods           Yes
-Concrete Methods         Yes
-
-(*Before Java 8)
-
-========================================
-COMMON INTERVIEW QUESTIONS
-========================================
-
-Q. Why doesn't Java support
-multiple inheritance with classes?
-
-Because of the Diamond Problem.
-
-----------------------------------------
-
-Q. Why use interfaces?
-
-To achieve:
-1. Abstraction
-2. Polymorphism
-3. Loose Coupling
-4. Multiple Inheritance
-
-----------------------------------------
-
-Q. Can interfaces have main() method?
-
-Yes.
-
-interface Demo {
-
-    static void main(String[] args) {
-        System.out.println("Hello");
+abstract class Robot {
+    public void move() {
+        System.out.println("Robot rolling...");
     }
 }
 
-----------------------------------------
-
-Q. Can interfaces contain nested classes?
-
-Yes.
-
-interface A {
-
-    class Demo {
-
-    }
+class Android extends Robot implements Walkable {
+    // No compile error! 
 }
 
-----------------------------------------
-
-Q. Can we override static methods
-of interfaces?
-
-No.
-
-Static methods belong to the
-interface itself.
+Rule: "Class Wins" Rule
+In Java, class implementations always take precedence over 
+interface default methods. An explicit override in `Android` 
+is not required here; calling `new Android().move()` outputs 
+"Robot rolling...".
 
 ========================================
-MOST IMPORTANT JAVA INTERFACES
+SPI (SERVICE PROVIDER INTERFACE) PATTERN
 ========================================
 
-Runnable
-Comparable
-Comparator
-Iterable
-Collection
-List
-Set
-Queue
-Map
-AutoCloseable
-Serializable
-Cloneable
-Callable
+Interfaces act as decoupling boundaries for pluggable 
+architectures using Java's built-in `ServiceLoader`.
 
-These are heavily used in
-real-world Java applications.
+1. Define Interface (In a core library)
+package com.api;
+public interface PaymentGateway {
+    void process(double amount);
+}
+
+2. Implement Interface (In an external plugin JAR)
+package com.provider;
+public class PayPalGateway implements com.api.PaymentGateway {
+    public void process(double amount) { /* PayPal logic */ }
+}
+
+3. Consumer discovers implementations dynamically:
+ServiceLoader<PaymentGateway> loader = ServiceLoader.load(PaymentGateway.class);
+for (PaymentGateway gateway : loader) {
+    gateway.process(100.0); // Automatically picks up PayPalGateway
+}
+
+Real-World Usage:
+How `java.sql.Driver` discovers JDBC drivers (MySQL, PostgreSQL) 
+automatically without explicit imports.
 
 ========================================
-*/
+COMPOSITE FUNCTIONAL INTERFACES
+========================================
+
+Built-in functional interfaces can be chained together using 
+default tracking methods like `andThen()`, `compose()`, and `and()`.
+
+1. Predicate Chaining (Logical AND)
+Predicate<String> isLong = s -> s.length() > 5;
+Predicate<String> containsA = s -> s.contains("a");
+Predicate<String> combined = isLong.and(containsA);
+
+2. Function Chaining (Mathematical Composition)
+Function<Integer, Integer> multiply = x -> x * 2;
+Function<Integer, Integer> square = x -> x * x;
+
+// multiply first, then square: (5 * 2)^2 = 100
+Function<Integer, Integer> pipeline = multiply.andThen(square); 
+
+// square first, then multiply: (5^2) * 2 = 50
+Function<Integer, Integer> inversePipeline = multiply.compose(square); 
+
+========================================
+FUNCTIONAL INTERFACING PRIMITIVE SPECIALIZATIONS
+========================================
+
+Standard functional interfaces like `Function<T, R>` handle objects. 
+Using them with primitives causes severe performance loss due to 
+auto-boxing and unboxing (`int` <-> `Integer`).
+
+Bad (High Memory/CPU Overhead):
+Function<Integer, Integer> doubleIt = x -> x * 2; // Boxes every value
+
+Good (High Performance Primitive Specialized):
+IntUnaryOperator doubleItPrimitive = x -> x * 2; // No boxing occurs
+
+Key Primitive Counterparts:
+-------------------------------------------------------
+Standard Type       Primitive Equivalent
+-------------------------------------------------------
+Predicate<T>        IntPredicate, LongPredicate, DoublePredicate
+Consumer<T>         IntConsumer, LongConsumer, DoubleConsumer
+Supplier<T>         IntSupplier, LongSupplier, DoubleSupplier
+Function<T, R>      IntFunction<R>, ToIntFunction<T>, IntToLongFunction
+
+```
