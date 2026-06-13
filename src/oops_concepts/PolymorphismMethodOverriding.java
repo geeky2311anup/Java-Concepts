@@ -1,28 +1,65 @@
-class Parent{
-    public void show(){
+class Parent {
+    // Overridable instance method
+    public void show() {
         System.out.println("Parent show method");
     }
-}
-class Child extends Parent{
-    @Override
-    public void show(){  // overriding the show method
-        System.out.println("Child show method");
-    }
-    public void display(){
-        System.out.println("Child specific display method");
-    }
-}
-public class PolymorphismMethodOverriding{
-    public static void main(String[] args){
-        Parent obj = new Child(); // upcasting
-        obj.show();  // calls Child's show method due to runtime polymorphism
-      //  obj.display(); // give error because display() is not in Parent class
-        Child obj2 = new Child(); // no upcasting
-        //obj2.show();  // calls Child's show method
-        obj2.display(); // works fine, calls display() from Child class
-        Parent obj3 = new Parent();
-        obj3.show();//it will call Parent class show method because obj3 is Parent class object
+
+    // Static method (Subject to Method Hiding, not overriding)
+    public static void staticMethod() {
+        System.out.println("Static method inside Parent");
     }
 }
 
-// add ex
+class Child extends Parent {
+    // Overriding the show method
+    @Override
+    public void show() {  
+        System.out.println("Child show method");
+    }
+
+    // Child-specific method
+    public void display() {
+        System.out.println("Child specific display method");
+    }
+
+    // Hiding the parent's static method
+    public static void staticMethod() {
+        System.out.println("Static method inside Child");
+    }
+}
+
+public class PolymorphismDemo {
+    public static void main(String[] args) {
+        
+        // ==========================================
+        // 1. UPCASTING (Runtime Polymorphism)
+        // ==========================================
+        Parent obj = new Child(); 
+        
+        // Calls Child's version because methods are resolved at RUNTIME based on the object type
+        obj.show();  
+
+        // obj.display(); 
+        // ERROR: The compiler only looks at the Reference type (Parent), and display() doesn't exist there.
+
+        
+        // ==========================================
+        // 2. DOWNCASTING (Accessing Child Methods)
+        // ==========================================
+        // To fix the error above, we safely verify the type and downcast back to Child
+        if (obj instanceof Child) {
+            Child castedObj = (Child) obj; 
+            castedObj.display(); // Works fine now!
+        }
+
+
+        // ==========================================
+        // 3. METHOD HIDING (Static Methods)
+        // ==========================================
+        // Static methods are resolved at COMPILE TIME based on the reference type
+        obj.staticMethod(); // Calls Parent's static method because 'obj' is a Parent reference
+        
+        Child obj2 = new Child();
+        obj2.staticMethod(); // Calls Child's static method
+    }
+}
