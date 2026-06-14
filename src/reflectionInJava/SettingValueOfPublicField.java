@@ -1,35 +1,36 @@
-import java.util.Arrays;
-
 class Solution {
-    /**
-     * Calculates the minimum cost to buy all candies where for every 3 candies 
-     * purchased, the cheapest one among the three is free.
-     * * Time Complexity: O(N log N) due to dual-pivot quicksort.
-     * Space Complexity: O(1) or O(log N) depending on the quicksort call stack.
-     */
-    public int minimumCost(int[] prices) {
-        // Guard clause for safety
-        if (prices == null || prices.length == 0) {
-            return 0;
+    public int pairSum(ListNode head) {
+        if (head == null) return 0;
+
+        // Phase 1: Compute absolute length of the node chain
+        int listLength = 0;
+        ListNode structuralCursor = head;
+        while (structuralCursor != null) {
+            listLength++;
+            structuralCursor = structuralCursor.next;
         }
 
-        Arrays.sort(prices);
-        int minimumTotalCost = 0;
-        int index = prices.length - 1;
-
-        // Process batches of 3 greedily from most expensive to cheapest
-        while (index >= 1) {
-            minimumTotalCost += prices[index];     // Most expensive in batch (Paid)
-            minimumTotalCost += prices[index - 1]; // Second most expensive in batch (Paid)
-            index -= 3;                            // Third item is free; skip it entirely
+        // Phase 2: Allocate a native primitive array block
+        int[] scalarBuffer = new int[listLength];
+        structuralCursor = head;
+        int targetIdx = 0;
+        
+        while (structuralCursor != null) {
+            scalarBuffer[targetIdx++] = structuralCursor.val;
+            structuralCursor = structuralCursor.next;
         }
 
-        // Clean up remaining elements if array size is not a multiple of 3
-        while (index >= 0) {
-            minimumTotalCost += prices[index];
-            index--;
+        int highestTwinPairSum = 0;
+        int midpointBoundary = listLength / 2;
+
+        // Phase 3: Direct bracket offset index calculations
+        for (int index = 0; index < midpointBoundary; index++) {
+            int matchingTwinSum = scalarBuffer[index] + scalarBuffer[listLength - 1 - index];
+            if (matchingTwinSum > highestTwinPairSum) {
+                highestTwinPairSum = matchingTwinSum;
+            }
         }
 
-        return minimumTotalCost;
+        return highestTwinPairSum;
     }
 }
