@@ -1,264 +1,166 @@
+// ===============================
+// AUTOBOXING & UNBOXING
+// ===============================
 
-// Demonstration of Primitive Data Types in Java
+System.out.println("\n=== AutoBoxing & Unboxing ===");
 
-// Demonstration of Primitive Data Types in Java
+Integer boxed = 50;      // Autoboxing
+int unboxed = boxed;     // Unboxing
 
-public class PrimitiveDataTypes {
+System.out.println("Boxed Integer = " + boxed);
+System.out.println("Unboxed int = " + unboxed);
 
-    public static void main(String[] args) {
+// ===============================
+// RANDOM NUMBER
+// ===============================
 
-        // ===============================
-        // INTEGER DATA TYPES
-        // ===============================
+System.out.println("\n=== Random Number Example ===");
 
-        byte byteVar = 100;
-        short shortVar = 10000;
-        int intVar = 100000;
-        long longVar = 100000000L;
+int randomNum = (int)(Math.random() * 100) + 1;
 
-        // ===============================
-        // FLOATING POINT DATA TYPES
-        // ===============================
+System.out.println("Random Number (1-100): " + randomNum);
 
-        float floatVar = 10.5f;
-        double doubleVar = 20.55555;
+// ===============================
+// SWAP TWO NUMBERS
+// ===============================
 
-        // ===============================
-        // CHARACTER & BOOLEAN
-        // ===============================
+System.out.println("\n=== Swapping Numbers ===");
 
-        char charVar = 'A';
-        boolean booleanVar = true;
+int first = 10;
+int second = 20;
 
-        // ===============================
-        // IMPLICIT TYPE CONVERSION
-        // ===============================
+System.out.println("Before Swap: " + first + ", " + second);
 
-        int i = 100;
-        long l = i;
-        float f = l;
-        double d = f;
+int temp = first;
+first = second;
+second = temp;
 
-        System.out.println("=== Implicit Type Conversion ===");
-        System.out.println("int to long: " + l);
-        System.out.println("long to float: " + f);
-        System.out.println("float to double: " + d);
+System.out.println("After Swap: " + first + ", " + second);
 
-        // ===============================
-        // EXPLICIT TYPE CASTING
-        // ===============================
+// ===============================
+// EVEN OR ODD
+// ===============================
 
-        double decimalNum = 99.99;
-        int convertedInt = (int) decimalNum;
+System.out.println("\n=== Even or Odd ===");
 
-        long bigNumber = 5000;
-        short convertedShort = (short) bigNumber;
+int number = 17;
 
-        System.out.println("\n=== Explicit Type Casting ===");
-        System.out.println("double to int: " + convertedInt);
-        System.out.println("long to short: " + convertedShort);
+String resultText = (number % 2 == 0)
+        ? "Even"
+        : "Odd";
 
-        // ===============================
-        // ASCII VALUE USING CHAR
-        // ===============================
+System.out.println(number + " is " + resultText);
 
-        char letter = 'B';
-        int asciiValue = letter;
+// ===============================
+// TEMPERATURE CONVERSION
+// ===============================
 
-        System.out.println("\n=== Character Operations ===");
-        System.out.println("Character: " + letter);
-        System.out.println("ASCII Value: " + asciiValue);
+System.out.println("\n=== Celsius to Fahrenheit ===");
 
-        // ===============================
-        // ARITHMETIC OPERATIONS
-        // ===============================
+double celsius = 37.0;
+double fahrenheit = (celsius * 9 / 5) + 32;
 
-        int a = 20;
-        int b = 10;
+System.out.println(celsius + "°C = " + fahrenheit + "°F");
 
-        System.out.println("\n=== Arithmetic Operations ===");
-        System.out.println("Addition: " + (a + b));
-        System.out.println("Subtraction: " + (a - b));
-        System.out.println("Multiplication: " + (a * b));
-        System.out.println("Division: " + (a / b));
-        System.out.println("Modulus: " + (a % b));
+// ===============================
+// DIGIT EXTRACTION
+// ===============================
 
-        // ===============================
-        // BOOLEAN OPERATIONS
-        // ===============================
+System.out.println("\n=== Digit Extraction ===");
 
-        boolean x = true;
-        boolean y = false;
+int value = 9876;
 
-        System.out.println("\n=== Boolean Operations ===");
-        System.out.println("x AND y: " + (x && y));
-        System.out.println("x OR y: " + (x || y));
-        System.out.println("NOT x: " + (!x));
+System.out.println("Last Digit = " + (value % 10));
+System.out.println("Remaining Number = " + (value / 10));
 
-        // ===============================
-        // TYPE PROMOTION
-        // ===============================
+// ===============================
+// UNICODE CHARACTERS
+// ===============================
 
-        System.out.println("\n=== Type Promotion ===");
+System.out.println("\n=== Unicode Characters ===");
 
-        byte bx = 10;
-        byte by = 20;
+char heart = '\u2665';
 
-        int result = bx + by;
+System.out.println("Unicode Heart: " + heart);
 
-        System.out.println("Result of byte + byte: " + result);
+// ===============================
+// INCREMENT & DECREMENT
+// ===============================
 
-        // ===============================
-        // OVERFLOW & UNDERFLOW
-        // ===============================
+System.out.println("\n=== Increment & Decrement ===");
 
-        System.out.println("\n=== Overflow Example ===");
+int count = 5;
 
-        byte maxByte = 127;
-        maxByte++;
+System.out.println("Original = " + count);
+System.out.println("Post Increment = " + count++);
+System.out.println("After Increment = " + count);
+System.out.println("Pre Increment = " + (++count));
 
-        System.out.println("After 127 + 1 = " + maxByte);
+// ===============================
+// COMPOUND ASSIGNMENT
+// ===============================
 
-        byte minByte = -128;
-        minByte--;
+System.out.println("\n=== Compound Assignment ===");
 
-        System.out.println("After -128 - 1 = " + minByte);
+int marks = 50;
 
-        // ===============================
-        // CHARACTER ARITHMETIC
-        // ===============================
+marks += 10;
+System.out.println("After += 10 : " + marks);
 
-        System.out.println("\n=== Character Arithmetic ===");
+marks *= 2;
+System.out.println("After *= 2 : " + marks);
 
-        char ch = 'A';
+// ===============================
+// BITWISE OPERATORS
+// ===============================
 
-        System.out.println("Character: " + ch);
-        System.out.println("Next Character: " + (char)(ch + 1));
-        System.out.println("ASCII Value: " + (int) ch);
+System.out.println("\n=== Bitwise Operators ===");
 
-        // ===============================
-        // NUMBER LITERALS
-        // ===============================
+int p = 5; // 0101
+int q = 3; // 0011
 
-        System.out.println("\n=== Number Literals ===");
+System.out.println("p & q = " + (p & q));
+System.out.println("p | q = " + (p | q));
+System.out.println("p ^ q = " + (p ^ q));
+System.out.println("p << 1 = " + (p << 1));
+System.out.println("p >> 1 = " + (p >> 1));
 
-        int binaryNum = 0b1010;
-        int octalNum = 012;
-        int hexNum = 0xA;
+// ===============================
+// RELATIONAL OPERATORS
+// ===============================
 
-        System.out.println("Binary 1010 = " + binaryNum);
-        System.out.println("Octal 12 = " + octalNum);
-        System.out.println("Hex A = " + hexNum);
+System.out.println("\n=== Relational Operators ===");
 
-        // ===============================
-        // SCIENTIFIC NOTATION
-        // ===============================
+int num1 = 15;
+int num2 = 20;
 
-        System.out.println("\n=== Scientific Notation ===");
+System.out.println("num1 == num2 : " + (num1 == num2));
+System.out.println("num1 != num2 : " + (num1 != num2));
+System.out.println("num1 < num2  : " + (num1 < num2));
+System.out.println("num1 > num2  : " + (num1 > num2));
 
-        double scientific = 1.5e3;
+// ===============================
+// AREA OF CIRCLE
+// ===============================
 
-        System.out.println("1.5e3 = " + scientific);
+System.out.println("\n=== Area of Circle ===");
 
-        // ===============================
-        // PARSING STRINGS
-        // ===============================
+double radius = 7.0;
+double area = Math.PI * radius * radius;
 
-        System.out.println("\n=== Parsing Strings ===");
+System.out.println("Radius = " + radius);
+System.out.println("Area = " + area);
 
-        String numStr = "500";
-        int parsedInt = Integer.parseInt(numStr);
+// ===============================
+// SIMPLE INTEREST
+// ===============================
 
-        String doubleStr = "12.34";
-        double parsedDouble = Double.parseDouble(doubleStr);
+System.out.println("\n=== Simple Interest ===");
 
-        System.out.println("Parsed Integer = " + parsedInt);
-        System.out.println("Parsed Double = " + parsedDouble);
+double principal = 10000;
+double rate = 8;
+double years = 2;
 
-        // ===============================
-        // WRAPPER CLASS METHODS
-        // ===============================
+double simpleInterest = (principal * rate * years) / 100;
 
-        System.out.println("\n=== Wrapper Utility Methods ===");
-
-        System.out.println("Max Integer = " + Integer.MAX_VALUE);
-        System.out.println("Min Integer = " + Integer.MIN_VALUE);
-
-        System.out.println(
-                "Integer.compare(10,20) = "
-                        + Integer.compare(10, 20));
-
-        // ===============================
-        // INSTANCEOF OPERATOR
-        // ===============================
-
-        System.out.println("\n=== instanceof Operator ===");
-
-        Integer obj = 100;
-
-        System.out.println(obj instanceof Integer);
-
-        // ===============================
-        // MATH CLASS METHODS
-        // ===============================
-
-        System.out.println("\n=== Math Class Methods ===");
-
-        System.out.println("Max = " + Math.max(10, 20));
-        System.out.println("Min = " + Math.min(10, 20));
-        System.out.println("Power = " + Math.pow(2, 5));
-        System.out.println("Square Root = " + Math.sqrt(25));
-
-        // ===============================
-        // TERNARY OPERATOR
-        // ===============================
-
-        System.out.println("\n=== Ternary Operator ===");
-
-        int age = 20;
-
-        String status = (age >= 18) ? "Adult" : "Minor";
-
-        System.out.println(status);
-
-        // ===============================
-        // MIN & MAX VALUES
-        // ===============================
-
-        System.out.println("\n=== Min and Max Values ===");
-
-        System.out.println("Byte Min: " + Byte.MIN_VALUE);
-        System.out.println("Byte Max: " + Byte.MAX_VALUE);
-
-        System.out.println("Short Min: " + Short.MIN_VALUE);
-        System.out.println("Short Max: " + Short.MAX_VALUE);
-
-        System.out.println("Integer Min: " + Integer.MIN_VALUE);
-        System.out.println("Integer Max: " + Integer.MAX_VALUE);
-
-        System.out.println("Long Min: " + Long.MIN_VALUE);
-        System.out.println("Long Max: " + Long.MAX_VALUE);
-
-        System.out.println("Float Min: " + Float.MIN_VALUE);
-        System.out.println("Float Max: " + Float.MAX_VALUE);
-
-        System.out.println("Double Min: " + Double.MIN_VALUE);
-        System.out.println("Double Max: " + Double.MAX_VALUE);
-
-        // ===============================
-        // ORIGINAL VALUES
-        // ===============================
-
-        System.out.println("\n=== Original Primitive Values ===");
-
-        System.out.println("Byte Value: " + byteVar);
-        System.out.println("Short Value: " + shortVar);
-        System.out.println("Integer Value: " + intVar);
-        System.out.println("Long Value: " + longVar);
-        System.out.println("Float Value: " + floatVar);
-        System.out.println("Double Value: " + doubleVar);
-        System.out.println("Character Value: " + charVar);
-        System.out.println("Boolean Value: " + booleanVar);
-    }
-}
-
+System.out.println("Simple Interest = " + simpleInterest);
