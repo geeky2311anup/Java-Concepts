@@ -1,186 +1,454 @@
-This is an excellent, comprehensive cheat sheet on Java interfaces! It covers a massive amount of ground from foundational syntax to modern features like Sealed Interfaces and Records.
-
-To make this documentation truly complete for advanced usage and technical interviews, we need to inject the missing advanced paradigms, edge-case design patterns, and JVM level behaviors.
-
-Here is the structured continuation to append directly to your notes.
-
----
-
-```java
 ========================================
-PRIVATE INTERFACE METHODS (JAVA 9)
+INTERSECTION TYPES
 ========================================
 
-Interfaces can contain private and private static 
-methods to prevent code duplication across multiple 
-default or static methods.
+Java allows an object to satisfy multiple interface
+contracts simultaneously through intersection types.
 
-interface DatabaseConnector {
-
-    default void connectMySql() {
-        logConnection("MySQL");
-        // Connection logic
-    }
-
-    default void connectPostgres() {
-        logConnection("PostgreSQL");
-        // Connection logic
-    }
-
-    // Helper method hidden from implementing classes
-    private void logConnection(String dbType) {
-        System.out.println("Initiating connection to " + dbType);
-    }
+interface Flyable {
+    void fly();
 }
 
-Purpose: 
-Encapsulates shared logic within the interface without 
-exposing it as part of the public API.
+interface Swimmable {
+    void swim();
+}
+
+class Duck implements Flyable, Swimmable {
+    public void fly() {}
+    public void swim() {}
+}
+
+Generic Intersection:
+
+<T extends Flyable & Swimmable>
+
+public static <T extends Flyable & Swimmable>
+void move(T obj) {
+    obj.fly();
+    obj.swim();
+}
+
+Rules:
+1. Maximum one class bound.
+2. Class bound must appear first.
+3. Unlimited interface bounds allowed.
+
+Example:
+
+<T extends Animal & Flyable & Swimmable>
 
 ========================================
-FUNCTIONAL INTERFACE INHERITANCE RULES
+MARKER INTERFACES
 ========================================
 
-An interface is still a Functional Interface if it 
-overrides methods from java.lang.Object. These do 
-not count toward the single abstract method (SAM) limit.
+Marker Interfaces contain no methods.
 
-@FunctionalInterface
-interface SmartTransformer {
-    void transform(); // The single abstract method (SAM)
+interface Auditable {}
 
-    // Overriding Object methods does NOT break @FunctionalInterface
+class Transaction implements Auditable {}
+
+Purpose:
+Provides metadata to JVM or frameworks.
+
+Historical Examples:
+----------------------------------
+Serializable
+Cloneable
+Remote
+RandomAccess
+
+Example:
+
+if(obj instanceof Serializable) {
+    // Serialization logic
+}
+
+Modern Alternative:
+Annotations often replace marker interfaces.
+
+@Deprecated
+@Override
+@Entity
+
+========================================
+SEALED INTERFACES (JAVA 17)
+========================================
+
+Restrict which classes/interfaces may implement
+an interface.
+
+public sealed interface Shape
+    permits Circle, Rectangle, Triangle {
+}
+
+final class Circle implements Shape {}
+final class Rectangle implements Shape {}
+final class Triangle implements Shape {}
+
+Benefits:
+1. Exhaustive modeling.
+2. Better compiler checks.
+3. Pattern matching support.
+4. Strong domain constraints.
+
+========================================
+NON-SEALED INTERFACES
+========================================
+
+A permitted subtype can reopen inheritance.
+
+sealed interface Vehicle
+    permits Car, Bike {}
+
+non-sealed class Car implements Vehicle {}
+
+class SportsCar extends Car {}
+class ElectricCar extends Car {}
+
+final class Bike implements Vehicle {}
+
+Meaning:
+Inheritance continues freely from Car.
+
+========================================
+PATTERN MATCHING WITH SEALED INTERFACES
+========================================
+
+sealed interface Shape
+    permits Circle, Rectangle {}
+
+record Circle(double radius) implements Shape {}
+record Rectangle(double w, double h) implements Shape {}
+
+static double area(Shape shape) {
+    return switch(shape) {
+
+        case Circle c ->
+            Math.PI * c.radius() * c.radius();
+
+        case Rectangle r ->
+            r.w() * r.h();
+    };
+}
+
+Compiler knows all possible implementations.
+
+No default case required.
+
+========================================
+RECORDS + INTERFACES
+========================================
+
+Records can implement interfaces.
+
+interface Printable {
+    void print();
+}
+
+record Employee(String name, int age)
+        implements Printable {
+
     @Override
-    boolean equals(Object obj); 
-    
+    public void print() {
+        System.out.println(name + " " + age);
+    }
+}
+
+Records cannot extend classes,
+but can implement multiple interfaces.
+
+========================================
+INTERFACE CONSTANTS
+========================================
+
+All interface fields are implicitly:
+
+public static final
+
+interface Constants {
+
+    int MAX_SIZE = 100;
+
+    String APP_NAME = "Inventory";
+}
+
+Compiler converts to:
+
+public static final int MAX_SIZE = 100;
+
+Usage:
+
+int size = Constants.MAX_SIZE;
+
+Best Practice:
+Avoid "constant interfaces".
+Prefer utility classes.
+
+public final class Constants {
+    private Constants() {}
+    public static final int MAX_SIZE = 100;
+}
+
+========================================
+NESTED INTERFACES
+========================================
+
+Interfaces may contain nested interfaces.
+
+interface Engine {
+
+    interface Specification {
+        int getHorsePower();
+    }
+}
+
+class PetrolSpec
+        implements Engine.Specification {
+
+    public int getHorsePower() {
+        return 200;
+    }
+}
+
+Useful for grouping related contracts.
+
+========================================
+GENERIC INTERFACES
+========================================
+
+Interfaces can be generic.
+
+interface Repository<T> {
+    void save(T obj);
+    T findById(int id);
+}
+
+class UserRepository
+        implements Repository<User> {
+
+    public void save(User user) {}
+
+    public User findById(int id) {
+        return null;
+    }
+}
+
+Benefits:
+1. Reusability
+2. Type Safety
+3. Compile-time checking
+
+========================================
+COVARIANT RETURN TYPES
+========================================
+
+Implementations may return more specific types.
+
+interface AnimalFactory {
+    Animal create();
+}
+
+class DogFactory
+        implements AnimalFactory {
+
     @Override
-    String toString();
-}
-
-Rule: 
-Abstract methods that match public methods in java.lang.Object 
-are ignored by the functional interface validation compiler check.
-
-========================================
-THE EVOLUTION OF INTERFACE METADATA
-========================================
-
-How Java handles interfaces behind the scenes has changed 
-drastically to preserve backward binary compatibility.
-
-Prior to Java 8:
-Interfaces were pure structural blueprints. Compiling an 
-interface generated only abstract class definitions in the 
-bytecode.
-
-Java 8 and Beyond:
-To support `default` and `static` methods without breaking 
-older compiled JARs, the JVM introduced a special bytecode 
-instruction: `invokevirtual` for instance methods was 
-complemented with optimizations to look up default implementations 
-inside interface tables (ITables) at runtime.
-
-========================================
-INTERFACES AND THE DIAMOND PROBLEM (PART II)
-========================================
-
-What happens if a class inherits conflicting signatures 
-from BOTH an Abstract Class and an Interface?
-
-interface Walkable {
-    default void move() {
-        System.out.println("Walking...");
+    public Dog create() {
+        return new Dog();
     }
 }
 
-abstract class Robot {
-    public void move() {
-        System.out.println("Robot rolling...");
+Dog is a subtype of Animal.
+
+Allowed by Java compiler.
+
+========================================
+INTERFACE SEGREGATION PRINCIPLE (ISP)
+========================================
+
+Clients should not depend on methods
+they do not use.
+
+Bad Design:
+
+interface Worker {
+    void work();
+    void eat();
+}
+
+class Robot implements Worker {
+
+    public void work() {}
+
+    public void eat() {
+        throw new UnsupportedOperationException();
     }
 }
 
-class Android extends Robot implements Walkable {
-    // No compile error! 
+Good Design:
+
+interface Workable {
+    void work();
 }
 
-Rule: "Class Wins" Rule
-In Java, class implementations always take precedence over 
-interface default methods. An explicit override in `Android` 
-is not required here; calling `new Android().move()` outputs 
-"Robot rolling...".
-
-========================================
-SPI (SERVICE PROVIDER INTERFACE) PATTERN
-========================================
-
-Interfaces act as decoupling boundaries for pluggable 
-architectures using Java's built-in `ServiceLoader`.
-
-1. Define Interface (In a core library)
-package com.api;
-public interface PaymentGateway {
-    void process(double amount);
+interface Eatable {
+    void eat();
 }
 
-2. Implement Interface (In an external plugin JAR)
-package com.provider;
-public class PayPalGateway implements com.api.PaymentGateway {
-    public void process(double amount) { /* PayPal logic */ }
+class Human
+        implements Workable, Eatable {}
+
+class Robot
+        implements Workable {}
+
+========================================
+DYNAMIC PROXY WITH INTERFACES
+========================================
+
+Interfaces enable runtime proxy generation.
+
+interface Service {
+    void execute();
 }
 
-3. Consumer discovers implementations dynamically:
-ServiceLoader<PaymentGateway> loader = ServiceLoader.load(PaymentGateway.class);
-for (PaymentGateway gateway : loader) {
-    gateway.process(100.0); // Automatically picks up PayPalGateway
+Service proxy =
+    (Service) Proxy.newProxyInstance(
+        Service.class.getClassLoader(),
+        new Class<?>[]{Service.class},
+        (obj, method, args) -> {
+
+            System.out.println("Before");
+
+            Object result =
+                method.invoke(realObject, args);
+
+            System.out.println("After");
+
+            return result;
+        });
+
+Used By:
+----------------------------------
+Spring AOP
+JDK Proxies
+RPC Frameworks
+Feign Clients
+
+========================================
+JVM INTERNALLY: ITABLE
+========================================
+
+Classes use:
+----------------------------------
+VTABLE (Virtual Method Table)
+
+Interfaces use:
+----------------------------------
+ITABLE (Interface Method Table)
+
+During method invocation:
+
+interface Animal {
+    void sound();
 }
 
-Real-World Usage:
-How `java.sql.Driver` discovers JDBC drivers (MySQL, PostgreSQL) 
-automatically without explicit imports.
+Animal a = new Dog();
+a.sound();
+
+JVM performs:
+
+1. Resolve interface reference.
+2. Lookup implementation in ITABLE.
+3. Dispatch correct concrete method.
+
+This allows:
+
+- Runtime polymorphism
+- Multiple interface inheritance
+- Efficient dynamic dispatch
 
 ========================================
-COMPOSITE FUNCTIONAL INTERFACES
+DEFAULT METHOD CONFLICT RESOLUTION
 ========================================
 
-Built-in functional interfaces can be chained together using 
-default tracking methods like `andThen()`, `compose()`, and `and()`.
+Priority Rules:
 
-1. Predicate Chaining (Logical AND)
-Predicate<String> isLong = s -> s.length() > 5;
-Predicate<String> containsA = s -> s.contains("a");
-Predicate<String> combined = isLong.and(containsA);
+Rule 1:
+Class wins over Interface.
 
-2. Function Chaining (Mathematical Composition)
-Function<Integer, Integer> multiply = x -> x * 2;
-Function<Integer, Integer> square = x -> x * x;
+Rule 2:
+More specific Interface wins.
 
-// multiply first, then square: (5 * 2)^2 = 100
-Function<Integer, Integer> pipeline = multiply.andThen(square); 
+interface A {
+    default void show() {
+        System.out.println("A");
+    }
+}
 
-// square first, then multiply: (5^2) * 2 = 50
-Function<Integer, Integer> inversePipeline = multiply.compose(square); 
+interface B extends A {
+    default void show() {
+        System.out.println("B");
+    }
+}
+
+class Test implements B {}
+
+Output:
+B
+
+Rule 3:
+Explicit override required if ambiguity remains.
+
+interface X {
+    default void print() {}
+}
+
+interface Y {
+    default void print() {}
+}
+
+class Demo implements X, Y {
+
+    @Override
+    public void print() {
+        X.super.print();
+    }
+}
 
 ========================================
-FUNCTIONAL INTERFACING PRIMITIVE SPECIALIZATIONS
+INTERFACES IN MODERN JAVA DESIGN
 ========================================
 
-Standard functional interfaces like `Function<T, R>` handle objects. 
-Using them with primitives causes severe performance loss due to 
-auto-boxing and unboxing (`int` <-> `Integer`).
+Primary Uses Today:
 
-Bad (High Memory/CPU Overhead):
-Function<Integer, Integer> doubleIt = x -> x * 2; // Boxes every value
+✓ Functional Programming
+✓ Dependency Injection
+✓ Spring Services
+✓ Repository Pattern
+✓ Strategy Pattern
+✓ Adapter Pattern
+✓ SPI Plugins
+✓ Microservice Contracts
+✓ Dynamic Proxies
+✓ Reactive APIs
+✓ Event Systems
 
-Good (High Performance Primitive Specialized):
-IntUnaryOperator doubleItPrimitive = x -> x * 2; // No boxing occurs
+Rule of Thumb:
 
-Key Primitive Counterparts:
--------------------------------------------------------
-Standard Type       Primitive Equivalent
--------------------------------------------------------
-Predicate<T>        IntPredicate, LongPredicate, DoublePredicate
-Consumer<T>         IntConsumer, LongConsumer, DoubleConsumer
-Supplier<T>         IntSupplier, LongSupplier, DoubleSupplier
-Function<T, R>      IntFunction<R>, ToIntFunction<T>, IntToLongFunction
+Use Interface When:
+----------------------------------
+- Defining behavior
+- Multiple implementations expected
+- API abstraction needed
+- Dependency inversion required
 
-```
+Use Abstract Class When:
+----------------------------------
+- Shared state exists
+- Common implementation dominates
+- Constructors are required
+- Protected members are needed
+
+Interview One-Liner:
+
+"Interfaces define capabilities,
+Abstract Classes define identity."
