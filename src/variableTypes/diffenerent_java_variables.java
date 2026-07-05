@@ -1,79 +1,200 @@
 package variableTypes;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
-/**
- * A comprehensive demonstration of all variable classifications in Java,
- * illustrating scopes, mutation boundaries, and memory behaviors.
- */
 public class JavaVariableMastery {
 
-    // 1. STATIC (CLASS) VARIABLE
-    // Stored in the Metaspace (Method Area). Shared by all class instances.
+    /* ===========================
+       STATIC VARIABLES
+       =========================== */
+
     public static int classSharedCounter = 100;
 
-    // 2. INSTANCE VARIABLE
-    // Stored on the Heap inside the object. Unique to each object instance.
+    // Compile-time constant
+    public static final String APPLICATION_NAME = "Variable Mastery";
+
+    // Static initialization block
+    static {
+        System.out.println("Static Block Executed Once");
+    }
+
+    /* ===========================
+       INSTANCE VARIABLES
+       =========================== */
+
     public String instanceStateName = "DefaultState";
 
-    // 3. COMPILE-TIME FINAL VARIABLE
-    // Must be initialized immediately. Value is substituted directly at compile time.
     public final double PI_CONSTANT = 3.141592653589793;
 
-    // 4. BLANK FINAL VARIABLE (Blank Constant)
-    // Initialized exactly once inside constructors. Allows instance-specific constants.
     public final int uniqueInstanceId;
 
-    // Constructor to bind the blank final variable safely
-    public JavaVariableMastery(int assignedId) {
-        this.uniqueInstanceId = assignedId; // Allowed exactly once
+    // Instance initialization block
+    {
+        System.out.println("Instance Initialization Block");
     }
 
-    // 5. PARAMETER VARIABLE
-    // Variables passed into a method signature. Scoped strictly inside this execution block.
-    public void executeCalculation(int inputFactor, int multiplier) {
-        
-        // 6. LOCAL VARIABLE
-        // Stored on the Thread Stack. Allocated upon method entry, destroyed upon exit.
-        int computationalResult = inputFactor * multiplier;
-        
-        System.out.println("Processing local variables: " + computationalResult);
+    public JavaVariableMastery(int assignedId) {
+        this.uniqueInstanceId = assignedId;
     }
+
+    /* ===========================
+       PARAMETER & LOCAL VARIABLES
+       =========================== */
+
+    public void executeCalculation(int inputFactor, int multiplier) {
+
+        int computationalResult = inputFactor * multiplier;
+
+        System.out.println("Result : " + computationalResult);
+    }
+
+    /* ===========================
+       SHADOWING
+       =========================== */
 
     public void demonstrateShadowing() {
-        // Local variable name shadowing an instance variable name
-        String instanceStateName = "LocalOverride";
-        
-        System.out.println("Shadowed Name (Local Context): " + instanceStateName);
-        System.out.println("Actual Instance Variable (via 'this'): " + this.instanceStateName);
+
+        String instanceStateName = "Local Variable";
+
+        System.out.println(instanceStateName);
+
+        System.out.println(this.instanceStateName);
     }
 
+    /* ===========================
+       FINAL REFERENCE VARIABLE
+       =========================== */
+
+    public void finalReferenceExample() {
+
+        final List<String> fruits = new ArrayList<>();
+
+        fruits.add("Apple");
+        fruits.add("Mango");
+
+        // Allowed
+        fruits.add("Orange");
+
+        // Not Allowed
+        // fruits = new ArrayList<>();
+
+        System.out.println(fruits);
+    }
+
+    /* ===========================
+       LOOP VARIABLES
+       =========================== */
+
+    public void loopVariables() {
+
+        for (int i = 1; i <= 5; i++) {
+            System.out.println("Loop Variable : " + i);
+        }
+    }
+
+    /* ===========================
+       ENHANCED FOR LOOP
+       =========================== */
+
+    public void enhancedForLoop() {
+
+        int[] numbers = {10,20,30,40};
+
+        for (int number : numbers) {
+            System.out.println(number);
+        }
+    }
+
+    /* ===========================
+       EFFECTIVELY FINAL VARIABLE
+       =========================== */
+
+    public void lambdaExample() {
+
+        int bonus = 100;
+
+        List<Integer> list = Arrays.asList(1,2,3);
+
+        list.forEach(x -> System.out.println(x + bonus));
+
+        // bonus = 200;
+        // Compile Error
+    }
+
+    /* ===========================
+       var (Java 10+)
+       =========================== */
+
+    public void varExample() {
+
+        var age = 25;
+        var name = "Anup";
+        var salary = 55000.50;
+
+        System.out.println(age);
+        System.out.println(name);
+        System.out.println(salary);
+    }
+
+    /* ===========================
+       MAIN METHOD
+       =========================== */
+
     public static void main(String[] args) {
-        // Initialize two separate objects to monitor memory isolation
-        JavaVariableMastery workerAlpha = new JavaVariableMastery(1001);
-        JavaVariableMastery workerBeta = new JavaVariableMastery(1002);
 
-        System.out.println("=== 1. Instance vs Class Variables ===");
-        workerAlpha.instanceStateName = "AlphaActive";
-        workerBeta.instanceStateName = "BetaActive";
-        
-        // Notice mutating workerAlpha does NOT touch workerBeta
-        System.out.println("Alpha Instance Variable: " + workerAlpha.instanceStateName);
-        System.out.println("Beta Instance Variable: " + workerBeta.instanceStateName);
+        JavaVariableMastery alpha = new JavaVariableMastery(1001);
+        JavaVariableMastery beta = new JavaVariableMastery(1002);
 
-        // Class variables are shared universally across all references
-        JavaVariableMastery.classSharedCounter = 500;
-        System.out.println("Class Variable accessed via Class Name: " + JavaVariableMastery.classSharedCounter);
+        alpha.instanceStateName = "Alpha";
+        beta.instanceStateName = "Beta";
 
-        System.out.println("\n=== 2. Blank Final Constraints ===");
-        System.out.println("Worker Alpha ID (Constant): " + workerAlpha.uniqueInstanceId);
-        System.out.println("Worker Beta ID (Constant): " + workerBeta.uniqueInstanceId);
-        // workerAlpha.uniqueInstanceId = 9999; // COMPILE ERROR: Cannot reassign final variable
+        System.out.println(alpha.instanceStateName);
+        System.out.println(beta.instanceStateName);
 
-        System.out.println("\n=== 3. Name Shadowing Mechanics ===");
-        workerAlpha.demonstrateShadowing();
+        classSharedCounter = 500;
 
-        System.out.println("\n=== 4. Parameter Execution ===");
-        workerAlpha.executeCalculation(10, 5);
+        System.out.println(classSharedCounter);
+
+        System.out.println(alpha.uniqueInstanceId);
+        System.out.println(beta.uniqueInstanceId);
+
+        alpha.demonstrateShadowing();
+
+        alpha.executeCalculation(10,5);
+
+        alpha.finalReferenceExample();
+
+        alpha.loopVariables();
+
+        alpha.enhancedForLoop();
+
+        alpha.lambdaExample();
+
+        alpha.varExample();
+
+        System.out.println(APPLICATION_NAME);
+    }
+}
+
+/* ===========================================
+   VARIABLE HIDING (Inheritance)
+   =========================================== */
+
+class Parent {
+
+    int value = 100;
+}
+
+class Child extends Parent {
+
+    int value = 200;
+
+    void display() {
+
+        System.out.println(value);
+
+        System.out.println(super.value);
     }
 }
