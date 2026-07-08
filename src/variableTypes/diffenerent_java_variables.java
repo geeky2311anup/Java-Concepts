@@ -12,10 +12,8 @@ public class JavaVariableMastery {
 
     public static int classSharedCounter = 100;
 
-    // Compile-time constant
     public static final String APPLICATION_NAME = "Variable Mastery";
 
-    // Static initialization block
     static {
         System.out.println("Static Block Executed Once");
     }
@@ -30,7 +28,18 @@ public class JavaVariableMastery {
 
     public final int uniqueInstanceId;
 
-    // Instance initialization block
+    // Default value examples
+    int defaultInt;
+    double defaultDouble;
+    boolean defaultBoolean;
+    String defaultString;
+
+    // Transient variable
+    transient String temporaryPassword = "12345";
+
+    // Volatile variable
+    volatile boolean isRunning = true;
+
     {
         System.out.println("Instance Initialization Block");
     }
@@ -73,12 +82,9 @@ public class JavaVariableMastery {
 
         fruits.add("Apple");
         fruits.add("Mango");
-
-        // Allowed
         fruits.add("Orange");
 
-        // Not Allowed
-        // fruits = new ArrayList<>();
+        // fruits = new ArrayList<>(); // Compile Error
 
         System.out.println(fruits);
     }
@@ -100,7 +106,7 @@ public class JavaVariableMastery {
 
     public void enhancedForLoop() {
 
-        int[] numbers = {10,20,30,40};
+        int[] numbers = {10, 20, 30, 40};
 
         for (int number : numbers) {
             System.out.println(number);
@@ -115,12 +121,11 @@ public class JavaVariableMastery {
 
         int bonus = 100;
 
-        List<Integer> list = Arrays.asList(1,2,3);
+        List<Integer> list = Arrays.asList(1, 2, 3);
 
         list.forEach(x -> System.out.println(x + bonus));
 
-        // bonus = 200;
-        // Compile Error
+        // bonus = 200; // Compile Error
     }
 
     /* ===========================
@@ -136,6 +141,59 @@ public class JavaVariableMastery {
         System.out.println(age);
         System.out.println(name);
         System.out.println(salary);
+    }
+
+    /* ===========================
+       DEFAULT VALUES
+       =========================== */
+
+    public void showDefaultValues() {
+
+        System.out.println("Default int      : " + defaultInt);
+        System.out.println("Default double   : " + defaultDouble);
+        System.out.println("Default boolean  : " + defaultBoolean);
+        System.out.println("Default String   : " + defaultString);
+    }
+
+    /* ===========================
+       VARIABLE SCOPE
+       =========================== */
+
+    public void scopeExample() {
+
+        int outer = 10;
+
+        if (outer > 5) {
+            int inner = 20;
+            System.out.println("Inner : " + inner);
+        }
+
+        System.out.println("Outer : " + outer);
+
+        // System.out.println(inner); // Compile Error
+    }
+
+    /* ===========================
+       NULL REFERENCE
+       =========================== */
+
+    public void nullReferenceExample() {
+
+        String text = null;
+
+        System.out.println(text);
+
+        // System.out.println(text.length()); // NullPointerException
+    }
+
+    /* ===========================
+       STATIC METHOD
+       =========================== */
+
+    public static void staticMethodExample() {
+
+        System.out.println(classSharedCounter);
+        System.out.println(APPLICATION_NAME);
     }
 
     /* ===========================
@@ -162,7 +220,7 @@ public class JavaVariableMastery {
 
         alpha.demonstrateShadowing();
 
-        alpha.executeCalculation(10,5);
+        alpha.executeCalculation(10, 5);
 
         alpha.finalReferenceExample();
 
@@ -174,7 +232,22 @@ public class JavaVariableMastery {
 
         alpha.varExample();
 
+        alpha.showDefaultValues();
+
+        alpha.scopeExample();
+
+        alpha.nullReferenceExample();
+
+        staticMethodExample();
+
+        System.out.println("Transient : " + alpha.temporaryPassword);
+
+        System.out.println("Volatile : " + alpha.isRunning);
+
         System.out.println(APPLICATION_NAME);
+
+        Child child = new Child();
+        child.display();
     }
 }
 
