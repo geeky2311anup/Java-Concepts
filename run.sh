@@ -1,29 +1,69 @@
-#!/bin/bash
-# Simple script to compile and run Java files
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.*;
+import java.util.stream.Stream;
 
-# Check if filename is provided
-if [ $# -eq 0 ]; then
-    echo "Usage: ./run.sh <JavaFileName>"
-    echo "Example: ./run.sh dataAbstraction"
-    exit 1
-fi
+public class Run {
 
-CLASS_NAME=$1
+    public static void main(String[] args) {
+        if (args.length != 1) {
+            System.out.println("Usage: java Run <ClassName>");
+            System.out.println("Example: java Run dataAbstraction");
+            return;
+        }
 
-# Find the java file
-JAVA_FILE=$(find src -name "${CLASS_NAME}.java" | head -1)
+        String className = args[0];
 
-if [ -z "$JAVA_FILE" ]; then
-    echo "Error: ${CLASS_NAME}.java not found in src directory"
-    exit 1
-fi
+        try {
+            Path javaFile = findJavaFile(Paths.get("src"), className + ".java");
 
-echo "Compiling $JAVA_FILE..."
-javac -d bin "$JAVA_FILE"
+            if (javaFile == null) {
+                System.out.println("Error: " + className + ".java not found in src/");
+                return;
+            }
 
-if [ $? -eq 0 ]; then
-    echo "Running $CLASS_NAME..."
-    java -cp bin $CLASS_NAME
-else
-    echo "Compilation failed!"
-fi
+            File binDir = new File("bin");
+            if (!binDir.exists()) {
+                binDir.mkdirs();
+            }
+
+            System.out.println("Compiling " + javaFile + "...");
+
+            Process compile = new ProcessBuilder(
+                    "javac",
+                    "-d",
+                    "bin",
+                    javaFile.toString()
+            ).inheritIO().start();
+
+            if (compile.waitFor() != 0) {
+                System.out.println("Compilation failed!");
+                return;
+            }
+
+            System.out.println("Running " + className + "...");
+
+            Process run = new ProcessBuilder(
+                    "java",
+                    "-cp",
+                    "bin",
+                    className
+            ).inheritIO().start();
+
+            run.waitFor();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private static Path findJavaFile(Path root, String fileName) throws IOException {
+        try (Stream<Path> paths = Files.walk(root)) {
+            return paths
+                    .filter(Files::isRegularFile)
+                    .filter(path -> path.getFileName().toString().equals(fileName))
+                    .findFirst()
+                    .orElse(null);
+        }
+    }
+}
