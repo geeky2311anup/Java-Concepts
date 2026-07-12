@@ -1,302 +1,169 @@
 // ===============================
-// MAXIMUM OF THREE NUMBERS
+// EVEN OR ODD
 // ===============================
 
-System.out.println("\n=== Maximum of Three Numbers ===");
+System.out.println("\n=== Even or Odd ===");
 
-int a = 12;
-int b = 45;
-int c = 30;
+int evenOdd = 27;
 
-int largest = Math.max(a, Math.max(b, c));
-
-System.out.println("Largest = " + largest);
-
-// ===============================
-// MINIMUM OF THREE NUMBERS
-// ===============================
-
-System.out.println("\n=== Minimum of Three Numbers ===");
-
-int smallest = Math.min(a, Math.min(b, c));
-
-System.out.println("Smallest = " + smallest);
-
-// ===============================
-// SQUARE & CUBE
-// ===============================
-
-System.out.println("\n=== Square and Cube ===");
-
-int value1 = 6;
-
-System.out.println("Square = " + (value1 * value1));
-System.out.println("Cube = " + (value1 * value1 * value1));
-
-// ===============================
-// ASCII VALUE
-// ===============================
-
-System.out.println("\n=== ASCII Value ===");
-
-char ch = 'A';
-
-System.out.println("Character = " + ch);
-System.out.println("ASCII = " + (int) ch);
-
-// ===============================
-// ASCII TO CHARACTER
-// ===============================
-
-System.out.println("\n=== ASCII to Character ===");
-
-int ascii = 97;
-
-System.out.println("Character = " + (char) ascii);
-
-// ===============================
-// CHARACTER CASE CHECK
-// ===============================
-
-System.out.println("\n=== Character Case Check ===");
-
-char letter = 'G';
-
-if (Character.isUpperCase(letter))
-    System.out.println(letter + " is Uppercase");
+if (evenOdd % 2 == 0)
+    System.out.println(evenOdd + " is Even");
 else
-    System.out.println(letter + " is Lowercase");
+    System.out.println(evenOdd + " is Odd");
 
 // ===============================
-// VOWEL OR CONSONANT
+// SWAP TWO NUMBERS
 // ===============================
 
-System.out.println("\n=== Vowel or Consonant ===");
+System.out.println("\n=== Swap Two Numbers ===");
 
-char alphabet = 'e';
+int first = 10;
+int second = 20;
 
-if ("aeiouAEIOU".indexOf(alphabet) != -1)
-    System.out.println(alphabet + " is a Vowel");
-else
-    System.out.println(alphabet + " is a Consonant");
+System.out.println("Before Swap: " + first + " " + second);
 
-// ===============================
-// POSITIVE NEGATIVE OR ZERO
-// ===============================
+int temp = first;
+first = second;
+second = temp;
 
-System.out.println("\n=== Positive Negative or Zero ===");
-
-int num = -12;
-
-if (num > 0)
-    System.out.println("Positive");
-else if (num < 0)
-    System.out.println("Negative");
-else
-    System.out.println("Zero");
+System.out.println("After Swap: " + first + " " + second);
 
 // ===============================
-// ABSOLUTE VALUE
+// MAX OF TWO NUMBERS
 // ===============================
 
-System.out.println("\n=== Absolute Value ===");
+System.out.println("\n=== Maximum of Two Numbers ===");
 
-int negative = -45;
+int num1 = 35;
+int num2 = 18;
 
-System.out.println("Absolute = " + Math.abs(negative));
-
-// ===============================
-// POWER USING Math.pow()
-// ===============================
-
-System.out.println("\n=== Power Function ===");
-
-int base = 3;
-int exponent = 4;
-
-System.out.println(base + "^" + exponent + " = " + Math.pow(base, exponent));
+System.out.println("Maximum = " + Math.max(num1, num2));
 
 // ===============================
-// SQUARE ROOT
+// MIN OF TWO NUMBERS
 // ===============================
 
-System.out.println("\n=== Square Root ===");
+System.out.println("\n=== Minimum of Two Numbers ===");
 
-double number1 = 144;
-
-System.out.println("Square Root = " + Math.sqrt(number1));
+System.out.println("Minimum = " + Math.min(num1, num2));
 
 // ===============================
-// CEIL FLOOR ROUND
+// CHARACTER IS DIGIT
 // ===============================
 
-System.out.println("\n=== Ceil Floor Round ===");
+System.out.println("\n=== Character is Digit ===");
 
-double decimal = 15.67;
+char digitChar = '8';
 
-System.out.println("Floor = " + Math.floor(decimal));
-System.out.println("Ceil = " + Math.ceil(decimal));
-System.out.println("Round = " + Math.round(decimal));
+System.out.println(Character.isDigit(digitChar));
 
 // ===============================
-// RANDOM DOUBLE
+// CHARACTER IS LETTER
 // ===============================
 
-System.out.println("\n=== Random Double ===");
+System.out.println("\n=== Character is Letter ===");
 
-double randomDouble = Math.random();
+char alpha = 'Z';
 
-System.out.println("Random = " + randomDouble);
-
-// ===============================
-// BOOLEAN OPERATORS
-// ===============================
-
-System.out.println("\n=== Boolean Operators ===");
-
-boolean x = true;
-boolean y = false;
-
-System.out.println("x && y = " + (x && y));
-System.out.println("x || y = " + (x || y));
-System.out.println("!x = " + (!x));
+System.out.println(Character.isLetter(alpha));
 
 // ===============================
-// TYPE CASTING
+// CHARACTER TO UPPERCASE
 // ===============================
 
-System.out.println("\n=== Type Casting ===");
+System.out.println("\n=== Character to Uppercase ===");
 
-double price = 199.99;
+char lower = 'g';
 
-int whole = (int) price;
-
-System.out.println("Double = " + price);
-System.out.println("Integer = " + whole);
+System.out.println(Character.toUpperCase(lower));
 
 // ===============================
-// INTEGER DIVISION
+// CHARACTER TO LOWERCASE
 // ===============================
 
-System.out.println("\n=== Integer Division ===");
+System.out.println("\n=== Character to Lowercase ===");
 
-int dividend = 17;
-int divisor = 5;
+char upper = 'P';
 
-System.out.println("Quotient = " + (dividend / divisor));
-System.out.println("Remainder = " + (dividend % divisor));
+System.out.println(Character.toLowerCase(upper));
 
 // ===============================
-// BOOLEAN COMPARISON
+// MAX & MIN INTEGER VALUE
 // ===============================
 
-System.out.println("\n=== Boolean Comparison ===");
+System.out.println("\n=== Integer Limits ===");
 
-int age = 20;
-
-boolean eligible = age >= 18;
-
-System.out.println("Eligible to Vote = " + eligible);
+System.out.println("Maximum Integer = " + Integer.MAX_VALUE);
+System.out.println("Minimum Integer = " + Integer.MIN_VALUE);
 
 // ===============================
-// STRING TO NUMBER
+// RANDOM INTEGER
 // ===============================
 
-System.out.println("\n=== String to Number ===");
+System.out.println("\n=== Random Integer ===");
 
-String text = "250";
+int randomInt = (int) (Math.random() * 100) + 1;
 
-int integerValue = Integer.parseInt(text);
-
-System.out.println(integerValue + 50);
+System.out.println("Random Number = " + randomInt);
 
 // ===============================
-// NUMBER TO STRING
+// INCREMENT & DECREMENT
 // ===============================
 
-System.out.println("\n=== Number to String ===");
+System.out.println("\n=== Increment and Decrement ===");
 
-int score = 95;
+int count = 5;
 
-String scoreText = String.valueOf(score);
-
-System.out.println(scoreText + " Marks");
-
-// ===============================
-// DIGIT COUNT
-// ===============================
-
-System.out.println("\n=== Count Digits ===");
-
-int digitNumber = 987654;
-
-int digits = String.valueOf(digitNumber).length();
-
-System.out.println("Digits = " + digits);
+System.out.println("Original = " + count);
+System.out.println("After Increment = " + (++count));
+System.out.println("After Decrement = " + (--count));
 
 // ===============================
-// REVERSE SIGN
+// AREA OF CIRCLE
 // ===============================
 
-System.out.println("\n=== Reverse Sign ===");
+System.out.println("\n=== Area of Circle ===");
 
-int original = 40;
+double radius = 7;
 
-System.out.println("Original = " + original);
-System.out.println("Negative = " + (-original));
+double area = Math.PI * radius * radius;
 
-// ===============================
-// IS DIVISIBLE
-// ===============================
-
-System.out.println("\n=== Divisibility Check ===");
-
-int check = 36;
-
-System.out.println("Divisible by 3 = " + (check % 3 == 0));
-System.out.println("Divisible by 5 = " + (check % 5 == 0));
+System.out.println("Area = " + area);
 
 // ===============================
-// HYPOTENUSE
+// SIMPLE INTEREST
 // ===============================
 
-System.out.println("\n=== Hypotenuse ===");
+System.out.println("\n=== Simple Interest ===");
 
-double side1 = 3;
-double side2 = 4;
+double principal = 10000;
+double rate = 7.5;
+double time = 2;
 
-double hypotenuse = Math.hypot(side1, side2);
+double interest = (principal * rate * time) / 100;
 
-System.out.println("Hypotenuse = " + hypotenuse);
-
-// ===============================
-// CLAMP VALUE
-// ===============================
-
-System.out.println("\n=== Clamp Value ===");
-
-int input = 125;
-
-int clamped = Math.max(0, Math.min(100, input));
-
-System.out.println("Clamped Value = " + clamped);
+System.out.println("Simple Interest = " + interest);
 
 // ===============================
-// DEGREE TO RADIAN
+// LEAP YEAR CHECK
 // ===============================
 
-System.out.println("\n=== Degree to Radian ===");
+System.out.println("\n=== Leap Year Check ===");
 
-double degree = 180;
+int year = 2024;
 
-System.out.println("Radians = " + Math.toRadians(degree));
+boolean leap = (year % 400 == 0) || (year % 4 == 0 && year % 100 != 0);
+
+System.out.println(year + " is Leap Year = " + leap);
 
 // ===============================
-// RADIAN TO DEGREE
+// TEMPERATURE CONVERSION
 // ===============================
 
-System.out.println("\n=== Radian to Degree ===");
+System.out.println("\n=== Celsius to Fahrenheit ===");
 
-double radian = Math.PI;
+double celsius = 37;
 
-System.out.println("Degrees = " + Math.toDegrees(radian));
+double fahrenheit = (celsius * 9 / 5) + 32;
+
+System.out.println("Fahrenheit = " + fahrenheit);
