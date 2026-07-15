@@ -1,48 +1,28 @@
- class Solution {
+class Solution {
+
+    private int getMax(int first, int second) {
+        return first > second ? first : second;
+    }
 
     public int pairSum(ListNode head) {
 
+        List<Integer> values = new ArrayList<>();
+        ListNode current = head;
 
-
-        List<Integer> nodeValues = new ArrayList<>();
-
-
-
-        ListNode walker = head;
-
-        while (walker != null) {
-
-            nodeValues.add(walker.val);
-
-            walker = walker.next;
-
+        while (current != null) {
+            values.add(current.val);
+            current = current.next;
         }
 
+        int n = values.size();
+        int maxTwin = 0;
 
-
-        int answer = 0;
-
-        int size = nodeValues.size();
-
-
-
-        for (int i = 0; i < size / 2; i++) {
-
-            int twinSum = nodeValues.get(i) + nodeValues.get(size - i - 1);
-
-            answer = Math.max(answer, twinSum);
-
+        for (int left = 0; left < n / 2; left++) {
+            int right = n - left - 1;
+            int sum = values.get(left) + values.get(right);
+            maxTwin = getMax(maxTwin, sum);
         }
 
-
-
-        return answer;
-
+        return maxTwin;
     }
-
 }
-
-
-
-
-
