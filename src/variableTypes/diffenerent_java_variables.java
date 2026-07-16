@@ -1,273 +1,96 @@
-package variableTypes;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
-public class JavaVariableMastery {
-
-    /* ===========================
-       STATIC VARIABLES
+   /* ===========================
+       WRAPPER CLASS VARIABLES
        =========================== */
 
-    public static int classSharedCounter = 100;
+    public void wrapperExample() {
 
-    public static final String APPLICATION_NAME = "Variable Mastery";
+        Integer number = 50;
+        Double price = 99.99;
+        Character grade = 'A';
 
-    static {
-        System.out.println("Static Block Executed Once");
+        System.out.println(number);
+        System.out.println(price);
+        System.out.println(grade);
     }
 
     /* ===========================
-       INSTANCE VARIABLES
+       ARRAY VARIABLE
        =========================== */
 
-    public String instanceStateName = "DefaultState";
+    public void arrayExample() {
 
-    public final double PI_CONSTANT = 3.141592653589793;
+        String[] cities = {"Delhi", "Mumbai", "Pune"};
 
-    public final int uniqueInstanceId;
-
-    // Default value examples
-    int defaultInt;
-    double defaultDouble;
-    boolean defaultBoolean;
-    String defaultString;
-
-    // Transient variable
-    transient String temporaryPassword = "12345";
-
-    // Volatile variable
-    volatile boolean isRunning = true;
-
-    {
-        System.out.println("Instance Initialization Block");
-    }
-
-    public JavaVariableMastery(int assignedId) {
-        this.uniqueInstanceId = assignedId;
-    }
-
-    /* ===========================
-       PARAMETER & LOCAL VARIABLES
-       =========================== */
-
-    public void executeCalculation(int inputFactor, int multiplier) {
-
-        int computationalResult = inputFactor * multiplier;
-
-        System.out.println("Result : " + computationalResult);
-    }
-
-    /* ===========================
-       SHADOWING
-       =========================== */
-
-    public void demonstrateShadowing() {
-
-        String instanceStateName = "Local Variable";
-
-        System.out.println(instanceStateName);
-
-        System.out.println(this.instanceStateName);
-    }
-
-    /* ===========================
-       FINAL REFERENCE VARIABLE
-       =========================== */
-
-    public void finalReferenceExample() {
-
-        final List<String> fruits = new ArrayList<>();
-
-        fruits.add("Apple");
-        fruits.add("Mango");
-        fruits.add("Orange");
-
-        // fruits = new ArrayList<>(); // Compile Error
-
-        System.out.println(fruits);
-    }
-
-    /* ===========================
-       LOOP VARIABLES
-       =========================== */
-
-    public void loopVariables() {
-
-        for (int i = 1; i <= 5; i++) {
-            System.out.println("Loop Variable : " + i);
+        for (String city : cities) {
+            System.out.println(city);
         }
     }
 
     /* ===========================
-       ENHANCED FOR LOOP
+       TYPE CASTING VARIABLES
        =========================== */
 
-    public void enhancedForLoop() {
+    public void typeCastingExample() {
 
-        int[] numbers = {10, 20, 30, 40};
+        double marks = 95.75;
+        int roundedMarks = (int) marks;
 
-        for (int number : numbers) {
-            System.out.println(number);
-        }
+        System.out.println(marks);
+        System.out.println(roundedMarks);
     }
 
     /* ===========================
-       EFFECTIVELY FINAL VARIABLE
+       CONSTANT USING FINAL
        =========================== */
 
-    public void lambdaExample() {
+    public void constantExample() {
 
-        int bonus = 100;
+        final int DAYS_IN_WEEK = 7;
 
-        List<Integer> list = Arrays.asList(1, 2, 3);
-
-        list.forEach(x -> System.out.println(x + bonus));
-
-        // bonus = 200; // Compile Error
+        System.out.println(DAYS_IN_WEEK);
     }
 
     /* ===========================
-       var (Java 10+)
+       STATIC LOCAL OBJECT
        =========================== */
 
-    public void varExample() {
+    public void objectVariableExample() {
 
-        var age = 25;
-        var name = "Anup";
-        var salary = 55000.50;
+        Student student = new Student("Anup", 21);
 
-        System.out.println(age);
-        System.out.println(name);
-        System.out.println(salary);
+        System.out.println(student);
     }
 
-    /* ===========================
-       DEFAULT VALUES
-       =========================== */
+Then call them in main():
 
-    public void showDefaultValues() {
+        alpha.wrapperExample();
 
-        System.out.println("Default int      : " + defaultInt);
-        System.out.println("Default double   : " + defaultDouble);
-        System.out.println("Default boolean  : " + defaultBoolean);
-        System.out.println("Default String   : " + defaultString);
-    }
+        alpha.arrayExample();
 
-    /* ===========================
-       VARIABLE SCOPE
-       =========================== */
+        alpha.typeCastingExample();
 
-    public void scopeExample() {
+        alpha.constantExample();
 
-        int outer = 10;
+        alpha.objectVariableExample();
 
-        if (outer > 5) {
-            int inner = 20;
-            System.out.println("Inner : " + inner);
-        }
-
-        System.out.println("Outer : " + outer);
-
-        // System.out.println(inner); // Compile Error
-    }
-
-    /* ===========================
-       NULL REFERENCE
-       =========================== */
-
-    public void nullReferenceExample() {
-
-        String text = null;
-
-        System.out.println(text);
-
-        // System.out.println(text.length()); // NullPointerException
-    }
-
-    /* ===========================
-       STATIC METHOD
-       =========================== */
-
-    public static void staticMethodExample() {
-
-        System.out.println(classSharedCounter);
-        System.out.println(APPLICATION_NAME);
-    }
-
-    /* ===========================
-       MAIN METHOD
-       =========================== */
-
-    public static void main(String[] args) {
-
-        JavaVariableMastery alpha = new JavaVariableMastery(1001);
-        JavaVariableMastery beta = new JavaVariableMastery(1002);
-
-        alpha.instanceStateName = "Alpha";
-        beta.instanceStateName = "Beta";
-
-        System.out.println(alpha.instanceStateName);
-        System.out.println(beta.instanceStateName);
-
-        classSharedCounter = 500;
-
-        System.out.println(classSharedCounter);
-
-        System.out.println(alpha.uniqueInstanceId);
-        System.out.println(beta.uniqueInstanceId);
-
-        alpha.demonstrateShadowing();
-
-        alpha.executeCalculation(10, 5);
-
-        alpha.finalReferenceExample();
-
-        alpha.loopVariables();
-
-        alpha.enhancedForLoop();
-
-        alpha.lambdaExample();
-
-        alpha.varExample();
-
-        alpha.showDefaultValues();
-
-        alpha.scopeExample();
-
-        alpha.nullReferenceExample();
-
-        staticMethodExample();
-
-        System.out.println("Transient : " + alpha.temporaryPassword);
-
-        System.out.println("Volatile : " + alpha.isRunning);
-
-        System.out.println(APPLICATION_NAME);
-
-        Child child = new Child();
-        child.display();
-    }
-}
+Finally, add this class at the end of the same file (after Child):
 
 /* ===========================================
-   VARIABLE HIDING (Inheritance)
+   STUDENT CLASS
    =========================================== */
 
-class Parent {
+class Student {
 
-    int value = 100;
-}
+    String name;
+    int age;
 
-class Child extends Parent {
+    Student(String name, int age) {
+        this.name = name;
+        this.age = age;
+    }
 
-    int value = 200;
-
-    void display() {
-
-        System.out.println(value);
-
-        System.out.println(super.value);
+    @Override
+    public String toString() {
+        return "Student{name='" + name + "', age=" + age + "}";
     }
 }
