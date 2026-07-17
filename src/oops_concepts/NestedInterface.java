@@ -1,18 +1,79 @@
-Your example already covers:
+interface Bird {
 
-Nested interfaces inside interfaces
-Nested interfaces inside classes
-Private nested interfaces
-Static nested interfaces
-Default methods
-Static methods
-Anonymous class implementations
+    void fly();
 
-Here are a few more advanced things you can add.
+    interface NonFlyingBird {
+        void run();
+    }
 
-1. Interface extending a nested interface
+    interface WaterBird {
+        void swim();
+    }
+
+    default void info() {
+        System.out.println("This is a bird.");
+    }
+
+    static void category() {
+        System.out.println("Birds belong to Aves.");
+    }
+}
+
+// Interface extending nested interface
 interface AdvancedBird extends Bird.WaterBird {
     void dive();
+}
+
+class Parrot implements Bird {
+    @Override
+    public void fly() {
+        System.out.println("Parrot can fly");
+    }
+}
+
+class Eagle implements Bird {
+    @Override
+    public void fly() {
+        System.out.println("Eagle flies high");
+    }
+}
+
+class Ostrich implements Bird.NonFlyingBird {
+    @Override
+    public void run() {
+        System.out.println("Ostrich runs fast");
+    }
+}
+
+class Duck implements Bird, Bird.WaterBird {
+
+    @Override
+    public void fly() {
+        System.out.println("Duck flies");
+    }
+
+    @Override
+    public void swim() {
+        System.out.println("Duck swims");
+    }
+}
+
+class Swan implements Bird, Bird.WaterBird, Bird.NonFlyingBird {
+
+    @Override
+    public void fly() {
+        System.out.println("Swan flies");
+    }
+
+    @Override
+    public void swim() {
+        System.out.println("Swan swims");
+    }
+
+    @Override
+    public void run() {
+        System.out.println("Swan runs");
+    }
 }
 
 class Penguin implements AdvancedBird {
@@ -28,12 +89,36 @@ class Penguin implements AdvancedBird {
     }
 }
 
-Usage:
+class Dog {
 
-Penguin p = new Penguin();
-p.swim();
-p.dive();
-2. Nested interface extending another nested interface
+    public void bark() {
+        System.out.println("Dog barks");
+    }
+
+    private interface Pet {
+        void play();
+    }
+
+    static interface GuardDog {
+        void protect();
+    }
+
+    class Puppy implements Pet {
+        @Override
+        public void play() {
+            System.out.println("Puppy plays");
+        }
+    }
+
+    static class GermanShepherd implements GuardDog {
+        @Override
+        public void protect() {
+            System.out.println("German Shepherd protects the house");
+        }
+    }
+}
+
+// Nested interface extending another nested interface
 interface Animal {
 
     interface Walker {
@@ -57,10 +142,8 @@ class Horse implements Animal.Runner {
         System.out.println("Horse runs");
     }
 }
-3. Lambda expression with nested interface
 
-Because nested interfaces are implicitly static, they can be used as functional interfaces.
-
+// Functional nested interface
 interface Machine {
 
     interface Switch {
@@ -68,36 +151,22 @@ interface Machine {
     }
 }
 
-Usage:
-
-Machine.Switch sw = () -> System.out.println("Machine turned ON");
-
-sw.turnOn();
-4. Multiple nested interfaces implemented together
-class Swan implements Bird, Bird.WaterBird, Bird.NonFlyingBird {
-
-    @Override
-    public void fly() {
-        System.out.println("Swan flies");
-    }
-
-    @Override
-    public void swim() {
-        System.out.println("Swan swims");
-    }
-
-    @Override
-    public void run() {
-        System.out.println("Swan runs");
-    }
-}
-5. Nested interface inside another nested interface
+// Nested interface inside another nested interface
 interface Vehicle {
 
     interface Engine {
 
         interface Electric {
             void charge();
+        }
+    }
+
+    interface Electric {
+
+        void charge();
+
+        default void batteryStatus() {
+            System.out.println("Battery is healthy");
         }
     }
 }
@@ -110,11 +179,15 @@ class Tesla implements Vehicle.Engine.Electric {
     }
 }
 
-Usage:
+class EVCar implements Vehicle.Electric {
 
-Tesla t = new Tesla();
-t.charge();
-6. Static method inside nested interface
+    @Override
+    public void charge() {
+        System.out.println("Charging EV...");
+    }
+}
+
+// Static method inside nested interface
 interface Shape {
 
     interface Calculator {
@@ -125,38 +198,71 @@ interface Shape {
     }
 }
 
-Usage:
+public class NestedInterfaceDemo {
 
-System.out.println(Shape.Calculator.square(5));
+    public static void main(String[] args) {
 
-Output:
+        Parrot parrot = new Parrot();
+        parrot.fly();
+        parrot.info();
 
-25
-7. Default method inside nested interface
-interface Vehicle {
+        Eagle eagle = new Eagle();
+        eagle.fly();
 
-    interface Electric {
+        Ostrich ostrich = new Ostrich();
+        ostrich.run();
 
-        void charge();
+        Duck duck = new Duck();
+        duck.fly();
+        duck.swim();
 
-        default void batteryStatus() {
-            System.out.println("Battery is healthy");
-        }
+        Swan swan = new Swan();
+        swan.fly();
+        swan.swim();
+        swan.run();
+
+        Penguin penguin = new Penguin();
+        penguin.swim();
+        penguin.dive();
+
+        Bird.category();
+
+        Dog dog = new Dog();
+        dog.bark();
+
+        Dog.Puppy puppy = dog.new Puppy();
+        puppy.play();
+
+        Dog.GermanShepherd guardDog = new Dog.GermanShepherd();
+        guardDog.protect();
+
+        // Anonymous class
+        Bird.NonFlyingBird kiwi = new Bird.NonFlyingBird() {
+            @Override
+            public void run() {
+                System.out.println("Kiwi runs");
+            }
+        };
+        kiwi.run();
+
+        // Lambda expression
+        Machine.Switch sw = () -> System.out.println("Machine turned ON");
+        sw.turnOn();
+
+        Bird.NonFlyingBird emu = () -> System.out.println("Emu runs very fast");
+        emu.run();
+
+        Horse horse = new Horse();
+        horse.walk();
+        horse.run();
+
+        Tesla tesla = new Tesla();
+        tesla.charge();
+
+        EVCar car = new EVCar();
+        car.charge();
+        car.batteryStatus();
+
+        System.out.println("Square of 5 = " + Shape.Calculator.square(5));
     }
 }
-
-Implementation:
-
-class EVCar implements Vehicle.Electric {
-
-    @Override
-    public void charge() {
-        System.out.println("Charging...");
-    }
-}
-
-Usage:
-
-EVCar car = new EVCar();
-car.charge();
-car.batteryStatus();
