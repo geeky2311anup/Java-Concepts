@@ -1,4 +1,5 @@
 interface Bird {
+
     void fly();
 
     interface NonFlyingBird {
@@ -54,6 +55,13 @@ class Parrot implements Bird {
     }
 }
 
+class Eagle implements Bird {
+    @Override
+    public void fly() {
+        System.out.println("Eagle flies at high altitude");
+    }
+}
+
 class Ostrich implements Bird.NonFlyingBird {
     @Override
     public void run() {
@@ -74,18 +82,27 @@ class Duck implements Bird, Bird.WaterBird {
     }
 }
 
+class Swan implements Bird.WaterBird {
+    @Override
+    public void swim() {
+        System.out.println("Swan swims gracefully");
+    }
+}
+
 public class NestedInterfaceDemo {
 
     public static void main(String[] args) {
 
-        // Nested interface implementation
+        // Parrot
         Parrot p = new Parrot();
         p.fly();
         p.info();
 
+        // Ostrich
         Ostrich o = new Ostrich();
         o.run();
 
+        // Duck
         Duck d = new Duck();
         d.fly();
         d.swim();
@@ -93,25 +110,50 @@ public class NestedInterfaceDemo {
         // Static interface method
         Bird.category();
 
-        // Inner class implementing private interface
+        // Dog examples
         Dog dog = new Dog();
         dog.bark();
 
         Dog.Puppy puppy = dog.new Puppy();
         puppy.play();
 
-        // Static nested class implementing nested interface
         Dog.GermanShepherd gs = new Dog.GermanShepherd();
         gs.protect();
 
-        // Anonymous implementation of nested interface
+        // Interface reference
+        Bird bird = new Eagle();
+        bird.fly();
+        bird.info();
+
+        // WaterBird reference
+        Bird.WaterBird swan = new Swan();
+        swan.swim();
+
+        // Anonymous implementation
         Bird.NonFlyingBird penguin = new Bird.NonFlyingBird() {
             @Override
             public void run() {
                 System.out.println("Penguin waddles and runs");
             }
         };
-
         penguin.run();
+
+        // Anonymous Bird implementation
+        Bird sparrow = new Bird() {
+            @Override
+            public void fly() {
+                System.out.println("Sparrow flies quickly");
+            }
+        };
+        sparrow.fly();
+        sparrow.info();
+
+        // Lambda expression (functional interface)
+        Bird.NonFlyingBird emu = () -> System.out.println("Emu runs very fast");
+        emu.run();
+
+        // Interface reference to static nested class
+        Dog.GuardDog guard = new Dog.GermanShepherd();
+        guard.protect();
     }
 }
