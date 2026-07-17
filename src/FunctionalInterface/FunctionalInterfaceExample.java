@@ -1,46 +1,50 @@
+class Solution {
 
-//functional interface is an interface that contains only one abstract method also known as Single Abstract Method(SAM) interface
-@FunctionalInterface          //this annotation is optional but it is good practice to use it
-interface LivingThings{           //functional interface
-    public void canBreathe();      //abstract method
-}
-@FunctionalInterface          //this annotation is optional but it is good practice to use it
-interface NonLivingThings{
-    public void canDecay();       //abstract method
-    //public void canBreak();     //if we uncomment this line then it will give error because functional interface can have only one abstract method and @FunctionalInterface annotation will check this condition
-}
+    public long countMajoritySubarrays(int[] nums, int target) {
+        int len = nums.length;
+        int balance = len;
 
-interface Mammals{
-    public void canWalk();       //abstract method
-    default boolean canSleep(){//we can have default method in functional interface
-        return true;
+        int[] count = new int[2 * len + 1];
+        count[len] = 1;
+
+        long validSubarrays = 0;
+        long current = 0;
+
+        for (int value : nums) {
+            if (value == target) {
+                current += count[balance];
+                balance++;
+            } else {
+                balance--;
+                current -= count[balance];
+            }
+
+            count[balance]++;
+            validSubarrays += current;
+        }
+
+        return validSubarrays;
     }
-    static boolean hasCells(){ //we can have static method in functional interface
-        return true;
+
+    // Helper method
+    private int arrayLength(int[] arr) {
+        return arr == null ? 0 : arr.length;
     }
 
-    String toString(); //we can have methods of Object class in functional interface
-}
-class Dog implements Mammals{
-    @Override
-    public void canWalk(){
-        System.out.println("Dog can walk");
+    // Helper method
+    private boolean isTarget(int value, int target) {
+        return value == target;
     }
-}
 
-//functional interface extends functional interface
-@FunctionalInterface
-interface Canine extends LivingThings{
-    //public void canBark();//if we uncomment this will give error because functional interface can have only one abstract method
-    public void canBreathe();//this will not give error because it is same as canBreathe() method of LivingThings interface
-}
+    // Utility method
+    private int clamp(int value, int low, int high) {
+        if (value < low) return low;
+        if (value > high) return high;
+        return value;
+    }
 
-public class FunctionalInterfaceExample{
-    public static void main(String[] args ){
-        Dog lebrador = new Dog();
-        lebrador.canWalk();
-        System.out.println("Dog can sleep: " + lebrador.canSleep());
-
-        System.out.println("Dog has cells: " + Mammals.hasCells()); // static methods are NOT inherited by implementing class, must use interface name
+    // Utility method
+    private long square(long x) {
+        return x * x;
     }
 }

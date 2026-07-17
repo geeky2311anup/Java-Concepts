@@ -19,6 +19,76 @@ interface Bird {
     }
 }
 
+// Interface extending nested interface
+interface AdvancedBird extends Bird.WaterBird {
+    void dive();
+}
+
+class Parrot implements Bird {
+    @Override
+    public void fly() {
+        System.out.println("Parrot can fly");
+    }
+}
+
+class Eagle implements Bird {
+    @Override
+    public void fly() {
+        System.out.println("Eagle flies high");
+    }
+}
+
+class Ostrich implements Bird.NonFlyingBird {
+    @Override
+    public void run() {
+        System.out.println("Ostrich runs fast");
+    }
+}
+
+class Duck implements Bird, Bird.WaterBird {
+
+    @Override
+    public void fly() {
+        System.out.println("Duck flies");
+    }
+
+    @Override
+    public void swim() {
+        System.out.println("Duck swims");
+    }
+}
+
+class Swan implements Bird, Bird.WaterBird, Bird.NonFlyingBird {
+
+    @Override
+    public void fly() {
+        System.out.println("Swan flies");
+    }
+
+    @Override
+    public void swim() {
+        System.out.println("Swan swims");
+    }
+
+    @Override
+    public void run() {
+        System.out.println("Swan runs");
+    }
+}
+
+class Penguin implements AdvancedBird {
+
+    @Override
+    public void swim() {
+        System.out.println("Penguin swims");
+    }
+
+    @Override
+    public void dive() {
+        System.out.println("Penguin dives deep");
+    }
+}
+
 class Dog {
 
     public void bark() {
@@ -48,44 +118,83 @@ class Dog {
     }
 }
 
-class Parrot implements Bird {
-    @Override
-    public void fly() {
-        System.out.println("Parrot can fly");
+// Nested interface extending another nested interface
+interface Animal {
+
+    interface Walker {
+        void walk();
+    }
+
+    interface Runner extends Walker {
+        void run();
     }
 }
 
-class Eagle implements Bird {
-    @Override
-    public void fly() {
-        System.out.println("Eagle flies at high altitude");
-    }
-}
+class Horse implements Animal.Runner {
 
-class Ostrich implements Bird.NonFlyingBird {
+    @Override
+    public void walk() {
+        System.out.println("Horse walks");
+    }
+
     @Override
     public void run() {
-        System.out.println("Ostrich can run");
+        System.out.println("Horse runs");
     }
 }
 
-class Duck implements Bird, Bird.WaterBird {
+// Functional nested interface
+interface Machine {
 
-    @Override
-    public void fly() {
-        System.out.println("Duck can fly");
-    }
-
-    @Override
-    public void swim() {
-        System.out.println("Duck can swim");
+    interface Switch {
+        void turnOn();
     }
 }
 
-class Swan implements Bird.WaterBird {
+// Nested interface inside another nested interface
+interface Vehicle {
+
+    interface Engine {
+
+        interface Electric {
+            void charge();
+        }
+    }
+
+    interface Electric {
+
+        void charge();
+
+        default void batteryStatus() {
+            System.out.println("Battery is healthy");
+        }
+    }
+}
+
+class Tesla implements Vehicle.Engine.Electric {
+
     @Override
-    public void swim() {
-        System.out.println("Swan swims gracefully");
+    public void charge() {
+        System.out.println("Tesla charging");
+    }
+}
+
+class EVCar implements Vehicle.Electric {
+
+    @Override
+    public void charge() {
+        System.out.println("Charging EV...");
+    }
+}
+
+// Static method inside nested interface
+interface Shape {
+
+    interface Calculator {
+
+        static int square(int x) {
+            return x * x;
+        }
     }
 }
 
@@ -93,67 +202,67 @@ public class NestedInterfaceDemo {
 
     public static void main(String[] args) {
 
-        // Parrot
-        Parrot p = new Parrot();
-        p.fly();
-        p.info();
+        Parrot parrot = new Parrot();
+        parrot.fly();
+        parrot.info();
 
-        // Ostrich
-        Ostrich o = new Ostrich();
-        o.run();
+        Eagle eagle = new Eagle();
+        eagle.fly();
 
-        // Duck
-        Duck d = new Duck();
-        d.fly();
-        d.swim();
+        Ostrich ostrich = new Ostrich();
+        ostrich.run();
 
-        // Static interface method
+        Duck duck = new Duck();
+        duck.fly();
+        duck.swim();
+
+        Swan swan = new Swan();
+        swan.fly();
+        swan.swim();
+        swan.run();
+
+        Penguin penguin = new Penguin();
+        penguin.swim();
+        penguin.dive();
+
         Bird.category();
 
-        // Dog examples
         Dog dog = new Dog();
         dog.bark();
 
         Dog.Puppy puppy = dog.new Puppy();
         puppy.play();
 
-        Dog.GermanShepherd gs = new Dog.GermanShepherd();
-        gs.protect();
+        Dog.GermanShepherd guardDog = new Dog.GermanShepherd();
+        guardDog.protect();
 
-        // Interface reference
-        Bird bird = new Eagle();
-        bird.fly();
-        bird.info();
-
-        // WaterBird reference
-        Bird.WaterBird swan = new Swan();
-        swan.swim();
-
-        // Anonymous implementation
-        Bird.NonFlyingBird penguin = new Bird.NonFlyingBird() {
+        // Anonymous class
+        Bird.NonFlyingBird kiwi = new Bird.NonFlyingBird() {
             @Override
             public void run() {
-                System.out.println("Penguin waddles and runs");
+                System.out.println("Kiwi runs");
             }
         };
-        penguin.run();
+        kiwi.run();
 
-        // Anonymous Bird implementation
-        Bird sparrow = new Bird() {
-            @Override
-            public void fly() {
-                System.out.println("Sparrow flies quickly");
-            }
-        };
-        sparrow.fly();
-        sparrow.info();
+        // Lambda expression
+        Machine.Switch sw = () -> System.out.println("Machine turned ON");
+        sw.turnOn();
 
-        // Lambda expression (functional interface)
         Bird.NonFlyingBird emu = () -> System.out.println("Emu runs very fast");
         emu.run();
 
-        // Interface reference to static nested class
-        Dog.GuardDog guard = new Dog.GermanShepherd();
-        guard.protect();
+        Horse horse = new Horse();
+        horse.walk();
+        horse.run();
+
+        Tesla tesla = new Tesla();
+        tesla.charge();
+
+        EVCar car = new EVCar();
+        car.charge();
+        car.batteryStatus();
+
+        System.out.println("Square of 5 = " + Shape.Calculator.square(5));
     }
 }
