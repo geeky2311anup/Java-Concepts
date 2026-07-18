@@ -4,25 +4,31 @@ class Solution {
         return first > second ? first : second;
     }
 
+    private List<Integer> storeValues(ListNode head) {
+        List<Integer> list = new ArrayList<>();
+        while (head != null) {
+            list.add(head.val);
+            head = head.next;
+        }
+        return list;
+    }
+
     public int pairSum(ListNode head) {
 
-        List<Integer> values = new ArrayList<>();
-        ListNode current = head;
+        List<Integer> values = storeValues(head);
+        int size = values.size();
+        int answer = 0;
 
-        while (current != null) {
-            values.add(current.val);
-            current = current.next;
+        int left = 0;
+        int right = size - 1;
+
+        while (left < right) {
+            int twinSum = values.get(left) + values.get(right);
+            answer = getMax(answer, twinSum);
+            left++;
+            right--;
         }
 
-        int n = values.size();
-        int maxTwin = 0;
-
-        for (int left = 0; left < n / 2; left++) {
-            int right = n - left - 1;
-            int sum = values.get(left) + values.get(right);
-            maxTwin = getMax(maxTwin, sum);
-        }
-
-        return maxTwin;
+        return answer;
     }
 }
