@@ -1,67 +1,54 @@
-import java.util.*;
-
-public class CollectionVsCollections4 {
-    public static void main(String[] args) {
-
-        List<Integer> listObj = new ArrayList<>();
-
-        listObj.add(1);
-        listObj.add(2);
-        listObj.add(3);
-        listObj.add(2);
-        listObj.add(5);
-
-        // Max and Min
-        System.out.println("Max value is: " + Collections.max(listObj));
-        System.out.println("Min value is: " + Collections.min(listObj));
-
-        // Sort
-        Collections.sort(listObj);
-        System.out.println("\nAfter Sorting:");
+        // Rotate
+        Collections.rotate(listObj, 2);
+        System.out.println("\n\nAfter Rotating by 2:");
         listObj.forEach(val -> System.out.print(val + " "));
 
-        // Reverse
-        Collections.reverse(listObj);
-        System.out.println("\n\nAfter Reversing:");
+        // Replace All
+        Collections.replaceAll(listObj, 2, 20);
+        System.out.println("\n\nAfter Replacing 2 with 20:");
         listObj.forEach(val -> System.out.print(val + " "));
 
-        // Shuffle
-        Collections.shuffle(listObj);
-        System.out.println("\n\nAfter Shuffling:");
+        // Reverse Order Sort
+        Collections.sort(listObj, Collections.reverseOrder());
+        System.out.println("\n\nSorted in Descending Order:");
         listObj.forEach(val -> System.out.print(val + " "));
 
-        // Binary Search (list must be sorted)
-        Collections.sort(listObj);
-        int index = Collections.binarySearch(listObj, 3);
-        System.out.println("\n\nIndex of 3: " + index);
+        // Disjoint
+        List<Integer> anotherList = Arrays.asList(100, 200, 300);
+        System.out.println("\n\nAre Lists Disjoint? "
+                + Collections.disjoint(listObj, anotherList));
 
-        // Frequency
-        int freq = Collections.frequency(listObj, 2);
-        System.out.println("Frequency of 2: " + freq);
+        // Singleton List
+        List<String> singleton = Collections.singletonList("Java");
+        System.out.println("\nSingleton List: " + singleton);
 
-        // Swap
-        Collections.swap(listObj, 0, listObj.size() - 1);
-        System.out.println("\nAfter Swapping first and last element:");
-        listObj.forEach(val -> System.out.print(val + " "));
+        // nCopies
+        List<String> copies = Collections.nCopies(5, "Hello");
+        System.out.println("\n5 Copies: " + copies);
 
-        // Copy example
-        List<Integer> destList =
-                new ArrayList<>(Arrays.asList(0, 0, 0, 0, 0));
-        Collections.copy(destList, listObj);
+        // Empty List
+        List<Integer> empty = Collections.emptyList();
+        System.out.println("\nEmpty List: " + empty);
 
-        System.out.println("\n\nCopied List:");
-        destList.forEach(val -> System.out.print(val + " "));
+        // Enumeration
+        Enumeration<Integer> enumeration = Collections.enumeration(listObj);
+        System.out.print("\nEnumeration: ");
+        while (enumeration.hasMoreElements()) {
+            System.out.print(enumeration.nextElement() + " ");
+        }
 
-        // Fill
-        Collections.fill(destList, 100);
-        System.out.println("\n\nAfter Fill:");
-        destList.forEach(val -> System.out.print(val + " "));
+        // Index Of SubList
+        List<Integer> sub = Arrays.asList(20, 3);
+        System.out.println("\n\nIndex of SubList: "
+                + Collections.indexOfSubList(listObj, sub));
 
-        // Unmodifiable List
-        List<Integer> readOnlyList =
-                Collections.unmodifiableList(listObj);
+        // Last Index Of SubList
+        System.out.println("Last Index of SubList: "
+                + Collections.lastIndexOfSubList(listObj, sub));
 
-        System.out.println("\n\nRead Only List:");
-        readOnlyList.forEach(val -> System.out.print(val + " "));
-    }
-}
+        // Checked List
+        List<Integer> checked =
+                Collections.checkedList(new ArrayList<>(), Integer.class);
+        checked.add(10);
+        checked.add(20);
+        System.out.println("\nChecked List: " + checked);
