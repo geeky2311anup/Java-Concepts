@@ -1,162 +1,118 @@
 // ===============================
-// ABSOLUTE VALUE
+// MAXIMUM OF TWO NUMBERS
 // ===============================
 
-System.out.println("\n=== Absolute Value ===");
+System.out.println("\n=== Maximum of Two Numbers ===");
 
-int value = -25;
+int a1 = 25;
+int b1 = 40;
 
-System.out.println("Absolute = " + Math.abs(value));
-
-// ===============================
-// POWER OF A NUMBER
-// ===============================
-
-System.out.println("\n=== Power ===");
-
-int base = 3;
-int exponent = 4;
-
-System.out.println(base + "^" + exponent + " = " + (int)Math.pow(base, exponent));
+System.out.println("Maximum = " + Math.max(a1, b1));
 
 // ===============================
-// SQUARE ROOT
+// MINIMUM OF TWO NUMBERS
 // ===============================
 
-System.out.println("\n=== Square Root ===");
+System.out.println("\n=== Minimum of Two Numbers ===");
 
-int number = 81;
-
-System.out.println("Square Root = " + Math.sqrt(number));
+System.out.println("Minimum = " + Math.min(a1, b1));
 
 // ===============================
-// FLOOR, CEIL & ROUND
+// CUBE OF A NUMBER
 // ===============================
 
-System.out.println("\n=== Floor, Ceil and Round ===");
+System.out.println("\n=== Cube of a Number ===");
 
-double decimal = 12.67;
+int cubeNum = 5;
 
-System.out.println("Floor = " + Math.floor(decimal));
-System.out.println("Ceil = " + Math.ceil(decimal));
-System.out.println("Round = " + Math.round(decimal));
+System.out.println("Cube = " + (int) Math.pow(cubeNum, 3));
 
 // ===============================
-// POSITIVE, NEGATIVE OR ZERO
+// CHECK EVEN OR ODD
 // ===============================
 
-System.out.println("\n=== Positive, Negative or Zero ===");
+System.out.println("\n=== Even or Odd ===");
 
-int x = -15;
+int evenOdd = 18;
 
-if (x > 0)
-    System.out.println("Positive");
-else if (x < 0)
-    System.out.println("Negative");
+if (evenOdd % 2 == 0)
+    System.out.println("Even");
 else
-    System.out.println("Zero");
+    System.out.println("Odd");
 
 // ===============================
-// MULTIPLE OF 5
+// CHECK LEAP YEAR
 // ===============================
 
-System.out.println("\n=== Multiple of 5 ===");
+System.out.println("\n=== Leap Year ===");
 
-int multiple = 45;
+int year = 2024;
 
-System.out.println(multiple % 5 == 0);
-
-// ===============================
-// ASCII VALUE OF CHARACTER
-// ===============================
-
-System.out.println("\n=== ASCII Value ===");
-
-char ch = 'A';
-
-System.out.println("ASCII = " + (int) ch);
+if ((year % 4 == 0 && year % 100 != 0) || year % 400 == 0)
+    System.out.println("Leap Year");
+else
+    System.out.println("Not a Leap Year");
 
 // ===============================
-// CHARACTER FROM ASCII
+// RANDOM INTEGER (0-99)
 // ===============================
 
-System.out.println("\n=== Character from ASCII ===");
+System.out.println("\n=== Random Integer ===");
 
-int ascii = 97;
+int randomInt = (int) (Math.random() * 100);
 
-System.out.println("Character = " + (char) ascii);
-
-// ===============================
-// CLAMP VALUE BETWEEN RANGE
-// ===============================
-
-System.out.println("\n=== Clamp Value ===");
-
-int num = 120;
-int low = 0;
-int high = 100;
-
-num = Math.max(low, Math.min(num, high));
-
-System.out.println("Clamped Value = " + num);
+System.out.println("Random Integer = " + randomInt);
 
 // ===============================
-// RANDOM DOUBLE
+// DEGREE TO RADIAN
 // ===============================
 
-System.out.println("\n=== Random Double ===");
+System.out.println("\n=== Degree to Radian ===");
 
-double randomDouble = Math.random();
+double degree = 90;
 
-System.out.println("Random Double = " + randomDouble);
-
-// ===============================
-// SIGN OF A NUMBER
-// ===============================
-
-System.out.println("\n=== Sign of Number ===");
-
-int signNum = -8;
-
-System.out.println(Integer.signum(signNum));
+System.out.println("Radians = " + Math.toRadians(degree));
 
 // ===============================
-// HYPOTENUSE OF RIGHT TRIANGLE
+// RADIAN TO DEGREE
 // ===============================
 
-System.out.println("\n=== Hypotenuse ===");
+System.out.println("\n=== Radian to Degree ===");
 
-double a = 3;
-double b = 4;
+double radian = Math.PI;
 
-System.out.println("Hypotenuse = " + Math.hypot(a, b));
-
-// ===============================
-// DIVISIBLE BY BOTH 3 AND 5
-// ===============================
-
-System.out.println("\n=== Divisible by 3 and 5 ===");
-
-int n = 30;
-
-System.out.println(n % 3 == 0 && n % 5 == 0);
+System.out.println("Degrees = " + Math.toDegrees(radian));
 
 // ===============================
-// MAX OF THREE NUMBERS
+// SINE, COSINE AND TANGENT
 // ===============================
 
-System.out.println("\n=== Maximum of Three Numbers ===");
+System.out.println("\n=== Trigonometric Functions ===");
 
-int p = 12;
-int q = 45;
-int r = 31;
+double angle = Math.toRadians(30);
 
-System.out.println(Math.max(p, Math.max(q, r)));
+System.out.println("Sin = " + Math.sin(angle));
+System.out.println("Cos = " + Math.cos(angle));
+System.out.println("Tan = " + Math.tan(angle));
 
 // ===============================
-// MIN OF THREE NUMBERS
+// CHECK PRIME NUMBER
 // ===============================
 
-System.out.println("\n=== Minimum of Three Numbers ===");
+System.out.println("\n=== Prime Number Check ===");
 
-System.out.println(Math.min(p, Math.min(q, r)));
+int prime = 29;
+boolean isPrime = true;
+
+if (prime <= 1)
+    isPrime = false;
+else {
+    for (int i = 2; i <= Math.sqrt(prime); i++) {
+        if (prime % i == 0) {
+            isPrime = false;
+            break;
+        }
+    }
+}
+
+System.out.println(isPrime);
