@@ -1,41 +1,49 @@
-        // Enhanced For Loop
-        System.out.println("\n24. ENHANCED FOR LOOP");
-        System.out.println("---------------------");
-        int[] numbers = {10, 20, 30, 40, 50};
-        for (int num : numbers) {
-            System.out.print(num + " ");
+        // ArrayList
+        System.out.println("\n30. ARRAYLIST");
+        System.out.println("-------------");
+        ArrayList<String> fruits = new ArrayList<>();
+        fruits.add("Apple");
+        fruits.add("Banana");
+        fruits.add("Orange");
+        System.out.println("Fruits: " + fruits);
+
+        // HashMap
+        System.out.println("\n31. HASHMAP");
+        System.out.println("-----------");
+        HashMap<Integer, String> students = new HashMap<>();
+        students.put(1, "Rahul");
+        students.put(2, "Priya");
+        students.put(3, "Amit");
+        System.out.println("Student with ID 2: " + students.get(2));
+
+        // Exception Handling
+        System.out.println("\n32. EXCEPTION HANDLING");
+        System.out.println("----------------------");
+        try {
+            int result = 20 / 0;
+            System.out.println(result);
+        } catch (ArithmeticException e) {
+            System.out.println("Exception Caught: " + e.getMessage());
         }
-        System.out.println();
 
-        // Math Class
-        System.out.println("\n25. MATH CLASS");
-        System.out.println("--------------");
-        System.out.println("Maximum: " + Math.max(15, 25));
-        System.out.println("Minimum: " + Math.min(15, 25));
-        System.out.println("Square Root of 64: " + Math.sqrt(64));
-
-        // StringBuilder
-        System.out.println("\n26. STRINGBUILDER");
+        // Command Line Style Formatting
+        System.out.println("\n33. STRING FORMAT");
         System.out.println("-----------------");
-        StringBuilder sb = new StringBuilder("Java");
-        sb.append(" Programming");
-        System.out.println("Output: " + sb);
+        String name = "John";
+        int age = 21;
+        System.out.printf("Name: %s, Age: %d%n", name, age);
 
-        // Wrapper Class
-        System.out.println("\n27. WRAPPER CLASS");
-        System.out.println("-----------------");
-        String numStr = "123";
-        int number = Integer.parseInt(numStr);
-        System.out.println("Parsed Integer: " + number);
+        // Type Casting
+        System.out.println("\n34. TYPE CASTING");
+        System.out.println("----------------");
+        double value = 25.78;
+        int intValue = (int) value;
+        System.out.println("Double: " + value);
+        System.out.println("Integer: " + intValue);
 
-        // Random Number
-        System.out.println("\n28. RANDOM NUMBER");
-        System.out.println("-----------------");
-        Random random = new Random();
-        System.out.println("Random Number (0-99): " + random.nextInt(100));
-
-        // Current Date and Time
-        System.out.println("\n29. CURRENT DATE & TIME");
-        System.out.println("-----------------------");
-        LocalDateTime now = LocalDateTime.now();
-        System.out.println("Current Date & Time: " + now);
+        // Character Methods
+        System.out.println("\n35. CHARACTER METHODS");
+        System.out.println("---------------------");
+        char ch = 'A';
+        System.out.println("Is Letter: " + Character.isLetter(ch));
+        System.out.println("Lowercase: " + Character.toLowerCase(ch));
