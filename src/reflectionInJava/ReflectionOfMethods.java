@@ -15,12 +15,22 @@ for (Constructor<?> constructor : constructors) {
         System.out.println();
     }
 
+    Class<?>[] exceptions = constructor.getExceptionTypes();
+    if (exceptions.length > 0) {
+        System.out.print("Throws : ");
+        for (Class<?> e : exceptions) {
+            System.out.print(e.getSimpleName() + " ");
+        }
+        System.out.println();
+    }
+
     System.out.println("------------------------------");
 }
 
 System.out.println("\n========== Method Parameters ==========");
 for (Method method : eagleClass.getDeclaredMethods()) {
     System.out.print(method.getName() + " -> ");
+
     Class<?>[] parameterTypes = method.getParameterTypes();
 
     if (parameterTypes.length == 0) {
@@ -34,6 +44,8 @@ for (Method method : eagleClass.getDeclaredMethods()) {
 
     System.out.println("Return Type : " + method.getReturnType().getSimpleName());
     System.out.println("Modifiers   : " + Modifier.toString(method.getModifiers()));
+    System.out.println("VarArgs     : " + method.isVarArgs());
+    System.out.println("Synthetic   : " + method.isSynthetic());
     System.out.println("------------------------------");
 }
 
@@ -42,14 +54,26 @@ Method flyMethod = eagleClass.getMethod("fly");
 flyMethod.invoke(eagle);
 
 System.out.println("\n========== Class Information ==========");
-System.out.println("Class Name   : " + eagleClass.getName());
-System.out.println("Simple Name  : " + eagleClass.getSimpleName());
-System.out.println("Package Name : " + eagleClass.getPackageName());
-System.out.println("Superclass   : " + eagleClass.getSuperclass().getSimpleName());
+System.out.println("Class Name      : " + eagleClass.getName());
+System.out.println("Simple Name     : " + eagleClass.getSimpleName());
+System.out.println("Package Name    : " + eagleClass.getPackageName());
+System.out.println("Superclass      : " + eagleClass.getSuperclass().getSimpleName());
+System.out.println("Is Interface    : " + eagleClass.isInterface());
+System.out.println("Is Enum         : " + eagleClass.isEnum());
+System.out.println("Is Annotation   : " + eagleClass.isAnnotation());
 
 System.out.println("\n========== Check Members ==========");
 System.out.println("Has field 'breed' : " + (eagleClass.getField("breed") != null));
 System.out.println("Has method 'eat'  : " + (eagleClass.getMethod("eat") != null));
+
+System.out.println("\n========== Fields ==========");
+for (Field field : eagleClass.getDeclaredFields()) {
+    System.out.println(
+        field.getName() + " : " +
+        field.getType().getSimpleName() +
+        " [" + Modifier.toString(field.getModifiers()) + "]"
+    );
+}
 
 System.out.println("\n========== Interfaces ==========");
 Class<?>[] interfaces = eagleClass.getInterfaces();
