@@ -18,6 +18,24 @@ System.out.println("\n=== Minimum of Two Numbers ===");
 System.out.println("Minimum = " + Math.min(a1, b1));
 
 // ===============================
+// SQUARE ROOT
+// ===============================
+
+System.out.println("\n=== Square Root ===");
+
+int num = 64;
+
+System.out.println("Square Root = " + Math.sqrt(num));
+
+// ===============================
+// POWER OF A NUMBER
+// ===============================
+
+System.out.println("\n=== Power of a Number ===");
+
+System.out.println("2^5 = " + (int) Math.pow(2, 5));
+
+// ===============================
 // CUBE OF A NUMBER
 // ===============================
 
@@ -26,6 +44,28 @@ System.out.println("\n=== Cube of a Number ===");
 int cubeNum = 5;
 
 System.out.println("Cube = " + (int) Math.pow(cubeNum, 3));
+
+// ===============================
+// ABSOLUTE VALUE
+// ===============================
+
+System.out.println("\n=== Absolute Value ===");
+
+int negative = -35;
+
+System.out.println("Absolute = " + Math.abs(negative));
+
+// ===============================
+// ROUND, CEIL AND FLOOR
+// ===============================
+
+System.out.println("\n=== Round, Ceil and Floor ===");
+
+double value = 8.67;
+
+System.out.println("Round = " + Math.round(value));
+System.out.println("Ceil = " + Math.ceil(value));
+System.out.println("Floor = " + Math.floor(value));
 
 // ===============================
 // CHECK EVEN OR ODD
