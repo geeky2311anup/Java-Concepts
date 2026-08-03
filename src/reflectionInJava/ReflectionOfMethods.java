@@ -1,91 +1,42 @@
-System.out.println("\n========== Constructors ==========");
-Constructor<?>[] constructors = eagleClass.getDeclaredConstructors();
-
-for (Constructor<?> constructor : constructors) {
-    System.out.println("Constructor : " + constructor.getName());
-    System.out.println("Modifiers   : " + Modifier.toString(constructor.getModifiers()));
-    System.out.println("Parameters  : " + constructor.getParameterCount());
-
-    Class<?>[] params = constructor.getParameterTypes();
-    if (params.length > 0) {
-        System.out.print("Parameter Types : ");
-        for (Class<?> p : params) {
-            System.out.print(p.getSimpleName() + " ");
-        }
-        System.out.println();
-    }
-
-    Class<?>[] exceptions = constructor.getExceptionTypes();
-    if (exceptions.length > 0) {
-        System.out.print("Throws : ");
-        for (Class<?> e : exceptions) {
-            System.out.print(e.getSimpleName() + " ");
-        }
-        System.out.println();
-    }
-
-    System.out.println("------------------------------");
-}
-
-System.out.println("\n========== Method Parameters ==========");
-for (Method method : eagleClass.getDeclaredMethods()) {
-    System.out.print(method.getName() + " -> ");
-
-    Class<?>[] parameterTypes = method.getParameterTypes();
-
-    if (parameterTypes.length == 0) {
-        System.out.println("No Parameters");
-    } else {
-        for (Class<?> type : parameterTypes) {
-            System.out.print(type.getSimpleName() + " ");
-        }
-        System.out.println();
-    }
-
-    System.out.println("Return Type : " + method.getReturnType().getSimpleName());
-    System.out.println("Modifiers   : " + Modifier.toString(method.getModifiers()));
-    System.out.println("VarArgs     : " + method.isVarArgs());
-    System.out.println("Synthetic   : " + method.isSynthetic());
-    System.out.println("------------------------------");
-}
-
-System.out.println("\n========== Invoke Public Method ==========");
-Method flyMethod = eagleClass.getMethod("fly");
-flyMethod.invoke(eagle);
-
-System.out.println("\n========== Class Information ==========");
-System.out.println("Class Name      : " + eagleClass.getName());
-System.out.println("Simple Name     : " + eagleClass.getSimpleName());
-System.out.println("Package Name    : " + eagleClass.getPackageName());
-System.out.println("Superclass      : " + eagleClass.getSuperclass().getSimpleName());
-System.out.println("Is Interface    : " + eagleClass.isInterface());
-System.out.println("Is Enum         : " + eagleClass.isEnum());
-System.out.println("Is Annotation   : " + eagleClass.isAnnotation());
-
-System.out.println("\n========== Check Members ==========");
-System.out.println("Has field 'breed' : " + (eagleClass.getField("breed") != null));
-System.out.println("Has method 'eat'  : " + (eagleClass.getMethod("eat") != null));
-
-System.out.println("\n========== Fields ==========");
-for (Field field : eagleClass.getDeclaredFields()) {
-    System.out.println(
-        field.getName() + " : " +
-        field.getType().getSimpleName() +
-        " [" + Modifier.toString(field.getModifiers()) + "]"
-    );
-}
-
-System.out.println("\n========== Interfaces ==========");
-Class<?>[] interfaces = eagleClass.getInterfaces();
-if (interfaces.length == 0) {
-    System.out.println("No Interfaces Implemented");
+System.out.println("\n========== Annotations ==========");
+Annotation[] annotations = eagleClass.getAnnotations();
+if (annotations.length == 0) {
+    System.out.println("No Annotations Present");
 } else {
-    for (Class<?> i : interfaces) {
-        System.out.println(i.getSimpleName());
+    for (Annotation annotation : annotations) {
+        System.out.println(annotation.annotationType().getSimpleName());
     }
 }
 
-System.out.println("\n========== Total Members ==========");
-System.out.println("Fields       : " + eagleClass.getDeclaredFields().length);
-System.out.println("Methods      : " + eagleClass.getDeclaredMethods().length);
-System.out.println("Constructors : " + eagleClass.getDeclaredConstructors().length);
+System.out.println("\n========== Nested Classes ==========");
+Class<?>[] innerClasses = eagleClass.getDeclaredClasses();
+if (innerClasses.length == 0) {
+    System.out.println("No Inner Classes");
+} else {
+    for (Class<?> c : innerClasses) {
+        System.out.println(c.getSimpleName());
+    }
+}
+
+System.out.println("\n========== Public Methods ==========");
+Method[] publicMethods = eagleClass.getMethods();
+System.out.println("Total Public Methods (Including Inherited): " + publicMethods.length);
+
+System.out.println("\n========== Public Fields ==========");
+Field[] publicFields = eagleClass.getFields();
+System.out.println("Total Public Fields (Including Inherited): " + publicFields.length);
+
+System.out.println("\n========== Class Modifiers ==========");
+System.out.println("Modifiers : " + Modifier.toString(eagleClass.getModifiers()));
+
+System.out.println("\n========== Array Check ==========");
+System.out.println("Is Array : " + eagleClass.isArray());
+
+System.out.println("\n========== Primitive Check ==========");
+System.out.println("Is Primitive : " + eagleClass.isPrimitive());
+
+System.out.println("\n========== Declaring Class ==========");
+System.out.println("Declaring Class : " + eagleClass.getDeclaringClass());
+
+System.out.println("\n========== Canonical Name ==========");
+System.out.println("Canonical Name : " + eagleClass.getCanonicalName());
