@@ -1,32 +1,29 @@
-/* ===========================
-   BOOLEAN VARIABLE
-   =========================== */
+class Solution {
+    public List<Integer> findMissingElements(int[] numbers) {
 
-public void booleanExample() {
+        boolean[] visited = new boolean[101];
+        List<Integer> result = new ArrayList<>();
 
-    boolean isPassed = true;
+        int low = numbers[0];
+        int high = numbers[0];
 
-    System.out.println(isPassed);
-}
+        for (int i = 0; i < numbers.length; i++) {
+            int value = numbers[i];
+            visited[value] = true;
 
-/* ===========================
-   STRING VARIABLE
-   =========================== */
+            if (value < low) {
+                low = value;
+            } else if (value > high) {
+                high = value;
+            }
+        }
 
-public void stringExample() {
+        for (int value = low; value <= high; value++) {
+            if (visited[value] == false) {
+                result.add(value);
+            }
+        }
 
-    String college = "ABC College";
-
-    System.out.println(college);
-}
-
-/* ===========================
-   FLOAT VARIABLE
-   =========================== */
-
-public void floatExample() {
-
-    float temperature = 36.5f;
-
-    System.out.println(temperature);
+        return result;
+    }
 }
