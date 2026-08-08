@@ -1,34 +1,36 @@
 class Solution {
 
-    private int getMax(int first, int second) {
-        return first > second ? first : second;
-    }
+    private List<Integer> convertToList(ListNode head) {
+        List<Integer> nums = new ArrayList<>();
 
-    private List<Integer> storeValues(ListNode head) {
-        List<Integer> list = new ArrayList<>();
         while (head != null) {
-            list.add(head.val);
+            nums.add(head.val);
             head = head.next;
         }
-        return list;
+
+        return nums;
+    }
+
+    private int pairValue(List<Integer> nums, int i, int j) {
+        return nums.get(i) + nums.get(j);
     }
 
     public int pairSum(ListNode head) {
 
-        List<Integer> values = storeValues(head);
-        int size = values.size();
-        int answer = 0;
+        List<Integer> nums = convertToList(head);
 
         int left = 0;
-        int right = size - 1;
+        int right = nums.size() - 1;
+        int maxSum = 0;
 
         while (left < right) {
-            int twinSum = values.get(left) + values.get(right);
-            answer = getMax(answer, twinSum);
+
+            maxSum = Math.max(maxSum, pairValue(nums, left, right));
+
             left++;
             right--;
         }
 
-        return answer;
+        return maxSum;
     }
 }
