@@ -4,22 +4,23 @@ class Solution {
         boolean[] visited = new boolean[101];
         List<Integer> result = new ArrayList<>();
 
+        if (numbers == null || numbers.length == 0) {
+            return result;
+        }
+
         int low = numbers[0];
         int high = numbers[0];
 
-        for (int i = 0; i < numbers.length; i++) {
-            int value = numbers[i];
+        // Mark visited numbers and find min/max
+        for (int value : numbers) {
             visited[value] = true;
-
-            if (value < low) {
-                low = value;
-            } else if (value > high) {
-                high = value;
-            }
+            low = Math.min(low, value);
+            high = Math.max(high, value);
         }
 
+        // Collect missing numbers between min and max
         for (int value = low; value <= high; value++) {
-            if (visited[value] == false) {
+            if (!visited[value]) {
                 result.add(value);
             }
         }
