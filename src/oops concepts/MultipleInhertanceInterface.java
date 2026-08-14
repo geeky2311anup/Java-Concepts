@@ -1,703 +1,301 @@
-/*
-=========================================================
-                JAVA INTERFACES - COMPLETE NOTES
-=========================================================
+/*========================================================
+              SUPER INTERFACE METHOD CALL
+========================================================*/
 
-1. Basic Interfaces
-2. Multiple Inheritance
-3. Default Methods
-4. Static Methods
-5. Private Methods (Java 9)
-6. Functional Interfaces
-7. Intersection Types
-8. Marker Interfaces
-9. Sealed Interfaces (Java 17)
-10. Non-Sealed Interfaces
-11. Pattern Matching
-12. Records + Interfaces
-13. Interface Constants
-14. Nested Interfaces
-15. Generic Interfaces
-16. Covariant Return Types
-17. Interface Segregation Principle
-18. Dynamic Proxy
-19. JVM ITABLE
-20. Default Method Conflict Resolution
-21. Interface Inheritance
-22. Diamond Problem
-23. Modern Java Uses
-24. Interface vs Abstract Class
-25. Interview Questions
-=========================================================
+/*
+When two interfaces have the same default method,
+the implementing class must resolve the conflict.
+
+We can explicitly call a particular interface's
+default implementation using:
+
+InterfaceName.super.method()
 */
 
-import java.io.Serializable;
-import java.lang.reflect.Proxy;
+interface Left {
 
-/*========================================================
-                    BASIC INTERFACE
-========================================================*/
-
-interface Animal {
-    void sound();
-}
-
-class Dog implements Animal {
-    @Override
-    public void sound() {
-        System.out.println("Bark");
+    default void display() {
+        System.out.println("Left");
     }
 }
 
-/*========================================================
-                MULTIPLE INTERFACE INHERITANCE
-========================================================*/
+interface Right {
 
-interface Flyable {
-    void fly();
+    default void display() {
+        System.out.println("Right");
+    }
 }
 
-interface Swimmable {
-    void swim();
-}
-
-class Duck implements Flyable, Swimmable {
+class MultipleDefault implements Left, Right {
 
     @Override
-    public void fly() {
-        System.out.println("Flying");
-    }
+    public void display() {
 
-    @Override
-    public void swim() {
-        System.out.println("Swimming");
+        Left.super.display();
+
+        // Right.super.display();
     }
 }
+
 
 /*========================================================
-                  DEFAULT METHODS
+              INTERFACE TYPE CASTING
 ========================================================*/
-
-interface Vehicle {
-
-    default void start() {
-        System.out.println("Vehicle Started");
-    }
-}
-
-class Car implements Vehicle {}
-
-/*========================================================
-                   STATIC METHODS
-========================================================*/
-
-interface MathUtil {
-
-    static int square(int x) {
-        return x * x;
-    }
-}
-
-/*========================================================
-                  PRIVATE METHODS (JAVA 9)
-========================================================*/
-
-interface Logger {
-
-    default void info() {
-        print("INFO");
-    }
-
-    default void error() {
-        print("ERROR");
-    }
-
-    private void print(String msg) {
-        System.out.println(msg);
-    }
-}
-
-/*========================================================
-              FUNCTIONAL INTERFACE
-========================================================*/
-
-@FunctionalInterface
-interface Calculator {
-
-    int calculate(int a, int b);
-
-    default void show() {}
-
-    static void display() {}
-}
-
-/*========================================================
-                INTERSECTION TYPES
-========================================================*/
-
-class BirdFish implements Flyable, Swimmable {
-
-    public void fly() {
-        System.out.println("Fly");
-    }
-
-    public void swim() {
-        System.out.println("Swim");
-    }
-}
-
-class GenericDemo {
-
-    public static <T extends Flyable & Swimmable>
-    void move(T obj) {
-
-        obj.fly();
-        obj.swim();
-    }
-}
 
 /*
-Rules:
+A class can be referenced using its interface type.
 
-1. Maximum one class bound.
-2. Class bound first.
-3. Unlimited interfaces.
-
-<T extends AnimalClass & Flyable & Swimmable>
-
-*/
-
-/*========================================================
-                MARKER INTERFACES
-========================================================*/
-
-interface Auditable {}
-
-class Transaction implements Auditable {}
-
-/*
-Historical Marker Interfaces
-
-Serializable
-Cloneable
-Remote
-RandomAccess
-
-*/
-
-/*========================================================
-                 SEALED INTERFACES
-========================================================*/
-
-sealed interface Shape
-        permits Circle, Rectangle, Triangle {}
-
-final class Circle implements Shape {}
-
-final class Rectangle implements Shape {}
-
-final class Triangle implements Shape {}
-
-/*========================================================
-                NON SEALED INTERFACE
-========================================================*/
-
-sealed interface VehicleType
-        permits CarType, BikeType {}
-
-non-sealed class CarType
-        implements VehicleType {}
-
-class SportsCar extends CarType {}
-
-class ElectricCar extends CarType {}
-
-final class BikeType
-        implements VehicleType {}
-
-/*========================================================
-          PATTERN MATCHING (JAVA 21)
-========================================================*/
-
-sealed interface Figure
-        permits CircleRec, RectangleRec {}
-
-record CircleRec(double radius)
-        implements Figure {}
-
-record RectangleRec(double w, double h)
-        implements Figure {}
-
-class PatternMatching {
-
-    static double area(Figure shape) {
-
-        return switch (shape) {
-
-            case CircleRec c ->
-                    Math.PI * c.radius() * c.radius();
-
-            case RectangleRec r ->
-                    r.w() * r.h();
-        };
-    }
-}
-
-/*========================================================
-               RECORDS + INTERFACES
-========================================================*/
-
-interface Printable {
-
-    void print();
-}
-
-record Employee(String name, int age)
-        implements Printable {
-
-    @Override
-    public void print() {
-        System.out.println(name + " " + age);
-    }
-}
-
-/*========================================================
-                INTERFACE CONSTANTS
-========================================================*/
-
-interface Constants {
-
-    int MAX_SIZE = 100;
-
-    String APP_NAME = "Inventory";
-}
-
-/*
-Compiler converts to:
-
-public static final int MAX_SIZE
-
-Best Practice:
-
-Use Utility Class instead.
-
-*/
-
-/*========================================================
-                NESTED INTERFACES
-========================================================*/
-
-interface Engine {
-
-    interface Specification {
-
-        int horsePower();
-    }
-}
-
-class PetrolSpecification
-        implements Engine.Specification {
-
-    public int horsePower() {
-        return 200;
-    }
-}
-
-/*========================================================
-               GENERIC INTERFACES
-========================================================*/
-
-interface Repository<T> {
-
-    void save(T obj);
-
-    T findById(int id);
-}
-
-class User {}
-
-class UserRepository
-        implements Repository<User> {
-
-    public void save(User user) {}
-
-    public User findById(int id) {
-        return null;
-    }
-}
-
-/*========================================================
-            COVARIANT RETURN TYPES
-========================================================*/
-
-class AnimalType {}
-
-class DogType extends AnimalType {}
-
-interface AnimalFactory {
-
-    AnimalType create();
-}
-
-class DogFactory
-        implements AnimalFactory {
-
-    @Override
-    public DogType create() {
-        return new DogType();
-    }
-}
-
-/*========================================================
-        INTERFACE SEGREGATION PRINCIPLE
-========================================================*/
-
-interface Workable {
-
-    void work();
-}
-
-interface Eatable {
-
-    void eat();
-}
-
-class Human
-        implements Workable, Eatable {
-
-    public void work() {}
-
-    public void eat() {}
-}
-
-class Robot
-        implements Workable {
-
-    public void work() {}
-}
-
-/*========================================================
-              DYNAMIC PROXY
-========================================================*/
-
-interface Service {
-
-    void execute();
-}
-
-class RealService
-        implements Service {
-
-    public void execute() {
-        System.out.println("Executing...");
-    }
-}
-
-/*
 Example:
-
-Service proxy =
-(Service) Proxy.newProxyInstance(
-    Service.class.getClassLoader(),
-    new Class<?>[]{Service.class},
-    (obj, method, args) -> {
-
-        System.out.println("Before");
-
-        Object result =
-            method.invoke(realObject, args);
-
-        System.out.println("After");
-
-        return result;
-    });
-
-Used By
-
-Spring AOP
-Feign
-RPC
-JDK Dynamic Proxy
-
-*/
-
-/*========================================================
-                    JVM ITABLE
-========================================================*/
-
-/*
-Classes:
-VTABLE
-
-Interfaces:
-ITABLE
 
 Animal a = new Dog();
 
-a.sound();
-
-JVM:
-
-1. Resolve interface
-2. Lookup ITABLE
-3. Invoke implementation
-
+This provides abstraction and allows
+runtime polymorphism.
 */
+
+Animal animal = new Dog();
+animal.sound();
+
 
 /*========================================================
-       DEFAULT METHOD CONFLICT RESOLUTION
+              INTERFACE AND LAMBDA
 ========================================================*/
 
-interface A {
-
-    default void show() {
-        System.out.println("A");
-    }
-}
-
-interface B extends A {
-
-    default void show() {
-        System.out.println("B");
-    }
-}
-
-class Test1
-        implements B {}
-
 /*
-Rule 1
+A functional interface can be implemented
+using a lambda expression.
 
-Class wins.
-
-Rule 2
-
-More specific interface wins.
-
-Rule 3
-
-Otherwise override explicitly.
-
+Only ONE abstract method is allowed.
+Default and static methods do not count.
 */
 
-interface X {
+@FunctionalInterface
+interface Greeting {
 
-    default void print() {
-        System.out.println("X");
+    void sayHello(String name);
+
+    default void message() {
+        System.out.println("Welcome");
     }
 }
 
-interface Y {
+Greeting greeting =
+        name -> System.out.println("Hello " + name);
 
-    default void print() {
-        System.out.println("Y");
-    }
+greeting.sayHello("Anup");
+
+
+/*========================================================
+              EXTENDING FUNCTIONAL INTERFACE
+========================================================*/
+
+/*
+A child interface can remain functional if
+it does not introduce another abstract method.
+*/
+
+@FunctionalInterface
+interface Operation {
+
+    int execute(int a, int b);
 }
 
-class Demo
-        implements X, Y {
+@FunctionalInterface
+interface Addition extends Operation {
+
+    // Inherits execute()
+
+}
+
+
+/*========================================================
+              INTERFACE OBJECT REFERENCE
+========================================================*/
+
+/*
+Interface reference can point to any object
+whose class implements that interface.
+*/
+
+Flyable f1 = new Duck();
+Swimmable s1 = new Duck();
+
+f1.fly();
+s1.swim();
+
+
+/*========================================================
+              ABSTRACT CLASS + INTERFACE
+========================================================*/
+
+/*
+A class can extend one abstract/concrete class
+and implement multiple interfaces simultaneously.
+*/
+
+abstract class Machine {
+
+    abstract void powerOn();
+}
+
+interface Connectable {
+
+    void connect();
+}
+
+interface Rechargeable {
+
+    void charge();
+}
+
+class Laptop extends Machine
+        implements Connectable, Rechargeable {
 
     @Override
-    public void print() {
-        X.super.print();
+    public void powerOn() {
+        System.out.println("Laptop ON");
+    }
+
+    @Override
+    public void connect() {
+        System.out.println("Connected");
+    }
+
+    @Override
+    public void charge() {
+        System.out.println("Charging");
     }
 }
 
-/*========================================================
-            INTERFACE INHERITANCE
-========================================================*/
-
-interface First {
-
-    void a();
-}
-
-interface Second {
-
-    void b();
-}
-
-interface Third
-        extends First, Second {
-
-    void c();
-}
 
 /*========================================================
-                DIAMOND PROBLEM
+              STATIC METHOD IN INTERFACE
 ========================================================*/
 
 /*
-Java avoids diamond problem.
+Interface static methods belong to the interface.
 
-If two interfaces provide same
-default method, compiler forces
-override.
+They are NOT inherited by implementing classes.
 
+Call them using the interface name.
 */
 
-/*========================================================
-            INTERFACE VS ABSTRACT CLASS
-========================================================*/
+interface Utility {
 
-/*
-
-Interface
-
-✔ Multiple inheritance
-✔ No constructors
-✔ No state
-✔ Behavior
-
-Abstract Class
-
-✔ Constructors
-✔ State
-✔ Protected members
-✔ Shared implementation
-
-*/
-
-/*========================================================
-                MODERN JAVA USES
-========================================================*/
-
-/*
-
-Functional Programming
-
-Dependency Injection
-
-Repository Pattern
-
-Strategy Pattern
-
-Adapter Pattern
-
-Factory Pattern
-
-Observer Pattern
-
-SPI
-
-Spring Services
-
-Microservices
-
-Reactive APIs
-
-Dynamic Proxy
-
-*/
-
-/*========================================================
-            COMMON INTERVIEW QUESTIONS
-========================================================*/
-
-/*
-
-Q. Can interface have constructors?
-No.
-
-Q. Can interface extend class?
-No.
-
-Q. Can interface extend interfaces?
-Yes.
-
-Q. Can class implement multiple interfaces?
-Yes.
-
-Q. Can interface have fields?
-Yes
-(public static final)
-
-Q. Can interface have static methods?
-Yes.
-
-Q. Can interface have private methods?
-Yes (Java 9)
-
-Q. Can interface have default methods?
-Yes (Java 8)
-
-Q. Can records implement interfaces?
-Yes.
-
-Q. Can enums implement interfaces?
-Yes.
-
-Q. Can interface be final?
-No.
-
-Q. Can interface be sealed?
-Yes.
-
-Q. Can interface be instantiated?
-No.
-
-*/
-
-/*========================================================
-                INTERVIEW ONE-LINERS
-========================================================*/
-
-/*
-
-Interfaces define behavior,
-Abstract Classes define identity.
-
-Interfaces support multiple
-inheritance of type,
-not state.
-
-Default methods were introduced
-for backward compatibility.
-
-Functional interfaces power
-Lambda Expressions.
-
-Sealed interfaces restrict
-inheritance.
-
-Interface fields are always
-
-public static final
-
-*/
-
-/*========================================================
-                    MAIN METHOD
-========================================================*/
-
-public class InterfaceNotes {
-
-    public static void main(String[] args) {
-
-        Dog dog = new Dog();
-        dog.sound();
-
-        Duck duck = new Duck();
-        duck.fly();
-        duck.swim();
-
-        Car car = new Car();
-        car.start();
-
-        Calculator add = (a, b) -> a + b;
-        System.out.println(add.calculate(5, 6));
-
-        System.out.println(MathUtil.square(8));
-
-        Employee e = new Employee("John", 25);
-        e.print();
-
-        System.out.println(Constants.APP_NAME);
-
-        if (e instanceof Serializable) {
-            System.out.println("Serializable");
-        }
-
-        GenericDemo.move(new BirdFish());
+    static void printMessage() {
+        System.out.println("Utility Method");
     }
 }
+
+// Correct:
+// Utility.printMessage();
+
+// Incorrect:
+// new Car().printMessage();
+
+
+/*========================================================
+              PRIVATE INTERFACE METHOD
+========================================================*/
+
+/*
+Private methods can only be called from
+inside the interface.
+
+They are useful for sharing common logic
+between default methods.
+*/
+
+interface Notification {
+
+    default void email() {
+        send("Email");
+    }
+
+    default void sms() {
+        send("SMS");
+    }
+
+    private void send(String type) {
+        System.out.println("Sending " + type);
+    }
+}
+
+
+/*========================================================
+              QUICK INTERVIEW TRAPS
+========================================================*/
+
+/*
+
+1. Interface variables are implicitly:
+   public static final
+
+2. Interface methods without a body are:
+   public abstract
+
+3. Default methods are:
+   public by default
+
+4. Static interface methods:
+   are not inherited
+
+5. Private interface methods:
+   cannot be accessed by implementing classes
+
+6. A class can implement:
+   multiple interfaces
+
+7. An interface can extend:
+   multiple interfaces
+
+8. A functional interface can contain:
+   exactly one abstract method
+
+9. Object cannot be created directly from:
+   an interface
+
+10. Interface can contain:
+    abstract methods
+    default methods
+    static methods
+    private methods
+    constants
+
+
+/*========================================================
+              INTERFACE DESIGN PRINCIPLE
+========================================================*/
+
+/*
+
+Prefer small, focused interfaces.
+
+Bad:
+
+interface Worker {
+
+    void work();
+    void eat();
+    void sleep();
+    void recharge();
+}
+
+A Robot may not need eat().
+
+Better:
+
+interface Workable {
+    void work();
+}
+
+interface Rechargeable {
+    void recharge();
+}
+
+Classes implement only the
+capabilities they actually need.
+
+This is the Interface Segregation Principle.
+
+*/
