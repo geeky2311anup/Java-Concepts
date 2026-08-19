@@ -1,30 +1,35 @@
 class Solution {
     public List<Integer> findMissingElements(int[] numbers) {
 
-        boolean[] visited = new boolean[101];
-        List<Integer> result = new ArrayList<>();
+        List<Integer> missing = new ArrayList<>();
 
-        if (numbers == null || numbers.length == 0) {
-            return result;
+        if (numbers == null || numbers.length < 2) {
+            return missing;
         }
 
-        int low = numbers[0];
-        int high = numbers[0];
+        boolean[] seen = new boolean[101];
+        int min = Integer.MAX_VALUE;
+        int max = Integer.MIN_VALUE;
 
-        // Mark visited numbers and find min/max
-        for (int value : numbers) {
-            visited[value] = true;
-            low = Math.min(low, value);
-            high = Math.max(high, value);
-        }
+        for (int num : numbers) {
+            seen[num] = true;
 
-        // Collect missing numbers between min and max
-        for (int value = low; value <= high; value++) {
-            if (!visited[value]) {
-                result.add(value);
+            if (num < min) {
+                min = num;
+            }
+
+            if (num > max) {
+                max = num;
             }
         }
 
-        return result;
+        // Check every value in the range
+        for (int current = min; current < max + 1; current++) {
+            if (!seen[current]) {
+                missing.add(current);
+            }
+        }
+
+        return missing;
     }
 }
