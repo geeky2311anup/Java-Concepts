@@ -35,7 +35,9 @@ public class RunnableInterface2 {
 
     public static void main(String[] args) {
 
-        System.out.println("Main Thread: " + Thread.currentThread().getName());
+        System.out.println(
+            "Main Thread: " + Thread.currentThread().getName()
+        );
 
         // Create Runnable objects
         RunnableObj task1 = new RunnableObj("Printing Numbers");
@@ -55,6 +57,7 @@ public class RunnableInterface2 {
 
         // Main thread work
         for (int i = 1; i <= 3; i++) {
+
             System.out.println(
                 "Main thread working... " + i
             );
