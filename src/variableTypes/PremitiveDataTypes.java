@@ -1,158 +1,133 @@
 // ===============================
-// MAXIMUM OF TWO NUMBERS
+// FIND MAXIMUM OF THREE NUMBERS
 // ===============================
 
-System.out.println("\n=== Maximum of Two Numbers ===");
+System.out.println("\n=== Maximum of Three Numbers ===");
 
-int a1 = 25;
-int b1 = 40;
+int x = 15;
+int y = 42;
+int z = 27;
 
-System.out.println("Maximum = " + Math.max(a1, b1));
+int maxThree = Math.max(x, Math.max(y, z));
 
-// ===============================
-// MINIMUM OF TWO NUMBERS
-// ===============================
+System.out.println("Maximum = " + maxThree);
 
-System.out.println("\n=== Minimum of Two Numbers ===");
-
-System.out.println("Minimum = " + Math.min(a1, b1));
 
 // ===============================
-// SQUARE ROOT
+// FIND MINIMUM OF THREE NUMBERS
 // ===============================
 
-System.out.println("\n=== Square Root ===");
+System.out.println("\n=== Minimum of Three Numbers ===");
 
-int num = 64;
+int minThree = Math.min(x, Math.min(y, z));
 
-System.out.println("Square Root = " + Math.sqrt(num));
+System.out.println("Minimum = " + minThree);
 
-// ===============================
-// POWER OF A NUMBER
-// ===============================
-
-System.out.println("\n=== Power of a Number ===");
-
-System.out.println("2^5 = " + (int) Math.pow(2, 5));
 
 // ===============================
-// CUBE OF A NUMBER
+// CHECK POSITIVE OR NEGATIVE
 // ===============================
 
-System.out.println("\n=== Cube of a Number ===");
+System.out.println("\n=== Positive or Negative ===");
 
-int cubeNum = 5;
+int checkNum = -12;
 
-System.out.println("Cube = " + (int) Math.pow(cubeNum, 3));
-
-// ===============================
-// ABSOLUTE VALUE
-// ===============================
-
-System.out.println("\n=== Absolute Value ===");
-
-int negative = -35;
-
-System.out.println("Absolute = " + Math.abs(negative));
-
-// ===============================
-// ROUND, CEIL AND FLOOR
-// ===============================
-
-System.out.println("\n=== Round, Ceil and Floor ===");
-
-double value = 8.67;
-
-System.out.println("Round = " + Math.round(value));
-System.out.println("Ceil = " + Math.ceil(value));
-System.out.println("Floor = " + Math.floor(value));
-
-// ===============================
-// CHECK EVEN OR ODD
-// ===============================
-
-System.out.println("\n=== Even or Odd ===");
-
-int evenOdd = 18;
-
-if (evenOdd % 2 == 0)
-    System.out.println("Even");
+if (checkNum > 0)
+    System.out.println("Positive");
+else if (checkNum < 0)
+    System.out.println("Negative");
 else
-    System.out.println("Odd");
+    System.out.println("Zero");
+
 
 // ===============================
-// CHECK LEAP YEAR
+// SWAP TWO NUMBERS
 // ===============================
 
-System.out.println("\n=== Leap Year ===");
+System.out.println("\n=== Swap Two Numbers ===");
 
-int year = 2024;
+int first = 10;
+int second = 20;
 
-if ((year % 4 == 0 && year % 100 != 0) || year % 400 == 0)
-    System.out.println("Leap Year");
-else
-    System.out.println("Not a Leap Year");
+int temp = first;
+first = second;
+second = temp;
 
-// ===============================
-// RANDOM INTEGER (0-99)
-// ===============================
+System.out.println("First = " + first);
+System.out.println("Second = " + second);
 
-System.out.println("\n=== Random Integer ===");
-
-int randomInt = (int) (Math.random() * 100);
-
-System.out.println("Random Integer = " + randomInt);
 
 // ===============================
-// DEGREE TO RADIAN
+// NUMBER OF DIGITS
 // ===============================
 
-System.out.println("\n=== Degree to Radian ===");
+System.out.println("\n=== Number of Digits ===");
 
-double degree = 90;
+int number = 58392;
+int count = 0;
+int copy = Math.abs(number);
 
-System.out.println("Radians = " + Math.toRadians(degree));
-
-// ===============================
-// RADIAN TO DEGREE
-// ===============================
-
-System.out.println("\n=== Radian to Degree ===");
-
-double radian = Math.PI;
-
-System.out.println("Degrees = " + Math.toDegrees(radian));
-
-// ===============================
-// SINE, COSINE AND TANGENT
-// ===============================
-
-System.out.println("\n=== Trigonometric Functions ===");
-
-double angle = Math.toRadians(30);
-
-System.out.println("Sin = " + Math.sin(angle));
-System.out.println("Cos = " + Math.cos(angle));
-System.out.println("Tan = " + Math.tan(angle));
-
-// ===============================
-// CHECK PRIME NUMBER
-// ===============================
-
-System.out.println("\n=== Prime Number Check ===");
-
-int prime = 29;
-boolean isPrime = true;
-
-if (prime <= 1)
-    isPrime = false;
-else {
-    for (int i = 2; i <= Math.sqrt(prime); i++) {
-        if (prime % i == 0) {
-            isPrime = false;
-            break;
-        }
-    }
+while (copy > 0) {
+    copy /= 10;
+    count++;
 }
 
-System.out.println(isPrime);
+System.out.println("Number of Digits = " + count);
+
+
+// ===============================
+// REVERSE A NUMBER
+// ===============================
+
+System.out.println("\n=== Reverse a Number ===");
+
+int original = 12345;
+int reverse = 0;
+
+int tempNum = original;
+
+while (tempNum != 0) {
+    int digit = tempNum % 10;
+    reverse = reverse * 10 + digit;
+    tempNum /= 10;
+}
+
+System.out.println("Reverse = " + reverse);
+
+
+// ===============================
+// CHECK PALINDROME NUMBER
+// ===============================
+
+System.out.println("\n=== Palindrome Number ===");
+
+int palindromeNum = 121;
+int reversedNum = 0;
+int originalNum = palindromeNum;
+
+while (palindromeNum != 0) {
+    int digit = palindromeNum % 10;
+    reversedNum = reversedNum * 10 + digit;
+    palindromeNum /= 10;
+}
+
+if (originalNum == reversedNum)
+    System.out.println("Palindrome");
+else
+    System.out.println("Not a Palindrome");
+
+
+// ===============================
+// FACTORIAL OF A NUMBER
+// ===============================
+
+System.out.println("\n=== Factorial ===");
+
+int factNum = 5;
+long factorial = 1;
+
+for (int i = 1; i <= factNum; i++) {
+    factorial *= i;
+}
+
+System.out.println("Factorial = " + factorial);
