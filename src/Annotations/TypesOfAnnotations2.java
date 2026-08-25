@@ -18,3 +18,19 @@ public class TypesOfAnnotations2 {
         mob.dummyMeythod();
     }
 }
+class Mobile {
+
+    @Deprecated
+    public void dummyMethod() {
+        System.out.println("This is a dummy method");
+    }
+}
+
+public class TypesOfAnnotations2 {
+    public static void main(String args[]) {
+        Mobile mob = new Mobile();
+
+        // Compiler may show a warning because the method is deprecated
+        mob.dummyMethod();
+    }
+}
