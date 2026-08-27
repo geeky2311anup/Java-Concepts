@@ -1,133 +1,122 @@
 // ===============================
-// FIND MAXIMUM OF THREE NUMBERS
+// CHECK EVEN OR ODD
 // ===============================
 
-System.out.println("\n=== Maximum of Three Numbers ===");
+System.out.println("\n=== Even or Odd ===");
 
-int x = 15;
-int y = 42;
-int z = 27;
+int evenOddNum = 18;
 
-int maxThree = Math.max(x, Math.max(y, z));
-
-System.out.println("Maximum = " + maxThree);
-
-
-// ===============================
-// FIND MINIMUM OF THREE NUMBERS
-// ===============================
-
-System.out.println("\n=== Minimum of Three Numbers ===");
-
-int minThree = Math.min(x, Math.min(y, z));
-
-System.out.println("Minimum = " + minThree);
-
-
-// ===============================
-// CHECK POSITIVE OR NEGATIVE
-// ===============================
-
-System.out.println("\n=== Positive or Negative ===");
-
-int checkNum = -12;
-
-if (checkNum > 0)
-    System.out.println("Positive");
-else if (checkNum < 0)
-    System.out.println("Negative");
+if (evenOddNum % 2 == 0)
+    System.out.println("Even");
 else
-    System.out.println("Zero");
+    System.out.println("Odd");
 
 
 // ===============================
-// SWAP TWO NUMBERS
+// SUM OF DIGITS
 // ===============================
 
-System.out.println("\n=== Swap Two Numbers ===");
+System.out.println("\n=== Sum of Digits ===");
 
-int first = 10;
-int second = 20;
+int digitNumber = 58392;
+int digitSum = 0;
+int tempValue = Math.abs(digitNumber);
 
-int temp = first;
-first = second;
-second = temp;
-
-System.out.println("First = " + first);
-System.out.println("Second = " + second);
-
-
-// ===============================
-// NUMBER OF DIGITS
-// ===============================
-
-System.out.println("\n=== Number of Digits ===");
-
-int number = 58392;
-int count = 0;
-int copy = Math.abs(number);
-
-while (copy > 0) {
-    copy /= 10;
-    count++;
+while (tempValue > 0) {
+    digitSum += tempValue % 10;
+    tempValue /= 10;
 }
 
-System.out.println("Number of Digits = " + count);
+System.out.println("Sum of Digits = " + digitSum);
 
 
 // ===============================
-// REVERSE A NUMBER
+// CHECK PRIME NUMBER
 // ===============================
 
-System.out.println("\n=== Reverse a Number ===");
+System.out.println("\n=== Prime Number ===");
 
-int original = 12345;
-int reverse = 0;
+int primeNum = 29;
+boolean isPrime = true;
 
-int tempNum = original;
-
-while (tempNum != 0) {
-    int digit = tempNum % 10;
-    reverse = reverse * 10 + digit;
-    tempNum /= 10;
+if (primeNum < 2)
+    isPrime = false;
+else {
+    for (int i = 2; i * i <= primeNum; i++) {
+        if (primeNum % i == 0) {
+            isPrime = false;
+            break;
+        }
+    }
 }
 
-System.out.println("Reverse = " + reverse);
-
-
-// ===============================
-// CHECK PALINDROME NUMBER
-// ===============================
-
-System.out.println("\n=== Palindrome Number ===");
-
-int palindromeNum = 121;
-int reversedNum = 0;
-int originalNum = palindromeNum;
-
-while (palindromeNum != 0) {
-    int digit = palindromeNum % 10;
-    reversedNum = reversedNum * 10 + digit;
-    palindromeNum /= 10;
-}
-
-if (originalNum == reversedNum)
-    System.out.println("Palindrome");
+if (isPrime)
+    System.out.println("Prime");
 else
-    System.out.println("Not a Palindrome");
+    System.out.println("Not Prime");
 
 
 // ===============================
-// FACTORIAL OF A NUMBER
+// FIBONACCI SERIES
 // ===============================
 
-System.out.println("\n=== Factorial ===");
+System.out.println("\n=== Fibonacci Series ===");
 
-int factNum = 5;
-long factorial = 1;
+int terms = 10;
+int a = 0;
+int b = 1;
 
-for (int i = 1; i <= factNum; i++) {
-    factorial *= i;
+for (int i = 1; i <= terms; i++) {
+    System.out.print(a + " ");
+
+    int next = a + b;
+    a = b;
+    b = next;
 }
 
-System.out.println("Factorial = " + factorial);
+System.out.println();
+
+
+// ===============================
+// GREATEST COMMON DIVISOR
+// ===============================
+
+System.out.println("\n=== GCD ===");
+
+int num1 = 48;
+int num2 = 18;
+
+int a1 = num1;
+int b1 = num2;
+
+while (b1 != 0) {
+    int remainder = a1 % b1;
+    a1 = b1;
+    b1 = remainder;
+}
+
+System.out.println("GCD = " + a1);
+
+
+// ===============================
+// LEAST COMMON MULTIPLE
+// ===============================
+
+System.out.println("\n=== LCM ===");
+
+int p = 12;
+int q = 18;
+
+int pCopy = p;
+int qCopy = q;
+
+while (qCopy != 0) {
+    int rem = pCopy % qCopy;
+    pCopy = qCopy;
+    qCopy = rem;
+}
+
+int gcd = pCopy;
+int lcm = Math.abs(p * q) / gcd;
+
+System.out.println("LCM = " + lcm);
