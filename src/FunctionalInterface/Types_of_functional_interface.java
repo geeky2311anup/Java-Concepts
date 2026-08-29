@@ -1,76 +1,141 @@
-//there are basically 4 types of functional interfaces in java
+```java
+import java.util.function.Consumer;
+import java.util.function.Supplier;
+import java.util.function.Function;
+import java.util.function.Predicate;
 
-//1. Consumer Functional Interface
-//takes input but returns nothing
-interface ConsumerFunctionalInterface<T>{
-    void accept(T t);
-}
+public class TypesOfFunctionalInterface {
 
-//2. Supplier Functional Interface
-//takes no input but returns output
-interface SupplierFunctionalInterface<R>{
-    R giveOutput();
-}
+    public static void main(String[] args) {
 
-//3. Function Functional Interface
-//takes input and returns output
-interface FunctionFunctionalInterface<R,T>{
-    R outputfun(T t);
-}
+        // ==================================================
+        // 1. CONSUMER
+        // Takes input but returns nothing
+        // Method: accept()
+        // ==================================================
 
-//4. Predicate Functional Interface
-//takes input and returns boolean
-interface PredicateFunctionalInterface<T>{
-    boolean test(T t);
-}
-
-class Types_of_functional_interface{
-    public static void main(String[] args){
-
-        //================ Consumer =================
-        ConsumerFunctionalInterface<String> consumerObj = (t) -> {
-            System.out.println("The input provided is: " + t);
+        Consumer<String> consumer = (str) -> {
+            System.out.println("Input provided: " + str);
         };
-        consumerObj.accept("Hello Consumer");
 
-        ConsumerFunctionalInterface<Integer> squarePrinter = (n) -> {
-            System.out.println("Square = " + (n * n));
+        consumer.accept("Hello Consumer");
+
+
+        Consumer<Integer> squarePrinter = (num) -> {
+            System.out.println("Square = " + (num * num));
         };
+
         squarePrinter.accept(8);
 
-        //================ Supplier =================
-        SupplierFunctionalInterface<Double> supplierObj = () -> {
+
+        // ==================================================
+        // 2. SUPPLIER
+        // Takes no input but returns output
+        // Method: get()
+        // ==================================================
+
+        Supplier<Double> supplier = () -> {
             return 1.234;
         };
-        System.out.println("Supplier Output : " + supplierObj.giveOutput());
 
-        SupplierFunctionalInterface<String> greetingSupplier = () -> {
+        System.out.println("Supplier Output: " + supplier.get());
+
+
+        Supplier<String> greetingSupplier = () -> {
             return "Welcome to Java Functional Interfaces";
         };
-        System.out.println(greetingSupplier.giveOutput());
 
-        //================ Function =================
-        FunctionFunctionalInterface<Integer, String> functionObj = (s) -> {
-            return s.length();
+        System.out.println(greetingSupplier.get());
+
+
+        // ==================================================
+        // 3. FUNCTION
+        // Takes input and returns output
+        // Method: apply()
+        // ==================================================
+
+        Function<String, Integer> stringLength = (str) -> {
+            return str.length();
         };
-        Integer len = functionObj.outputfun("hello java");
-        System.out.println("Length of input string is " + len);
 
-        FunctionFunctionalInterface<String, Integer> binaryConverter = (num) -> {
+        System.out.println(
+            "Length of input string: " + stringLength.apply("Hello Java")
+        );
+
+
+        Function<Integer, String> binaryConverter = (num) -> {
             return Integer.toBinaryString(num);
         };
-        System.out.println("Binary of 25 = " + binaryConverter.outputfun(25));
 
-        //================ Predicate =================
-        PredicateFunctionalInterface<Integer> predicateObj = (num) -> {
+        System.out.println(
+            "Binary of 25: " + binaryConverter.apply(25)
+        );
+
+
+        // ==================================================
+        // 4. PREDICATE
+        // Takes input and returns boolean
+        // Method: test()
+        // ==================================================
+
+        Predicate<Integer> isEven = (num) -> {
             return num % 2 == 0;
         };
-        Boolean result = predicateObj.test(12345);
-        System.out.println("Is number even? " + result);
 
-        PredicateFunctionalInterface<String> emptyCheck = (str) -> {
+        System.out.println(
+            "Is 12345 even? " + isEven.test(12345)
+        );
+
+
+        Predicate<String> isNotEmpty = (str) -> {
             return !str.isEmpty();
         };
-        System.out.println("String is not empty: " + emptyCheck.test("Java"));
+
+        System.out.println(
+            "Is string not empty? " + isNotEmpty.test("Java")
+        );
     }
 }
+```
+
+### Easy way to remember
+
+| Functional Interface | Input | Output    | Method     |
+| -------------------- | ----- | --------- | ---------- |
+| `Consumer<T>`        | ✅     | ❌         | `accept()` |
+| `Supplier<T>`        | ❌     | ✅         | `get()`    |
+| `Function<T, R>`     | ✅     | ✅         | `apply()`  |
+| `Predicate<T>`       | ✅     | `boolean` | `test()`   |
+
+### One important correction
+
+Your custom `FunctionFunctionalInterface<R,T>` is valid, but Java's standard `Function` is written as:
+
+```java
+Function<T, R>
+```
+
+where:
+
+* `T` = **input type**
+* `R` = **return type**
+
+For example:
+
+```java
+Function<String, Integer> length = str -> str.length();
+```
+
+means:
+
+**String → Integer**
+
+Similarly:
+
+```java
+Function<Integer, String> binary = num -> Integer.toBinaryString(num);
+```
+
+means:
+
+**Integer → String**
