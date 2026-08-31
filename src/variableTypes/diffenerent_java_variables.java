@@ -1,39 +1,29 @@
 class Solution {
     public List<Integer> findMissingElements(int[] numbers) {
+        List<Integer> result = new ArrayList<>();
 
-        List<Integer> missing = new ArrayList<>();
-
-        if (numbers == null || numbers.length < 2) {
-            return missing;
+        if (numbers == null || numbers.length <= 1) {
+            return result;
         }
 
-        int min = Integer.MAX_VALUE;
-        int max = Integer.MIN_VALUE;
+        int low = numbers[0];
+        int high = numbers[0];
 
-        // Find the minimum and maximum values
-        // and mark every value that occurs.
-        boolean[] seen = new boolean[101];
+        boolean[] present = new boolean[101];
 
-        for (int num : numbers) {
-            seen[num] = true;
+        for (int value : numbers) {
+            present[value] = true;
 
-            if (num < min) {
-                min = num;
-            }
+            low = Math.min(low, value);
+            high = Math.max(high, value);
+        }
 
-            if (num > max) {
-                max = num;
+        for (int value = low + 1; value < high; value++) {
+            if (!present[value]) {
+                result.add(value);
             }
         }
 
-        // Every number between min and max should be present.
-        // If it was not seen, add it to the answer.
-        for (int num = min + 1; num < max; num++) {
-            if (!seen[num]) {
-                missing.add(num);
-            }
-        }
-
-        return missing;
+        return result;
     }
 }
