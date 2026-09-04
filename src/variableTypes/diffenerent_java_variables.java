@@ -1,37 +1,28 @@
 class Solution {
-    public List<Integer> findMissingElements(int[] numbers) {
-        List<Integer> missing = new ArrayList<>();
+    public int firstStableIndex(int[] nums, int k) {
+        int n = nums.length;
+        int[] minFromRight = new int[n];
 
-        if (numbers == null || numbers.length < 2) {
-            return missing;
+        minFromRight[n - 1] = nums[n - 1];
+
+        for (int i = n - 2; i >= 0; i--) {
+            minFromRight[i] = Math.min(minFromRight[i + 1], nums[i]);
         }
 
-        int minValue = Integer.MAX_VALUE;
-        int maxValue = Integer.MIN_VALUE;
+        int largest = nums[0];
 
-        boolean[] seen = new boolean[101];
-
-        for (int num : numbers) {
-            seen[num] = true;
-
-            if (num < minValue) {
-                minValue = num;
+        for (int i = 0; i < n; i++) {
+            if (nums[i] > largest) {
+                largest = nums[i];
             }
 
-            if (num > maxValue) {
-                maxValue = num;
+            int difference = largest - minFromRight[i];
+
+            if (difference <= k) {
+                return i;
             }
         }
 
-        int current = minValue + 1;
-
-        while (current < maxValue) {
-            if (!seen[current]) {
-                missing.add(current);
-            }
-            current++;
-        }
-
-        return missing;
+        return -1;
     }
 }
