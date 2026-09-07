@@ -1,3 +1,4 @@
+```java
 // ================= STRINGBUILDER =================
 System.out.println("\n36. STRINGBUILDER");
 System.out.println("-----------------");
@@ -28,12 +29,21 @@ sb.append(" Java");
 System.out.println("After Append Again: " + sb);
 
 System.out.println("Index of Java: " + sb.indexOf("Java"));
+System.out.println("Last Index of a: " + sb.lastIndexOf("a"));
+
+System.out.println("Current Capacity: " + sb.capacity());
+
+sb.ensureCapacity(50);
+System.out.println("Capacity After Ensure: " + sb.capacity());
 
 sb.reverse();
 System.out.println("Reversed: " + sb);
 
 sb.reverse();
 System.out.println("Back to Original: " + sb);
+
+sb.setCharAt(0, 'H');
+System.out.println("After Set Character: " + sb);
 
 System.out.println("Length: " + sb.length());
 System.out.println("Capacity: " + sb.capacity());
@@ -70,6 +80,12 @@ System.out.println("E: " + Math.E);
 System.out.println("Log: " + Math.log(10));
 System.out.println("Log10: " + Math.log10(100));
 
+// Extra Math methods
+System.out.println("Negative Absolute: " + Math.abs(-100));
+System.out.println("Exact Addition: " + Math.addExact(20, 30));
+System.out.println("Exact Multiplication: " + Math.multiplyExact(5, 6));
+System.out.println("Random Decimal: " + Math.random());
+
 
 // ================= WRAPPER CLASS =================
 System.out.println("\n38. WRAPPER CLASS");
@@ -93,16 +109,38 @@ System.out.println("Integer to Hex: " + Integer.toHexString(255));
 System.out.println("Integer to Octal: " + Integer.toOctalString(8));
 
 System.out.println("Compare: " + Integer.compare(20, 10));
+
 System.out.println("Is Digit: " + Character.isDigit('5'));
 System.out.println("Is Letter: " + Character.isLetter('A'));
 
-System.out.println("Is Letter or Digit: " + Character.isLetterOrDigit('7'));
-System.out.println("Is Whitespace: " + Character.isWhitespace(' '));
-System.out.println("Uppercase: " + Character.toUpperCase('a'));
-System.out.println("Lowercase: " + Character.toLowerCase('A'));
+System.out.println("Is Letter or Digit: "
+        + Character.isLetterOrDigit('7'));
 
-System.out.println("Binary to Integer: " + Integer.parseInt("1010", 2));
-System.out.println("Hex to Integer: " + Integer.parseInt("FF", 16));
+System.out.println("Is Whitespace: "
+        + Character.isWhitespace(' '));
+
+System.out.println("Uppercase: "
+        + Character.toUpperCase('a'));
+
+System.out.println("Lowercase: "
+        + Character.toLowerCase('A'));
+
+System.out.println("Binary to Integer: "
+        + Integer.parseInt("1010", 2));
+
+System.out.println("Hex to Integer: "
+        + Integer.parseInt("FF", 16));
+
+// Extra Wrapper methods
+System.out.println("Integer Value: " + num.intValue());
+System.out.println("Double Value: " + decimal.doubleValue());
+
+System.out.println("Is Even: " + (num % 2 == 0));
+System.out.println("Character Numeric Value: "
+        + Character.getNumericValue('8'));
+
+System.out.println("Integer to String: "
+        + Integer.toString(500));
 
 
 // ================= COMMAND LINE ARGUMENTS =================
@@ -135,6 +173,13 @@ if (args.length > 0) {
 
     System.out.println("Contains '" + search + "': " + found);
 
+    // Display arguments in reverse order
+    System.out.println("Arguments in Reverse:");
+
+    for (int i = args.length - 1; i >= 0; i--) {
+        System.out.println(args[i]);
+    }
+
 } else {
     System.out.println("No command line arguments provided.");
 }
@@ -146,7 +191,8 @@ System.out.println("---------------");
 
 java.time.LocalDate today = java.time.LocalDate.now();
 java.time.LocalTime currentTime = java.time.LocalTime.now();
-java.time.LocalDateTime dateTime = java.time.LocalDateTime.now();
+java.time.LocalDateTime dateTime =
+        java.time.LocalDateTime.now();
 
 System.out.println("Today's Date: " + today);
 System.out.println("Current Time: " + currentTime);
@@ -191,3 +237,32 @@ System.out.println("Is Today Before Future Date: "
 
 System.out.println("Are Dates Equal: "
         + today.isEqual(today));
+
+// Extra Date & Time methods
+System.out.println("Date After 30 Days: "
+        + today.plusDays(30));
+
+System.out.println("Date Before 30 Days: "
+        + today.minusDays(30));
+
+System.out.println("Time After 2 Hours: "
+        + currentTime.plusHours(2));
+
+System.out.println("Time After 15 Minutes: "
+        + currentTime.plusMinutes(15));
+
+System.out.println("Time Before 10 Minutes: "
+        + currentTime.minusMinutes(10));
+
+System.out.println("Day of Week After 30 Days: "
+        + today.plusDays(30).getDayOfWeek());
+
+System.out.println("DateTime Year: "
+        + dateTime.getYear());
+
+System.out.println("DateTime Hour: "
+        + dateTime.getHour());
+
+System.out.println("DateTime Minute: "
+        + dateTime.getMinute());
+```
