@@ -1,15 +1,17 @@
-//hasArelationship
+```java
+// Has-A Relationship Example
+
 class Address {
     private String city;
     private String state;
+    private String country;
 
-    // Constructor
-    public Address(String city, String state) {
+    public Address(String city, String state, String country) {
         this.city = city;
         this.state = state;
+        this.country = country;
     }
 
-    // Getter methods
     public String getCity() {
         return city;
     }
@@ -17,21 +19,25 @@ class Address {
     public String getState() {
         return state;
     }
+
+    public String getCountry() {
+        return country;
+    }
 }
 
 class Employee {
     private int empId;
     private String empName;
-    private Address address; // Has-A relationship
+    private String department;
+    private Address address; // Employee Has-A Address
 
-    // Constructor
-    public Employee(int empId, String empName, Address address) {
+    public Employee(int empId, String empName, String department, Address address) {
         this.empId = empId;
         this.empName = empName;
+        this.department = department;
         this.address = address;
     }
 
-    // Getter methods
     public int getEmpId() {
         return empId;
     }
@@ -40,19 +46,37 @@ class Employee {
         return empName;
     }
 
+    public String getDepartment() {
+        return department;
+    }
+
     public Address getAddress() {
         return address;
+    }
+
+    public void displayDetails() {
+        System.out.println("Employee ID: " + empId);
+        System.out.println("Employee Name: " + empName);
+        System.out.println("Department: " + department);
+        System.out.println("City: " + address.getCity());
+        System.out.println("State: " + address.getState());
+        System.out.println("Country: " + address.getCountry());
     }
 }
 
 public class Main {
     public static void main(String[] args) {
-        Address addr = new Address("New York", "NY");
-        Employee emp = new Employee(101, "John Doe", addr);
 
-        System.out.println("Employee ID: " + emp.getEmpId());
-        System.out.println("Employee Name: " + emp.getEmpName());
-        System.out.println("Employee City: " + emp.getAddress().getCity());
-        System.out.println("Employee State: " + emp.getAddress().getState());
+        Address addr = new Address("New York", "NY", "USA");
+
+        Employee emp = new Employee(
+            101,
+            "John Doe",
+            "Software Development",
+            addr
+        );
+
+        emp.displayDetails();
     }
 }
+```
