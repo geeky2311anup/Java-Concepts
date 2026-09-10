@@ -1,28 +1,28 @@
+```java
 class Solution {
     public int firstStableIndex(int[] nums, int k) {
-        int n = nums.length;
-        int[] minFromRight = new int[n];
+        int size = nums.length;
+        int[] suffixMin = new int[size];
 
-        minFromRight[n - 1] = nums[n - 1];
+        suffixMin[size - 1] = nums[size - 1];
 
-        for (int i = n - 2; i >= 0; i--) {
-            minFromRight[i] = Math.min(minFromRight[i + 1], nums[i]);
+        for (int pos = size - 2; pos >= 0; pos--) {
+            suffixMin[pos] = Math.min(nums[pos], suffixMin[pos + 1]);
         }
 
-        int largest = nums[0];
+        int maxSeen = Integer.MIN_VALUE;
 
-        for (int i = 0; i < n; i++) {
-            if (nums[i] > largest) {
-                largest = nums[i];
-            }
+        for (int pos = 0; pos < size; pos++) {
+            maxSeen = Math.max(maxSeen, nums[pos]);
 
-            int difference = largest - minFromRight[i];
-
-            if (difference <= k) {
-                return i;
+            if (maxSeen - suffixMin[pos] <= k) {
+                return pos;
             }
         }
 
         return -1;
     }
 }
+```
+
+This keeps the **same O(n) time and O(n) space complexity**, but changes the naming and implementation style.
