@@ -1,122 +1,112 @@
 // ===============================
-// CHECK EVEN OR ODD
+// 1. EVEN OR ODD EVALUATION
 // ===============================
+System.out.println("\n--- Parity Check ---");
 
-System.out.println("\n=== Even or Odd ===");
+int targetValue = 18;
 
-int evenOddNum = 18;
-
-if (evenOddNum % 2 == 0)
-    System.out.println("Even");
-else
-    System.out.println("Odd");
-
-
-// ===============================
-// SUM OF DIGITS
-// ===============================
-
-System.out.println("\n=== Sum of Digits ===");
-
-int digitNumber = 58392;
-int digitSum = 0;
-int tempValue = Math.abs(digitNumber);
-
-while (tempValue > 0) {
-    digitSum += tempValue % 10;
-    tempValue /= 10;
+// Bitwise AND (& 1) returns 0 for even numbers, 1 for odd numbers
+if ((targetValue & 1) == 0) {
+    System.out.println("Result: Even");
+} else {
+    System.out.println("Result: Odd");
 }
 
-System.out.println("Sum of Digits = " + digitSum);
+
+// ===============================
+// 2. SUMMATION OF DIGITS
+// ===============================
+System.out.println("\n--- Digit Sum Computation ---");
+
+int inputVal = 58392;
+int accumulatedSum = 0;
+int currentVal = Math.abs(inputVal);
+
+while (currentVal > 0) {
+    accumulatedSum += currentVal % 10;
+    currentVal /= 10;
+}
+
+System.out.println("Total Digit Sum = " + accumulatedSum);
 
 
 // ===============================
-// CHECK PRIME NUMBER
+// 3. PRIMALITY TESTING
 // ===============================
+System.out.println("\n--- Primality Test ---");
 
-System.out.println("\n=== Prime Number ===");
+int checkNumber = 29;
+boolean primeFlag = checkNumber >= 2;
 
-int primeNum = 29;
-boolean isPrime = true;
-
-if (primeNum < 2)
-    isPrime = false;
-else {
-    for (int i = 2; i * i <= primeNum; i++) {
-        if (primeNum % i == 0) {
-            isPrime = false;
-            break;
-        }
+// Check divisibility up to the square root of checkNumber
+for (int divisor = 2; divisor * divisor <= checkNumber && primeFlag; divisor++) {
+    if (checkNumber % divisor == 0) {
+        primeFlag = false;
     }
 }
 
-if (isPrime)
-    System.out.println("Prime");
-else
-    System.out.println("Not Prime");
+System.out.println(primeFlag ? "Status: Prime Number" : "Status: Composite Number");
 
 
 // ===============================
-// FIBONACCI SERIES
+// 4. FIBONACCI SEQUENCE GENERATION
 // ===============================
+System.out.println("\n--- Fibonacci Sequence ---");
 
-System.out.println("\n=== Fibonacci Series ===");
+int totalTerms = 10;
+int firstTerm = 0;
+int secondTerm = 1;
 
-int terms = 10;
-int a = 0;
-int b = 1;
+for (int termIdx = 0; termIdx < totalTerms; termIdx++) {
+    System.out.print(firstTerm + (termIdx == totalTerms - 1 ? "" : " "));
 
-for (int i = 1; i <= terms; i++) {
-    System.out.print(a + " ");
-
-    int next = a + b;
-    a = b;
-    b = next;
+    int sumNext = firstTerm + secondTerm;
+    firstTerm = secondTerm;
+    secondTerm = sumNext;
 }
-
 System.out.println();
 
 
 // ===============================
-// GREATEST COMMON DIVISOR
+// 5. GREATEST COMMON DIVISOR (EUCLIDEAN)
 // ===============================
+System.out.println("\n--- Greatest Common Divisor ---");
 
-System.out.println("\n=== GCD ===");
+int valA = 48;
+int valB = 18;
 
-int num1 = 48;
-int num2 = 18;
+int tempA = valA;
+int tempB = valB;
 
-int a1 = num1;
-int b1 = num2;
-
-while (b1 != 0) {
-    int remainder = a1 % b1;
-    a1 = b1;
-    b1 = remainder;
+while (tempB != 0) {
+    int modVal = tempA % tempB;
+    tempA = tempB;
+    tempB = modVal;
 }
 
-System.out.println("GCD = " + a1);
+int computedGcd = tempA;
+System.out.println("Calculated GCD = " + computedGcd);
 
 
 // ===============================
-// LEAST COMMON MULTIPLE
+// 6. LEAST COMMON MULTIPLE
 // ===============================
+System.out.println("\n--- Least Common Multiple ---");
 
-System.out.println("\n=== LCM ===");
+int number1 = 12;
+int number2 = 18;
 
-int p = 12;
-int q = 18;
+int x = number1;
+int y = number2;
 
-int pCopy = p;
-int qCopy = q;
-
-while (qCopy != 0) {
-    int rem = pCopy % qCopy;
-    pCopy = qCopy;
-    qCopy = rem;
+// Euclidean algorithm to obtain GCD first
+while (y != 0) {
+    int mod = x % y;
+    x = y;
+    y = mod;
 }
 
-int gcd = pCopy;
-int lcm = Math.abs(p * q) / gcd;
+// Compute LCM using the formula: (|a * b|) / GCD(a, b)
+int computedLcm = (x == 0) ? 0 : Math.abs(number1 * number2) / x;
 
-System.out.println("LCM = " + lcm);
+System.out.println("Calculated LCM = " + computedLcm);
