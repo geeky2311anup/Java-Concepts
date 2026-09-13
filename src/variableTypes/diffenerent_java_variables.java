@@ -20,11 +20,13 @@ class Solution {
      *    - Added early boundary validation for empty arrays.
      *
      * 3. Structural Flow Changes:
-     *    - Reconstructed loop signatures and added comprehensive documentation 
+     *    - Reconstructed loop signatures and added comprehensive documentation
      *      explaining the two-pass suffix-minimum tracking algorithm.
      */
     public int firstStableIndex(int[] arr, int targetDiff) {
         int length = arr.length;
+
+        // Handle empty input
         if (length == 0) {
             return -1;
         }
