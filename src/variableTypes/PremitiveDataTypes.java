@@ -1,112 +1,46 @@
-// ===============================
-// 1. EVEN OR ODD EVALUATION
-// ===============================
-System.out.println("\n--- Parity Check ---");
+class Solution {
+    private long[][][] memo;
+    private static final long MOD = 1000000007L;
 
-int targetValue = 18;
+    private int dfs(int pos, int state, int remaining, int n) {
+        if (remaining == 0) {
+            return 1;
+        }
 
-// Bitwise AND (& 1) returns 0 for even numbers, 1 for odd numbers
-if ((targetValue & 1) == 0) {
-    System.out.println("Result: Even");
-} else {
-    System.out.println("Result: Odd");
-}
+        if (pos >= n) {
+            return 0;
+        }
 
+        if (memo[pos][remaining][state] != -1) {
+            return (int) memo[pos][remaining][state];
+        }
 
-// ===============================
-// 2. SUMMATION OF DIGITS
-// ===============================
-System.out.println("\n--- Digit Sum Computation ---");
+        long ways;
 
-int inputVal = 58392;
-int accumulatedSum = 0;
-int currentVal = Math.abs(inputVal);
+        if (state == 1) {
+            long close = dfs(pos, 0, remaining - 1, n);
+            long extend = dfs(pos + 1, 1, remaining, n);
+            ways = (close + extend) % MOD;
+        } else {
+            long begin = dfs(pos + 1, 1, remaining, n);
+            long skip = dfs(pos + 1, 0, remaining, n);
+            ways = (begin + skip) % MOD;
+        }
 
-while (currentVal > 0) {
-    accumulatedSum += currentVal % 10;
-    currentVal /= 10;
-}
+        memo[pos][remaining][state] = ways;
+        return (int) ways;
+    }
 
-System.out.println("Total Digit Sum = " + accumulatedSum);
+    public int numberOfSets(int n, int k) {
+        memo = new long[n + 1][k + 1][2];
 
+        for (int i = 0; i <= n; i++) {
+            for (int j = 0; j <= k; j++) {
+                memo[i][j][0] = -1;
+                memo[i][j][1] = -1;
+            }
+        }
 
-// ===============================
-// 3. PRIMALITY TESTING
-// ===============================
-System.out.println("\n--- Primality Test ---");
-
-int checkNumber = 29;
-boolean primeFlag = checkNumber >= 2;
-
-// Check divisibility up to the square root of checkNumber
-for (int divisor = 2; divisor * divisor <= checkNumber && primeFlag; divisor++) {
-    if (checkNumber % divisor == 0) {
-        primeFlag = false;
+        return dfs(0, 0, k, n);
     }
 }
-
-System.out.println(primeFlag ? "Status: Prime Number" : "Status: Composite Number");
-
-
-// ===============================
-// 4. FIBONACCI SEQUENCE GENERATION
-// ===============================
-System.out.println("\n--- Fibonacci Sequence ---");
-
-int totalTerms = 10;
-int firstTerm = 0;
-int secondTerm = 1;
-
-for (int termIdx = 0; termIdx < totalTerms; termIdx++) {
-    System.out.print(firstTerm + (termIdx == totalTerms - 1 ? "" : " "));
-
-    int sumNext = firstTerm + secondTerm;
-    firstTerm = secondTerm;
-    secondTerm = sumNext;
-}
-System.out.println();
-
-
-// ===============================
-// 5. GREATEST COMMON DIVISOR (EUCLIDEAN)
-// ===============================
-System.out.println("\n--- Greatest Common Divisor ---");
-
-int valA = 48;
-int valB = 18;
-
-int tempA = valA;
-int tempB = valB;
-
-while (tempB != 0) {
-    int modVal = tempA % tempB;
-    tempA = tempB;
-    tempB = modVal;
-}
-
-int computedGcd = tempA;
-System.out.println("Calculated GCD = " + computedGcd);
-
-
-// ===============================
-// 6. LEAST COMMON MULTIPLE
-// ===============================
-System.out.println("\n--- Least Common Multiple ---");
-
-int number1 = 12;
-int number2 = 18;
-
-int x = number1;
-int y = number2;
-
-// Euclidean algorithm to obtain GCD first
-while (y != 0) {
-    int mod = x % y;
-    x = y;
-    y = mod;
-}
-
-// Compute LCM using the formula: (|a * b|) / GCD(a, b)
-int computedLcm = (x == 0) ? 0 : Math.abs(number1 * number2) / x;
-
-System.out.println("Calculated LCM = " + computedLcm);
