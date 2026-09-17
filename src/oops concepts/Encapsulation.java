@@ -1,21 +1,23 @@
-// File name: Main.java
-
 class Employee {
 
-    // Private data members
     private int empId;
     private String empName;
 
-    // Setter methods
+    Employee(int id, String name) {
+        setEmpId(id);
+        setEmpName(name);
+    }
+
     public void setEmpId(int id) {
-        empId = id;
+        if (id > 0) {
+            empId = id;
+        }
     }
 
     public void setEmpName(String name) {
         empName = name;
     }
 
-    // Getter methods
     public int getEmpId() {
         return empId;
     }
@@ -28,25 +30,13 @@ class Employee {
 public class Main {
     public static void main(String[] args) {
 
-        Employee e = new Employee();
-
-        e.setEmpId(101);
-        e.setEmpName("Rahul");
+        Employee e = new Employee(101, "Rahul");
 
         System.out.println("Employee ID: " + e.getEmpId());
         System.out.println("Employee Name: " + e.getEmpName());
-    }
-//example of encapsulation
 
-class Main {
-    public static void main(String[] args) {
+        e.setEmpName("Amit");
 
-        Employee e = new Employee();
-
-        e.setEmpId(101);
-        e.setEmpName("Rahul");
-
-        System.out.println("Employee ID: " + e.getEmpId());
-        System.out.println("Employee Name: " + e.getEmpName());
+        System.out.println("Updated Name: " + e.getEmpName());
     }
 }
