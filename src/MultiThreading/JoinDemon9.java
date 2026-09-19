@@ -1,196 +1,426 @@
-public class JoinDemon9
- {
-    
+public class JoinDemon9 {
+
 }
+
 /*
 
-Question is why Stop, Resume, Suspend method are depricated
-use of join , thread priority, daemon thgread
+Question: Why are stop(), suspend(), and resume() deprecated?
+Also explain join(), thread priority, and daemon threads.
 
-answer->
- Nice set of topics—you’ve basically hit all the “real-world threads” interview points in one line 😄
-I’ll go part by part.
+1. Why stop(), suspend(), resume() are deprecated
 
-1️⃣ Why stop(), suspend(), resume() are deprecated
-🔴 Thread.stop() – why it’s dangerous
+---
 
-stop() kills a thread immediately, wherever it is.
+## Thread.stop()
+
+stop() forcibly terminates a thread immediately.
 
 Problems:
 
-The thread might be holding locks (inside a synchronized block).
-If you kill it there:
+* The thread can be stopped while modifying shared data.
+* It may be holding a lock when stopped.
+* Shared objects can be left in an inconsistent state.
+* It makes synchronization and debugging difficult.
 
-Locks are released abruptly
+Example problem:
 
-Shared data may be half-updated / inconsistent
-
-Other threads reading that data see corrupted state
-
-Finally blocks may not run as expected.
-
-You get random, hard-to-debug bugs.
-
-So Java said: this is too unsafe → deprecated.
-👉 Modern way: use cooperative stop:
-
-class MyTask implements Runnable {
-    private volatile boolean running = true;
-
-    public void stopTask() {
-        running = false;
-    }
-
-    public void run() {
-        while (running) {
-            // do work
-            if (Thread.currentThread().isInterrupted()) break;
-        }
-    }
+synchronized void update() {
+balance -= 100;
+// thread is stopped here
+balance += 50;
 }
 
+The operation may be left incomplete.
 
-We ask the thread to stop; it decides when to stop safely.
+Modern approach:
+Use a flag or interruption so that the thread can stop cooperatively.
 
-🔴 Thread.suspend() and Thread.resume() – why they’re dangerous
+Example:
 
-suspend() pauses a thread wherever it is.
-resume() tries to continue it.
+class Task implements Runnable {
+private volatile boolean running = true;
 
-Main problems:
+```
+public void stopTask() {
+    running = false;
+}
 
-If you suspend() a thread while it holds a lock, that lock is never released →
-all other threads waiting for that lock block forever → deadlock.
+public void run() {
+    while (running) {
+        // perform work
+    }
+}
+```
 
-If you call resume() on the wrong thread or forget to call it → that thread is stuck forever.
+}
 
-Again: super easy to create unfixable, random deadlocks.
+volatile is useful here because changes to running
+are visible to other threads.
 
-So they were also deprecated.
+## Thread.suspend()
 
-👉 Modern approach: use higher-level tools:
+suspend() pauses a thread at its current point.
 
-wait()/notify() on shared objects
+The major problem is that the thread may be holding
+a lock when it gets suspended.
 
-BlockingQueue, Semaphore, ReentrantLock, CountDownLatch, etc. (java.util.concurrent)
+Example:
 
-2️⃣ join() – what it does and when to use it
+synchronized void work() {
+// lock acquired
 
-join() = “wait for this thread to finish”
+```
+// thread gets suspended here
+```
+
+}
+
+Another thread may need the same lock and will wait
+indefinitely.
+
+This can result in deadlock-like behavior.
+
+## Thread.resume()
+
+resume() was used to continue a suspended thread.
+
+The problem is that suspend() and resume() are not
+safe as a synchronization mechanism.
+
+If resume() is called before the thread actually
+reaches the suspended state, the program can behave
+unexpectedly.
+
+Modern alternatives:
+
+* wait() / notify()
+* BlockingQueue
+* Semaphore
+* CountDownLatch
+* ReentrantLock
+* ExecutorService
+
+2. join()
+
+---
+
+join() means:
+
+"Wait until this thread finishes."
 
 Example:
 
 Thread worker = new Thread(() -> {
-    // some long work
+System.out.println("Worker is running");
 });
 
 worker.start();
 
-// main thread waits for worker to finish
 worker.join();
 
-System.out.println("Worker done, now continue in main");
+System.out.println("Worker completed");
 
+Here the main thread waits for worker to finish.
 
-Use cases:
+Important:
+join() blocks the thread that calls join(),
+not the thread being joined.
 
-You started some background computation and need the final result before continuing.
+For example:
 
-You want to ensure all worker threads finish before program exits.
+worker.join();
 
-In simple examples: run multiple threads, then join() each to wait for completion.
+means the current thread waits for worker.
 
-Variations:
+Common use cases:
 
-join() – wait indefinitely
+* Waiting for background calculations
+* Waiting for multiple worker threads
+* Making sure threads complete before continuing
+* Collecting results produced by worker threads
 
-join(long millis) – wait at most millis ms
+Different versions:
 
-3️⃣ Thread Priority – what it is and why not to rely on it
+join()
+-> Wait indefinitely
 
-In Java:
+join(long millis)
+-> Wait for at most the specified time
 
-thread.setPriority(1);  // MIN_PRIORITY
-thread.setPriority(5);  // NORM_PRIORITY (default)
-thread.setPriority(10); // MAX_PRIORITY
+Example with multiple threads:
 
+Thread t1 = new Thread(() -> {});
+Thread t2 = new Thread(() -> {});
 
-Idea: a hint to the scheduler that some threads are “more important”.
+t1.start();
+t2.start();
 
-Reality:
+t1.join();
+t2.join();
 
-JVM passes this to the OS scheduler
+System.out.println("Both threads finished");
 
-Different OSes treat priority differently
+3. Thread Priority
 
-JVM does NOT guarantee:
+---
 
-that higher priority will always run first
+Java thread priority ranges from 1 to 10.
 
-that low-priority threads won’t starve
+Thread.MIN_PRIORITY    = 1
+Thread.NORM_PRIORITY   = 5
+Thread.MAX_PRIORITY    = 10
 
-So, use priority only as a soft hint, never as core logic.
-
-Typical advice:
-
-Most code: just leave default priority
-
-Maybe bump priority for:
-
-UI threads in desktop apps
-
-very time-sensitive tasks (even then: carefully)
-
-4️⃣ Daemon Threads – what they are and when to use them
-
-A daemon thread is a “background helper” that does not prevent the JVM from exiting.
-
-Key behavior:
-
-When all non-daemon (user) threads finish,
-
-JVM kills all daemon threads automatically and exits.
-
-Creating a daemon thread:
+Example:
 
 Thread t = new Thread(() -> {
-    while (true) {
-        // background task
-    }
+System.out.println("Running");
 });
-t.setDaemon(true);  // must call BEFORE start()
+
+t.setPriority(Thread.MAX_PRIORITY);
 t.start();
 
+Priority is only a scheduling hint.
 
-Examples:
+A higher-priority thread is NOT guaranteed to execute
+before a lower-priority thread.
 
-Garbage collector (GC)
+For example:
 
-Background log flusher
+t1.setPriority(10);
+t2.setPriority(1);
 
-Heartbeat/ping thread
+It does NOT mean:
 
-Cache cleaner
+t1 will definitely finish first.
 
-⚠️ Important:
+Why?
 
-If the JVM shuts down, daemon threads are stopped abruptly:
+* JVM scheduling can depend on the operating system.
+* Different operating systems handle priorities differently.
+* Scheduling is not something application logic should depend on.
+* A lower-priority thread may still get CPU time.
 
-No guarantee finally blocks run
+Interview point:
 
-No guarantee resources are cleaned up
+Never use thread priority to guarantee program correctness.
 
-So:
+Use synchronization and concurrency utilities instead.
 
-DO NOT use daemon threads for critical tasks (e.g., writing final data to DB, saving files).
+4. Daemon Threads
 
-Use them for “nice to have” background work.
+---
 
-5️⃣ Quick comparison table
-Feature / Method	Status	Use Case	Problem / Note
-stop()	Deprecated	Force kill a thread	Corrupts shared state, unsafe
-suspend() / resume()	Deprecated	Pause / resume thread	Easy deadlocks, unsafe
-join()	Recommended	Wait for a thread to finish	Blocks current thread
-setPriority()	Use rarely	Hint scheduler for importance	Not portable, no hard guarantee
-Daemon thread	Important	Background helpers	Killed automatically when JVM exits
- */
+A daemon thread is a background thread that does not
+prevent the JVM from terminating.
+
+Example:
+
+Thread background = new Thread(() -> {
+while (true) {
+System.out.println("Background work");
+}
+});
+
+background.setDaemon(true);
+background.start();
+
+Important:
+
+setDaemon(true) must be called BEFORE start().
+
+Once a thread has started, its daemon status cannot
+be changed.
+
+When all non-daemon threads finish:
+
+JVM exits
+↓
+Daemon threads are also terminated
+
+Examples of tasks suitable for daemon threads:
+
+* Background monitoring
+* Cache cleanup
+* Periodic housekeeping
+* Background helper tasks
+
+Do NOT depend on daemon threads for critical work.
+
+For example:
+
+* Important database operations
+* Saving important files
+* Final transaction processing
+* Critical resource cleanup
+
+5. User Thread vs Daemon Thread
+
+---
+
+User thread:
+
+* Keeps the JVM alive.
+* JVM waits for user threads to finish.
+
+Daemon thread:
+
+* Does not keep the JVM alive.
+* JVM can exit when no user threads remain.
+
+Example:
+
+Thread userThread = new Thread(() -> {
+System.out.println("User thread");
+});
+
+Thread daemonThread = new Thread(() -> {
+while (true) {
+// background work
+}
+});
+
+daemonThread.setDaemon(true);
+
+userThread.start();
+daemonThread.start();
+
+If userThread finishes and no other user threads exist,
+the JVM can terminate even though daemonThread is still running.
+
+6. Important Interview Difference
+
+---
+
+stop()
+-> Terminates a thread forcibly.
+
+interrupt()
+-> Requests a thread to stop/wake from certain blocking
+operations. It does not forcibly kill the thread.
+
+suspend()
+-> Pauses a thread.
+
+resume()
+-> Attempts to continue a suspended thread.
+
+join()
+-> Makes the current thread wait for another thread.
+
+setPriority()
+-> Gives a scheduling hint.
+
+setDaemon()
+-> Marks a thread as a background daemon thread.
+
+7. interrupt() vs stop()
+
+---
+
+This is a common interview question.
+
+stop():
+
+Thread t = new Thread(() -> {
+// work
+});
+
+t.start();
+t.stop();
+
+The thread is forcibly terminated.
+
+interrupt():
+
+Thread t = new Thread(() -> {
+while (!Thread.currentThread().isInterrupted()) {
+// work
+}
+});
+
+t.start();
+t.interrupt();
+
+Here the thread receives an interruption request and
+can decide how to terminate safely.
+
+Therefore, interruption is generally preferred over
+forcibly stopping a thread.
+
+8. Important Rule About Daemon Threads
+
+---
+
+Daemon status must be set before starting the thread.
+
+Correct:
+
+Thread t = new Thread(() -> {
+// work
+});
+
+t.setDaemon(true);
+t.start();
+
+Incorrect:
+
+Thread t = new Thread(() -> {
+// work
+});
+
+t.start();
+t.setDaemon(true);
+
+The second approach throws IllegalThreadStateException.
+
+9. Quick Interview Table
+
+---
+
+Feature          Meaning                         Important Point
+
+stop()           Forcefully terminates thread    Deprecated / unsafe
+
+suspend()        Pauses thread                   Deprecated / unsafe
+
+resume()         Continues suspended thread      Deprecated / unsafe
+
+join()           Waits for another thread        Blocks caller
+
+interrupt()      Requests interruption            Cooperative mechanism
+
+setPriority()    Sets scheduling priority        Only a hint
+
+setDaemon()      Makes background thread          Set before start()
+
+10. One-Line Revision
+
+---
+
+stop()
+-> Force stop, unsafe
+
+suspend()
+-> Pause thread, unsafe
+
+resume()
+-> Resume suspended thread, unsafe
+
+join()
+-> Wait for another thread
+
+interrupt()
+-> Request interruption
+
+Priority
+-> Scheduler hint, not a guarantee
+
+Daemon
+-> Background thread that doesn't keep JVM alive
+
+Most important interview point:
+
+"Do not depend on deprecated thread-control methods
+for synchronization. Prefer cooperative interruption
+and java.util.concurrent utilities."
+*/
