@@ -10,6 +10,10 @@ interface Bird {
         void swim();
     }
 
+    interface Predator {
+        void hunt();
+    }
+
     default void info() {
         System.out.println("This is a bird.");
     }
@@ -19,26 +23,33 @@ interface Bird {
     }
 }
 
-// Interface extending nested interface
 interface AdvancedBird extends Bird.WaterBird {
     void dive();
 }
 
 class Parrot implements Bird {
+
     @Override
     public void fly() {
         System.out.println("Parrot can fly");
     }
 }
 
-class Eagle implements Bird {
+class Eagle implements Bird, Bird.Predator {
+
     @Override
     public void fly() {
         System.out.println("Eagle flies high");
     }
+
+    @Override
+    public void hunt() {
+        System.out.println("Eagle hunts from the sky");
+    }
 }
 
 class Ostrich implements Bird.NonFlyingBird {
+
     @Override
     public void run() {
         System.out.println("Ostrich runs fast");
@@ -104,6 +115,7 @@ class Dog {
     }
 
     class Puppy implements Pet {
+
         @Override
         public void play() {
             System.out.println("Puppy plays");
@@ -111,6 +123,7 @@ class Dog {
     }
 
     static class GermanShepherd implements GuardDog {
+
         @Override
         public void protect() {
             System.out.println("German Shepherd protects the house");
@@ -118,7 +131,6 @@ class Dog {
     }
 }
 
-// Nested interface extending another nested interface
 interface Animal {
 
     interface Walker {
@@ -143,15 +155,18 @@ class Horse implements Animal.Runner {
     }
 }
 
-// Functional nested interface
 interface Machine {
 
     interface Switch {
         void turnOn();
     }
+
+    interface Control {
+        void start();
+        void stop();
+    }
 }
 
-// Nested interface inside another nested interface
 interface Vehicle {
 
     interface Engine {
@@ -187,13 +202,102 @@ class EVCar implements Vehicle.Electric {
     }
 }
 
-// Static method inside nested interface
 interface Shape {
 
     interface Calculator {
 
         static int square(int x) {
             return x * x;
+        }
+
+        static int cube(int x) {
+            return x * x * x;
+        }
+    }
+}
+
+// Multiple levels of nested interfaces
+interface Computer {
+
+    interface Hardware {
+
+        interface Processor {
+            void process();
+        }
+    }
+
+    interface Software {
+        void run();
+    }
+}
+
+class IntelProcessor implements Computer.Hardware.Processor {
+
+    @Override
+    public void process() {
+        System.out.println("Intel processor is processing");
+    }
+}
+
+class OperatingSystem implements Computer.Software {
+
+    @Override
+    public void run() {
+        System.out.println("Operating system is running");
+    }
+}
+
+// Interface containing another interface with default method
+interface Mobile {
+
+    interface Camera {
+
+        void capture();
+
+        default void quality() {
+            System.out.println("Camera quality: High");
+        }
+    }
+}
+
+class Phone implements Mobile.Camera {
+
+    @Override
+    public void capture() {
+        System.out.println("Phone captures a photo");
+    }
+}
+
+// Nested interface with constants
+interface Bank {
+
+    interface Account {
+
+        double MIN_BALANCE = 1000.0;
+
+        void deposit(double amount);
+
+        void withdraw(double amount);
+    }
+}
+
+class SavingsAccount implements Bank.Account {
+
+    private double balance = Bank.Account.MIN_BALANCE;
+
+    @Override
+    public void deposit(double amount) {
+        balance += amount;
+        System.out.println("Deposited: " + amount);
+    }
+
+    @Override
+    public void withdraw(double amount) {
+        if (balance - amount >= Bank.Account.MIN_BALANCE) {
+            balance -= amount;
+            System.out.println("Withdrawn: " + amount);
+        } else {
+            System.out.println("Minimum balance requirement not satisfied");
         }
     }
 }
@@ -208,6 +312,7 @@ public class NestedInterfaceDemo {
 
         Eagle eagle = new Eagle();
         eagle.fly();
+        eagle.hunt();
 
         Ostrich ostrich = new Ostrich();
         ostrich.run();
@@ -236,20 +341,39 @@ public class NestedInterfaceDemo {
         Dog.GermanShepherd guardDog = new Dog.GermanShepherd();
         guardDog.protect();
 
-        // Anonymous class
         Bird.NonFlyingBird kiwi = new Bird.NonFlyingBird() {
             @Override
             public void run() {
                 System.out.println("Kiwi runs");
             }
         };
+
         kiwi.run();
 
-        // Lambda expression
-        Machine.Switch sw = () -> System.out.println("Machine turned ON");
-        sw.turnOn();
+        Machine.Switch machineSwitch =
+                () -> System.out.println("Machine turned ON");
 
-        Bird.NonFlyingBird emu = () -> System.out.println("Emu runs very fast");
+        machineSwitch.turnOn();
+
+        Machine.Control control = new Machine.Control() {
+
+            @Override
+            public void start() {
+                System.out.println("Machine started");
+            }
+
+            @Override
+            public void stop() {
+                System.out.println("Machine stopped");
+            }
+        };
+
+        control.start();
+        control.stop();
+
+        Bird.NonFlyingBird emu =
+                () -> System.out.println("Emu runs very fast");
+
         emu.run();
 
         Horse horse = new Horse();
@@ -263,6 +387,24 @@ public class NestedInterfaceDemo {
         car.charge();
         car.batteryStatus();
 
-        System.out.println("Square of 5 = " + Shape.Calculator.square(5));
+        System.out.println("Square of 5 = "
+                + Shape.Calculator.square(5));
+
+        System.out.println("Cube of 3 = "
+                + Shape.Calculator.cube(3));
+
+        IntelProcessor processor = new IntelProcessor();
+        processor.process();
+
+        OperatingSystem os = new OperatingSystem();
+        os.run();
+
+        Phone phone = new Phone();
+        phone.capture();
+        phone.quality();
+
+        SavingsAccount account = new SavingsAccount();
+        account.deposit(5000);
+        account.withdraw(2000);
     }
 }
