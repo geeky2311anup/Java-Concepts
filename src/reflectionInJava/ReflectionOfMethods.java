@@ -4,7 +4,7 @@ if (annotations.length == 0) {
     System.out.println("No Annotations Present");
 } else {
     for (Annotation annotation : annotations) {
-        System.out.println(annotation.annotationType().getSimpleName());
+        System.out.println(annotation.annotationType).getSimpleName());
     }
 }
 
