@@ -1,53 +1,188 @@
-class ThreadObj extends Thread{
+class ThreadObj extends Thread {
+
     @Override
-    public void run(){
+    public void run() {
         System.out.println(Thread.currentThread().getName());
     }
 }
 
 public class ThreadClass3 {
-    public static void main(String[] args){
+
+    public static void main(String[] args) {
+
         ThreadObj threadObj = new ThreadObj();
+
         threadObj.start();
-        System.out.println(Thread.currentThread().getName());//this is printed first because main thread has more priority
-        
+
+        System.out.println(Thread.currentThread().getName());
     }
 }
 
 /*
- ✅ Why main prints first and THEN Thread-0?
+==========================================================
+                WHAT HAPPENS HERE?
+==========================================================
 
-Your code:
+1. The JVM starts with the main thread.
 
-ThreadObj threadObj = new ThreadObj();
+   main
+    |
+    |----> ThreadObj object is created
+    |
+    |----> threadObj.start()
+    |
+    |----> main continues
+    |
+    |----> System.out.println(...)
+    |
+    |----> main thread finishes
+    |
+    |----> Thread-0 may execute
+    |
+    v
+
+==========================================================
+WHAT DOES start() ACTUALLY DO?
+==========================================================
+
 threadObj.start();
-System.out.println(Thread.currentThread().getName());
 
-What happens:
+This creates a NEW thread and tells the JVM:
 
-threadObj.start() creates a new thread and asks the JVM to run its run() method.
+    "This thread is ready to execute."
 
-But start() does NOT run the thread immediately.
-It just requests the JVM scheduler:
-“When you get time, please run this new thread.”
+The JVM will eventually call:
 
-Immediately after calling start(), the main thread continues and executes:
+    run()
 
-System.out.println(Thread.currentThread().getName());
+on the new thread.
 
+IMPORTANT:
 
-This prints something like:
+start() does NOT mean:
 
-main
+    "Execute run() RIGHT NOW."
 
+The thread has to be scheduled by the JVM/OS.
 
-Only after that, the CPU scheduler eventually decides to run the new thread, so you see:
+==========================================================
+WHY DOES "main" OFTEN PRINT FIRST?
+==========================================================
 
-Thread-0
+After:
 
-🔥 Key Point:
+    threadObj.start();
 
-Thread scheduling is non-deterministic
-→ The JVM decides when to run the new thread.
-→ The main thread usually finishes its next line faster.
- */
+the main thread is still running.
+
+It immediately reaches:
+
+    System.out.println(Thread.currentThread().getName());
+
+So the main thread may print:
+
+    main
+
+before the newly created thread gets CPU time.
+
+Then Thread-0 executes:
+
+    run()
+
+and prints:
+
+    Thread-0
+
+Output may therefore be:
+
+    main
+    Thread-0
+
+==========================================================
+BUT CAN Thread-0 PRINT FIRST?
+==========================================================
+
+YES!
+
+For example:
+
+    Thread-0
+    main
+
+is also a valid output.
+
+Why?
+
+Because thread scheduling is NON-DETERMINISTIC.
+
+The operating system/JVM scheduler decides when each
+thread gets CPU time.
+
+==========================================================
+IMPORTANT CORRECTION
+==========================================================
+
+❌ Don't think:
+
+    "main always runs first because it has higher priority."
+
+That's not guaranteed.
+
+Thread priority and execution order are different things.
+
+Even if one thread has a higher priority, you should NOT
+use priority to assume a fixed execution order.
+
+==========================================================
+start() vs run()
+==========================================================
+
+If you write:
+
+    threadObj.start();
+
+A NEW THREAD is created.
+
+    main
+      \
+       ---> Thread-0 ---> run()
+
+But if you write:
+
+    threadObj.run();
+
+NO new thread is created.
+
+The main thread itself executes run():
+
+    main ---> run()
+
+Therefore:
+
+    start()  → new thread
+    run()    → normal method call
+
+==========================================================
+KEY POINT
+==========================================================
+
+start()
+   ↓
+Creates/starts a separate thread
+   ↓
+JVM schedules it
+   ↓
+run() executes on that new thread
+
+The order of:
+
+    main
+    Thread-0
+
+or:
+
+    Thread-0
+    main
+
+is NOT guaranteed.
+*/
