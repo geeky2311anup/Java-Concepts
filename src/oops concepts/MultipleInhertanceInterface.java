@@ -1,28 +1,22 @@
 class Solution {
-    public int maxPalindromes(String s, int k) {
-        int n = s.length();
-        int result = 0;
-        int previousEnd = -1;
+    public int maxPalindromes(String text, int minLength) {
+        int len = text.length();
+        int totalPalindromes = 0;
+        int lastMatchedEnd = -1;
 
-        for (int center = 0; center < n; center++) {
-            int[][] ranges = {
-                {center - 1, center},
-                {center, center}
-            };
+        for (int idx = 0; idx < len; idx++) {
+            // Check both odd-length (offset = 0) and even-length (offset = 1) palindrome centers
+            for (int offset = 0; offset <= 1; offset++) {
+                int left = idx;
+                int right = idx + offset;
 
-            for (int[] range : ranges) {
-                int left = range[0];
-                int right = range[1];
+                while (left >= 0 && right < len && text.charAt(left) == text.charAt(right)) {
+                    int windowSize = right - left + 1;
 
-                while (left >= 0 && right < n) {
-                    if (s.charAt(left) != s.charAt(right)) {
-                        break;
-                    }
-
-                    if (right - left + 1 >= k) {
-                        if (left > previousEnd) {
-                            result++;
-                            previousEnd = right;
+                    if (windowSize >= minLength) {
+                        if (left > lastMatchedEnd) {
+                            totalPalindromes++;
+                            lastMatchedEnd = right;
                         }
                         break;
                     }
@@ -33,6 +27,6 @@ class Solution {
             }
         }
 
-        return result;
+        return totalPalindromes;
     }
 }
