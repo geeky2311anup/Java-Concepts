@@ -1,26 +1,35 @@
 class Solution {
-    public int pairSum(ListNode head) {
-        List<Integer> values = new ArrayList<>();
+    public boolean isValid(String s) {
 
-        for (ListNode node = head; node != null; node = node.next) {
-            values.add(node.val);
-        }
+        Stack<Character> stack = new Stack<>();
 
-        int i = 0;
-        int j = values.size() - 1;
-        int answer = Integer.MIN_VALUE;
+        for (int i = 0; i < s.length(); i++) {
+            char current = s.charAt(i);
 
-        while (i < j) {
-            int sum = values.get(i) + values.get(j);
-
-            if (sum > answer) {
-                answer = sum;
+            if (current == '(' || current == '[' || current == '{') {
+                stack.push(current);
+                continue;
             }
 
-            i++;
-            j--;
+            if (stack.empty()) {
+                return false;
+            }
+
+            char top = stack.pop();
+
+            if (current == ')' && top != '(') {
+                return false;
+            }
+
+            if (current == ']' && top != '[') {
+                return false;
+            }
+
+            if (current == '}' && top != '{') {
+                return false;
+            }
         }
 
-        return answer;
+        return stack.empty();
     }
 }
