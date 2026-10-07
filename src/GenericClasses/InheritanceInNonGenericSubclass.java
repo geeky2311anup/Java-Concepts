@@ -1,26 +1,51 @@
-class Print<T>{
+// Generic parent class
+class Print<T> {
+
     T value;
-    public Print(T value){
+
+    // Constructor of the generic class
+    public Print(T value) {
         this.value = value;
     }
-    public void display(){
+
+    // Displays the stored value
+    public void display() {
         System.out.println("Value: " + value);
     }
 }
-class ColorPrint extends Print<String>{
+
+// Non-generic child class extending Print<String>
+class ColorPrint extends Print<String> {
+
     public String color;
-    public ColorPrint(String value, String color){
-        super(value);//calling parent class constructor and passing value to it no need to use this.value=value;
+
+    // Child class constructor
+    public ColorPrint(String value, String color) {
+
+        // Calls the parent constructor and initializes value
+        super(value);
+
+        // Initializes the child class variable
         this.color = color;
     }
-    public void displayColor(){
+
+    // Displays both value and color
+    public void displayColor() {
         System.out.println("Value: " + value + ", Color: " + color);
-    }   
-}
-public class InheritanceInNonGenericSubclass{
-    public static void main(String[] args){
-        ColorPrint cp = new ColorPrint("Hello", "Red");
-        cp.display(); // From parent generic class
-        cp.displayColor(); // From child non-generic subclass
     }
-}   
+}
+
+public class InheritanceInNonGenericSubclass {
+
+    public static void main(String[] args) {
+
+        // Creates a ColorPrint object with String values
+        ColorPrint cp = new ColorPrint("Hello", "Red");
+
+        // Method inherited from the generic parent class
+        cp.display();
+
+        // Method defined in the child class
+        cp.displayColor();
+    }
+}
