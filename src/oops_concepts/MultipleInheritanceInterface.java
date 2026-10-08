@@ -25,6 +25,30 @@ public class MultipleInheritanceInterface{
     public static void main(String[] args){
         MyClass obj = new MyClass();  // Create object of class, not interface
         obj.display();
+
+
+        @FunctionalInterface
+interface TaskA {
+    void execute();
+}
+
+@FunctionalInterface
+interface TaskB {
+    void execute();
+}
+
+@FunctionalInterface
+interface CombinedTask extends TaskA, TaskB {
+    // Inherits single abstract method 'void execute()'
+}
+
+public class LambdaTest {
+    public static void main(String[] args) {
+        // Lambda assigned directly to CombinedTask
+        CombinedTask task = () -> System.out.println("Executing combined task!");
+        task.execute();
+    }
+}
         
         // You can also use interface reference
         C objC = new MyClass();
