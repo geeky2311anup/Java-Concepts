@@ -1,46 +1,45 @@
-class Solution {
-    private long[][][] memo;
-    private static final long MOD = 1000000007L;
 
-    private int dfs(int pos, int state, int remaining, int n) {
-        if (remaining == 0) {
+class Solution {
+    private long[][][] dp;
+    private static final long MOD = 1_000_000_007L;
+
+    private int solve(int index, int open, int k, int n) {
+        if (k == 0) {
             return 1;
         }
 
-        if (pos >= n) {
+        if (index == n) {
             return 0;
         }
 
-        if (memo[pos][remaining][state] != -1) {
-            return (int) memo[pos][remaining][state];
+        if (dp[index][k][open] != -1) {
+            return (int) dp[index][k][open];
         }
 
-        long ways;
+        long count;
 
-        if (state == 1) {
-            long close = dfs(pos, 0, remaining - 1, n);
-            long extend = dfs(pos + 1, 1, remaining, n);
-            ways = (close + extend) % MOD;
+        if (open == 1) {
+            // Close the current segment or extend it.
+            count = solve(index, 0, k - 1, n);
+            count = (count + solve(index + 1, 1, k, n)) % MOD;
         } else {
-            long begin = dfs(pos + 1, 1, remaining, n);
-            long skip = dfs(pos + 1, 0, remaining, n);
-            ways = (begin + skip) % MOD;
+            // Start a new segment or skip this position.
+            count = solve(index + 1, 1, k, n);
+            count = (count + solve(index + 1, 0, k, n)) % MOD;
         }
 
-        memo[pos][remaining][state] = ways;
-        return (int) ways;
+        return (int) (dp[index][k][open] = count);
     }
 
     public int numberOfSets(int n, int k) {
-        memo = new long[n + 1][k + 1][2];
+        dp = new long[n + 1][k + 1][2];
 
         for (int i = 0; i <= n; i++) {
             for (int j = 0; j <= k; j++) {
-                memo[i][j][0] = -1;
-                memo[i][j][1] = -1;
+                java.util.Arrays.fill(dp[i][j], -1);
             }
         }
 
-        return dfs(0, 0, k, n);
+        return solve(0, 0, k, n);
     }
 }
