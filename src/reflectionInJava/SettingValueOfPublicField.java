@@ -1,35 +1,36 @@
+
 class Solution {
     public boolean isValid(String s) {
-
-        Stack<Character> stack = new Stack<>();
+        char[] stack = new char[s.length()];
+        int top = -1;
 
         for (int i = 0; i < s.length(); i++) {
             char current = s.charAt(i);
 
             if (current == '(' || current == '[' || current == '{') {
-                stack.push(current);
+                stack[++top] = current;
                 continue;
             }
 
-            if (stack.empty()) {
+            if (top == -1) {
                 return false;
             }
 
-            char top = stack.pop();
+            char last = stack[top--];
 
-            if (current == ')' && top != '(') {
+            if (current == ')' && last != '(') {
                 return false;
             }
 
-            if (current == ']' && top != '[') {
+            if (current == ']' && last != '[') {
                 return false;
             }
 
-            if (current == '}' && top != '{') {
+            if (current == '}' && last != '{') {
                 return false;
             }
         }
 
-        return stack.empty();
+        return top == -1;
     }
 }
