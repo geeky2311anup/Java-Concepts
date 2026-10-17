@@ -83,3 +83,13 @@ TreeMap
 Sorted by key
 Hashtable
 Thread-safe (old class)
+   add(e)	Add an element
+add(index, e)	Insert at an index
+get(index)	Retrieve an element
+set(index, e)	Replace an element
+remove(index)	Remove by index
+remove(object)	Remove a matching element
+indexOf(e)	First matching index
+lastIndexOf(e)	Last matching index
+subList(a, b)	View a range from index a inclusive to b exclusive
+contains(e)	Check whether an element exists
