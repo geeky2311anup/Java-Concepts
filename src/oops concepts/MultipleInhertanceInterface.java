@@ -4,16 +4,22 @@ class Solution {
         int totalPalindromes = 0;
         int lastMatchedEnd = -1;
 
+        // Try every index as a palindrome center
         for (int idx = 0; idx < len; idx++) {
-            // Check both odd-length (offset = 0) and even-length (offset = 1) palindrome centers
+            // offset = 0: odd-length, offset = 1: even-length
             for (int offset = 0; offset <= 1; offset++) {
                 int left = idx;
                 int right = idx + offset;
 
-                while (left >= 0 && right < len && text.charAt(left) == text.charAt(right)) {
+                // Expand while characters match
+                while (left >= 0 && right < len
+                        && text.charAt(left) == text.charAt(right)) {
+
                     int windowSize = right - left + 1;
 
+                    // Found a palindrome of the required length
                     if (windowSize >= minLength) {
+                        // Select non-overlapping palindromes
                         if (left > lastMatchedEnd) {
                             totalPalindromes++;
                             lastMatchedEnd = right;
