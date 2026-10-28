@@ -1,50 +1,46 @@
+
 class Solution {
 
     public long countMajoritySubarrays(int[] nums, int target) {
-        int len = nums.length;
-        int balance = len;
+        int n = nums.length;
+        int offset = n;
 
-        int[] count = new int[2 * len + 1];
-        count[len] = 1;
+        int[] prefixCount = new int[2 * n + 1];
+        prefixCount[offset] = 1;
 
-        long validSubarrays = 0;
-        long current = 0;
+        long answer = 0;
+        long currentCount = 0;
+        int balance = 0;
 
-        for (int value : nums) {
-            if (value == target) {
-                current += count[balance];
+        for (int num : nums) {
+            if (isTarget(num, target)) {
+                currentCount += prefixCount[offset + balance];
                 balance++;
             } else {
                 balance--;
-                current -= count[balance];
+                currentCount -= prefixCount[offset + balance];
             }
 
-            count[balance]++;
-            validSubarrays += current;
+            prefixCount[offset + balance]++;
+            answer += currentCount;
         }
 
-        return validSubarrays;
+        return answer;
     }
 
-    // Helper method
-    private int arrayLength(int[] arr) {
-        return arr == null ? 0 : arr.length;
-    }
-
-    // Helper method
     private boolean isTarget(int value, int target) {
         return value == target;
     }
 
-    // Utility method
-    private int clamp(int value, int low, int high) {
-        if (value < low) return low;
-        if (value > high) return high;
-        return value;
+    private int getIndex(int balance, int offset) {
+        return offset + balance;
     }
 
-    // Utility method
-    private long square(long x) {
-        return x * x;
+    private long square(long value) {
+        return value * value;
+    }
+
+    private int clamp(int value, int low, int high) {
+        return Math.max(low, Math.min(value, high));
     }
 }
