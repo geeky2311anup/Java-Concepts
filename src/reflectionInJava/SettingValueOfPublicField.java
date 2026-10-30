@@ -3,11 +3,21 @@ import java.util.*;
 
 class Solution {
 
-    // Checks whether the opening and closing brackets match
+    // Determines whether a character is an opening bracket
+    private boolean isOpening(char ch) {
+        return ch == '(' || ch == '[' || ch == '{';
+    }
+
+    // Returns the corresponding closing bracket
+    private char getClosing(char ch) {
+        if (ch == '(') return ')';
+        if (ch == '[') return ']';
+        return '}';
+    }
+
+    // Checks whether both brackets form a valid pair
     private boolean isMatching(char open, char close) {
-        return (open == '(' && close == ')') ||
-               (open == '[' && close == ']') ||
-               (open == '{' && close == '}');
+        return getClosing(open) == close;
     }
 
     public boolean isValid(String s) {
@@ -17,58 +27,75 @@ class Solution {
         for (int i = 0; i < s.length(); i++) {
             char current = s.charAt(i);
 
-            // Push opening brackets onto the stack
-            if (current == '(' || current == '[' || current == '{') {
+            // Store opening brackets for future matching
+            if (isOpening(current)) {
                 stack[++top] = current;
-                continue;
-            }
+            } else {
 
-            // A closing bracket cannot match an empty stack
-            if (top == -1) {
-                return false;
-            }
+                // No opening bracket is available to match
+                if (top < 0) {
+                    return false;
+                }
 
-            // Pop the most recent opening bracket
-            char last = stack[top--];
+                char previous = stack[top--];
 
-            // Check whether the bracket pair is valid
-            if (!isMatching(last, current)) {
-                return false;
+                // Verify the bracket sequence
+                if (!isMatching(previous, current)) {
+                    return false;
+                }
             }
         }
 
-        // Valid only when every opening bracket has been closed
+        // All opening brackets must have corresponding closing brackets
         return top == -1;
     }
 
     public static void main(String[] args) {
-        Solution solution = new Solution();
+        Solution obj = new Solution();
 
-        System.out.println(solution.isValid("()"));       // true
-        System.out.println(solution.isValid("()[]{}"));   // true
-        System.out.println(solution.isValid("(]"));       // false
-        System.out.println(solution.isValid("({[]})"));   // true
-        System.out.println(solution.isValid("((("));      // false
+        String[] testCases = {
+            "()",
+            "()[]{}",
+            "(]",
+            "({[]})",
+            "(((",
+            "([)]",
+            "{[()]}",
+            "}"
+        };
+
+        for (String test : testCases) {
+            System.out.println(test + " -> " + obj.isValid(test));
+        }
     }
 }
 
 /*
 Moral / Key Learning:
 
-1. Use a stack to manage nested structures because the most
-   recently opened bracket must be closed first (LIFO).
+1. Stack follows LIFO (Last In First Out), which makes it
+   suitable for handling nested brackets.
 
-2. Every closing bracket must match the most recent unmatched
-   opening bracket.
+2. Every opening bracket must be closed by its corresponding
+   closing bracket.
 
-3. If a closing bracket appears when the stack is empty,
-   or the bracket types do not match, the string is invalid.
+3. The most recently opened bracket must be closed first.
 
-4. After processing the entire string, the stack must be empty.
-   Any remaining opening bracket makes the string invalid.
+4. A closing bracket with an empty stack indicates an invalid
+   sequence.
+
+5. Different bracket types cannot be interchanged.
+   For example, ([)] is invalid.
+
+6. At the end of traversal, the stack must be empty.
+   Otherwise, some opening brackets remain unmatched.
+
+7. Using a character array as a stack avoids the overhead
+   of creating a separate Stack object.
 
 Time Complexity: O(n)
-Space Complexity: O(n)
+- Every character is processed exactly once.
 
-where n is the length of the string.
+Space Complexity: O(n)
+- In the worst case, all characters are opening brackets.
 */
