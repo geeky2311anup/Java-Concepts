@@ -388,13 +388,5 @@ System.out.println("Length to Words: " + numberNames);
 
 System.out.println("\n===== 30. Peek for Debugging =====");
 
-List<Integer> debugResult =
-        nums.stream()
-            .filter(n -> n > 10)
-            .peek(n -> System.out.println("After filter: " + n))
-            .map(n -> n * 2)
-            .peek(n -> System.out.println("After map: " + n))
-            .toList();
 
-System.out.println("Final Result: " + debugResult);
 ```
