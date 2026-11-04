@@ -40,6 +40,30 @@ public class SolutionTest {
 
         // Test 12: Two identical elements
         runTest(sol, new int[]{7, 7}, 0);
+
+        // Test 13: Array containing zeros
+        runTest(sol, new int[]{0, 0, 5, 10}, 3);
+
+        // Test 14: Mixed positive and negative values
+        runTest(sol, new int[]{-8, 4, -2, 7, 0}, 6);
+
+        // Test 15: All elements are equal
+        runTest(sol, new int[]{12, 12, 12, 12}, 10);
+
+        // Test 16: Strictly increasing values
+        runTest(sol, new int[]{2, 5, 9, 14, 20, 30}, 8);
+
+        // Test 17: Strictly decreasing values
+        runTest(sol, new int[]{50, 40, 30, 20, 10}, 15);
+
+        // Test 18: Larger array
+        runTest(sol, new int[]{15, 3, 22, 8, 17, 5, 30, 11}, 12);
+
+        // Test 19: Target is zero
+        runTest(sol, new int[]{-3, 0, 3, 6}, 0);
+
+        // Test 20: Array with repeated negative values
+        runTest(sol, new int[]{-5, -5, -2, -2, 0}, 4);
     }
 
     private static void runTest(Solution sol, int[] arr, int target) {
