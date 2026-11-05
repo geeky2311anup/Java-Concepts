@@ -1,36 +1,62 @@
-interface Bird{
+
+interface Bird {
+
+    // Abstract method: Every implementing class must define it
     public void fly();
-    default void eat(){
+
+    // Default method: Provides a common implementation
+    default void eat() {
         System.out.println("Bird is eating");
     }
 }
-interface Hen extends Bird{
+
+// Hen inherits all methods of Bird and overrides its default method
+interface Hen extends Bird {
+
     @Override
-    default void eat(){
+    default void eat() {
         System.out.println("Hen is eating grains");
     }
 }
-class chicken implements Hen{
+
+// Chicken implements Hen
+class chicken implements Hen {
+
     @Override
-    public void fly(){
+    public void fly() {
         System.out.println("Chicken can fly");
     }
+
+    // No need to override eat(), Hen already provides its implementation
 }
-class parrot implements Bird{
+
+// Parrot directly implements Bird
+class parrot implements Bird {
+
     @Override
-    public void fly(){
+    public void fly() {
         System.out.println("Parrot can fly");
     }
+
+    // Uses the default eat() method from Bird
 }
 
-public class DefaultMethodInInterface{
- public static void main(String[] args){
-    parrot p = new parrot();
-    p.fly();
-    p.eat();   
-    chicken c = new chicken(); 
-    c.fly();
-    c.eat();
- }
+public class DefaultMethodInInterface {
 
+    public static void main(String[] args) {
+
+        // Parrot uses Bird's default implementation of eat()
+        parrot p = new parrot();
+
+        p.fly();
+        p.eat();
+
+        System.out.println("------------------");
+
+        // Chicken inherits the overridden default method from Hen
+        chicken c = new chicken();
+
+        c.fly();
+        c.eat();
+    }
 }
