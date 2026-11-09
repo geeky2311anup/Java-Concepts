@@ -2,96 +2,83 @@
 class Solution {
 
     /*
+     * 3D DP (Memoization):
+     *
      * dp[index][k][open]
      *
      * index : Current position being processed.
-     * k     : Number of line segments still to be selected.
-     * open  : 1 if a segment is currently open, otherwise 0.
+     * k     : Number of segments still to be completed.
+     * open  : 1 means a segment is currently active,
+     *         0 means no segment is currently active.
      *
-     * dp[index][k][open] stores the number of valid ways
-     * to complete the selection from the current state.
+     * Each state represents a unique combination of these
+     * three parameters.
      *
-     * A value of -1 means that the state has not been computed.
+     * -1 indicates that the state has not been calculated yet.
      */
     private long[][][] dp;
 
-    // Modulo is used to keep the number of ways within the limit.
+    // Modulo value to prevent integer overflow.
     private static final long MOD = 1_000_000_007L;
 
 
     /*
-     * Recursive DP function.
+     * Recursive DP function with memoization.
      *
-     * We process positions from left to right and decide whether
-     * to start a segment, extend an existing segment, close it,
-     * or leave the current position unused.
+     * At every position, we decide whether to:
+     * 1. Start a new segment.
+     * 2. Extend an existing segment.
+     * 3. Close the current segment.
+     * 4. Skip the current position.
      *
-     * Parameters:
-     * index : Current position in the range [0, n - 1].
-     * open  : Indicates whether a segment is currently open.
-     * k     : Number of segments that still need to be completed.
-     * n     : Total number of positions.
-     *
-     * Returns the number of valid ways to complete the selection.
+     * The function returns the total number of valid ways
+     * to select exactly k segments from the remaining positions.
      */
     private int solve(int index, int open, int k, int n) {
 
-        /*
-         * BASE CASE 1:
-         * If no segments remain to be selected, the requirement
-         * has been satisfied. There is one valid way to finish:
-         * do not select any additional segments.
-         */
+        // If all required segments are completed,
+        // we have found one valid combination.
         if (k == 0) {
             return 1;
         }
 
-        /*
-         * BASE CASE 2:
-         * If we have reached the end of the range but still need
-         * to select more segments, no valid completion is possible.
-         */
+        // No positions are left, but some segments are still required.
         if (index == n) {
             return 0;
         }
 
-        /*
-         * MEMOIZATION:
-         * If this state has already been solved, reuse its result.
-         * This avoids exploring the same state repeatedly.
-         */
+        // Return the previously calculated result if available.
         if (dp[index][k][open] != -1) {
             return (int) dp[index][k][open];
         }
 
-        // Accumulates the number of valid choices from this state.
+        // Stores the total ways obtained from different choices.
         long count = 0;
 
 
         /*
-         * CASE 1: A segment is currently OPEN.
+         * CASE 1: A segment is already OPEN.
          *
-         * We have two possible decisions:
+         * We have two choices:
          *
-         * 1. Close the current segment.
-         *    One segment is completed, so k decreases by one.
-         *    We remain at the same index because this position
-         *    can be reconsidered as the beginning of a new segment
-         *    or left unused.
+         * A. CLOSE:
+         *    Complete the current segment.
+         *    Decrease k because one segment has been completed.
          *
-         * 2. Extend the current segment.
-         *    The current position is included in the segment,
-         *    and we move forward while keeping the segment open.
+         * B. EXTEND:
+         *    Include the current position in the existing segment.
+         *    Move to the next position without changing k.
          */
         if (open == 1) {
 
-            // Finish the current segment.
+            // Close the current segment.
+            // The current index is reconsidered in the closed state.
             long close = solve(index, 0, k - 1, n);
 
-            // Include the current position in the open segment.
+            // Extend the current segment to the next position.
             long extend = solve(index + 1, 1, k, n);
 
-            // Combine both mutually exclusive choices.
+            // Both choices represent different valid possibilities.
             count = (close + extend) % MOD;
 
         } else {
@@ -99,60 +86,56 @@ class Solution {
             /*
              * CASE 2: No segment is currently OPEN.
              *
-             * Again, there are two possible decisions:
+             * We have two choices:
              *
-             * 1. Start a new segment at the current position.
-             *    The segment becomes open, and we advance.
+             * A. START:
+             *    Start a new segment from the current position.
+             *    Move forward with open = 1.
              *
-             * 2. Skip the current position.
-             *    No segment is started, and we advance.
-             *
-             * Both decisions are explored independently.
+             * B. SKIP:
+             *    Do not use the current position.
+             *    Move forward while keeping open = 0.
              */
 
-            // Start selecting a new segment.
+            // Start a new segment at the current position.
             long start = solve(index + 1, 1, k, n);
 
-            // Leave this position unused.
+            // Ignore the current position and move ahead.
             long skip = solve(index + 1, 0, k, n);
 
-            // Add the number of ways from both choices.
+            // Total ways = ways by starting + ways by skipping.
             count = (start + skip) % MOD;
         }
 
+
         /*
-         * STORE THE RESULT:
-         * Save the computed answer for this state so that future
-         * calls with identical parameters can reuse it.
+         * MEMOIZATION:
+         *
+         * Store the calculated result for the current state.
+         * If the same state is encountered again, we can directly
+         * return its stored result instead of solving recursively.
          */
         dp[index][k][open] = count;
 
-        // Return the computed number of ways.
         return (int) count;
     }
 
 
     /*
-     * Main function called by the platform.
-     *
-     * n : Number of available positions.
-     * k : Exact number of line segments to select.
+     * Main function:
+     * Calculates the number of ways to draw exactly k
+     * non-overlapping line segments using n positions.
      */
     public int numberOfSets(int n, int k) {
 
-        /*
-         * Allocate the memoization table.
-         *
-         * First dimension : n + 1 possible index values.
-         * Second dimension: k + 1 remaining-segment values.
-         * Third dimension : 2 states (closed or open).
-         */
+        // Allocate the 3D DP array.
         dp = new long[n + 1][k + 1][2];
 
         /*
-         * Initialize every state to -1.
-         * This distinguishes uncomputed states from states
-         * whose correct answer is zero.
+         * Initially, mark all states as unvisited.
+         *
+         * A value of -1 means not calculated.
+         * A value of 0 means calculated but no valid ways exist.
          */
         for (int i = 0; i <= n; i++) {
             for (int j = 0; j <= k; j++) {
@@ -161,11 +144,11 @@ class Solution {
         }
 
         /*
-         * Initial state:
+         * Starting DP state:
          *
-         * index = 0 : Start from the first position.
-         * open  = 0 : No segment has been started.
-         * k         : All requested segments remain to be selected.
+         * index = 0 : Begin from the first position.
+         * open  = 0 : No segment is currently active.
+         * k         : All k segments need to be selected.
          */
         return solve(0, 0, k, n);
     }
