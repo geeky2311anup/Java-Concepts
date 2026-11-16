@@ -1,16 +1,19 @@
 class MonitorLockExample {
 
-    // synchronized method -> only one thread can execute at a time
+    // CASE 1: Synchronized Method
+    // Only one thread can execute this method
+    // using the same object at a time.
+
     public synchronized void task1() {
 
         try {
-
             System.out.println(
                 Thread.currentThread().getName()
                 + " entered task1()"
             );
 
-            // thread sleeps for 3 seconds
+            // Sleep for 3 seconds
+            // sleep() does NOT release the monitor lock
             Thread.sleep(3000);
 
             System.out.println(
@@ -19,12 +22,15 @@ class MonitorLockExample {
             );
 
         } catch (InterruptedException e) {
-
             System.out.println("Thread interrupted");
         }
     }
 
-    // normal method -> no lock required
+    // CASE 2: Normal Method
+    // No monitor lock is required.
+    // Other threads can execute this method
+    // even when task1() holds the object lock.
+
     public void task2() {
 
         System.out.println(
@@ -33,7 +39,9 @@ class MonitorLockExample {
         );
     }
 
-    // synchronized block example
+    // CASE 3: Synchronized Block
+    // Only the code inside synchronized block is locked.
+
     public void task3() {
 
         System.out.println(
@@ -62,28 +70,38 @@ class MonitorLockExample {
     }
 }
 
+
+// Main class
+// File name: MonitorLock5.java
+
 public class MonitorLock5 {
 
     public static void main(String[] args) {
 
+        // Creating a single shared object
         MonitorLockExample obj = new MonitorLockExample();
 
+        // Thread 1
         Thread t1 = new Thread(() -> {
             obj.task1();
         }, "Worker-1");
 
+        // Thread 2
         Thread t2 = new Thread(() -> {
             obj.task1();
         }, "Worker-2");
 
+        // Thread 3
         Thread t3 = new Thread(() -> {
             obj.task2();
         }, "Worker-3");
 
+        // Thread 4
         Thread t4 = new Thread(() -> {
             obj.task3();
         }, "Worker-4");
 
+        // Starting all threads
         t1.start();
         t2.start();
         t3.start();
@@ -91,80 +109,83 @@ public class MonitorLock5 {
     }
 }
 
+
 /*
-==================== MONITOR LOCK ====================
+====================================================
+                 MONITOR LOCK
+====================================================
 
-1. Every Java object has an internal lock called:
-   -> Monitor Lock / Intrinsic Lock
+1. Every Java object has an internal lock called
+   Monitor Lock or Intrinsic Lock.
 
-2. synchronized keyword uses this monitor lock.
+2. The synchronized keyword uses this monitor lock.
 
-3. If one thread acquires the lock,
-   other threads must wait until lock is released.
+3. If one thread acquires the lock, another thread
+   must wait to acquire the same lock.
 
-======================================================
-
-CASE 1 : synchronized method
+----------------------------------------------------
+CASE 1: SYNCHRONIZED METHOD
+----------------------------------------------------
 
 public synchronized void task1()
 
-- Lock is acquired on current object (this).
-- Only one thread can execute task1() at a time.
+- Locks the current object (this).
+- Only one thread can execute it at a time
+  using the same object.
+- Worker-1 and Worker-2 share the same lock.
 
-Possible Output:
+----------------------------------------------------
+CASE 2: NORMAL METHOD
+----------------------------------------------------
 
-Worker-1 entered task1()
-Worker-3 executing task2()
-Worker-1 completed task1()
-Worker-2 entered task1()
-Worker-2 completed task1()
+public void task2()
 
-Explanation:
-- Worker-2 waits because Worker-1 already holds lock.
-- task2() runs independently because it is NOT synchronized.
+- No monitor lock is required.
+- Can execute while another thread holds
+  the object's monitor lock.
 
-======================================================
-
-CASE 2 : without synchronized
-
-public void task1()
-
-Possible Output:
-
-Worker-1 entered task1()
-Worker-2 entered task1()
-Worker-1 completed task1()
-Worker-2 completed task1()
-
-Explanation:
-- Both threads execute simultaneously.
-- No monitor lock is used.
-
-======================================================
-
-CASE 3 : synchronized block
+----------------------------------------------------
+CASE 3: SYNCHRONIZED BLOCK
+----------------------------------------------------
 
 synchronized(this) {
-    // critical section
+
+    // Critical section
+
 }
 
-- Only code inside block is locked.
-- Better performance than synchronizing whole method.
+- Locks only the specified block.
+- Uses the current object's monitor lock.
+- The lock is released after exiting the block.
 
-======================================================
-
+----------------------------------------------------
 IMPORTANT POINTS
+----------------------------------------------------
 
-1. sleep() DOES NOT release monitor lock.
+1. sleep() does NOT release the monitor lock.
 
-2. wait() releases monitor lock.
+2. wait() releases the monitor lock.
 
-3. synchronized methods are thread-safe.
+3. notify() wakes up one waiting thread.
 
-4. Multiple synchronized methods on same object
-   share same monitor lock.
+4. notifyAll() wakes up all waiting threads.
 
-5. Different objects have different locks.
+5. Multiple synchronized methods on the same
+   object share the same monitor lock.
 
-======================================================
+6. Different objects have different monitor locks.
+
+7. Normal methods do not require monitor locks.
+
+8. Java supports reentrant locking.
+
+====================================================
+FINAL CONCLUSION
+====================================================
+
+A monitor lock ensures that only one thread at a
+time can execute synchronized code protected by
+the same object's monitor lock.
+
+====================================================
 */
