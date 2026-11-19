@@ -1,6 +1,8 @@
 class MonitorLockExample {
 
-    // synchronized method -> only one thread can execute at a time
+    private final Object fineLock = new Object();
+
+    // synchronized method -> acquires monitor lock on current instance (this)
     public synchronized void task1() {
 
         try {
@@ -10,7 +12,7 @@ class MonitorLockExample {
                 + " entered task1()"
             );
 
-            // thread sleeps for 3 seconds
+            // thread sleeps for 3 seconds (keeps monitor lock!)
             Thread.sleep(3000);
 
             System.out.println(
@@ -33,7 +35,7 @@ class MonitorLockExample {
         );
     }
 
-    // synchronized block example
+    // synchronized block on 'this' -> shares instance lock with task1()
     public void task3() {
 
         System.out.println(
@@ -57,6 +59,51 @@ class MonitorLockExample {
             System.out.println(
                 Thread.currentThread().getName()
                 + " leaving synchronized block"
+            );
+        }
+    }
+
+    // --- NEW ADDITIONS ---
+
+    // 4. static synchronized method -> acquires lock on MonitorLockExample.class, NOT 'this'
+    public static synchronized void staticTask() {
+
+        System.out.println(
+            Thread.currentThread().getName()
+            + " entered staticTask() [Class Lock]"
+        );
+
+        try {
+            Thread.sleep(1500);
+        } catch (InterruptedException e) {
+            System.out.println("Static task interrupted");
+        }
+
+        System.out.println(
+            Thread.currentThread().getName()
+            + " completed staticTask() [Class Lock]"
+        );
+    }
+
+    // 5. synchronized block on a dedicated lock object -> avoids blocking 'this'
+    public void fineGrainedTask() {
+
+        synchronized (fineLock) {
+
+            System.out.println(
+                Thread.currentThread().getName()
+                + " entered fineGrainedTask() [fineLock]"
+            );
+
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                System.out.println("Fine-grained task interrupted");
+            }
+
+            System.out.println(
+                Thread.currentThread().getName()
+                + " leaving fineGrainedTask() [fineLock]"
             );
         }
     }
@@ -84,10 +131,21 @@ public class MonitorLock5 {
             obj.task3();
         }, "Worker-4");
 
+        // Testing new additions
+        Thread t5 = new Thread(() -> {
+            MonitorLockExample.staticTask();
+        }, "Worker-5");
+
+        Thread t6 = new Thread(() -> {
+            obj.fineGrainedTask();
+        }, "Worker-6");
+
         t1.start();
         t2.start();
         t3.start();
         t4.start();
+        t5.start();
+        t6.start();
     }
 }
 
@@ -153,6 +211,24 @@ synchronized(this) {
 
 ======================================================
 
+CASE 4 : static synchronized method
+
+public static synchronized void staticTask()
+
+- Lock is acquired on MonitorLockExample.class (Class object).
+- Does NOT block threads holding the instance lock ('this').
+
+======================================================
+
+CASE 5 : private lock object
+
+synchronized (fineLock) { ... }
+
+- Isolates locking to a specific state/resource.
+- Reduces contention across unrelated synchronized sections on 'this'.
+
+======================================================
+
 IMPORTANT POINTS
 
 1. sleep() DOES NOT release monitor lock.
@@ -165,6 +241,9 @@ IMPORTANT POINTS
    share same monitor lock.
 
 5. Different objects have different locks.
+
+6. Class lock (static synchronized) and instance lock
+   ('this') are completely independent.
 
 ======================================================
 */
