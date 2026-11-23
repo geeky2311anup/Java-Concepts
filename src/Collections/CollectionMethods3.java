@@ -35,7 +35,7 @@ public class CollectionMethods3 {
 
         // remove by index
         listObj.remove(3);
-        System.out.println("After remove(): " + listObj);
+        System.out.println("After remove(index): " + listObj);
 
         // addAll
         Stack<Integer> stackObj = new Stack<>();
@@ -69,6 +69,33 @@ public class CollectionMethods3 {
             System.out.print(obj + " ");
         }
         System.out.println();
+
+        // --- Additional List & Collection methods ---
+
+        // remove first matching Object (use Integer.valueOf so it doesn't treat as index)
+        listObj.remove(Integer.valueOf(25));
+        System.out.println("After remove(Integer.valueOf(25)): " + listObj);
+
+        // add more elements, sort, and inspect a subList view
+        listObj.addAll(Arrays.asList(15, 5, 50));
+        Collections.sort(listObj);
+        System.out.println("After sort(): " + listObj);
+
+        List<Integer> view = listObj.subList(1, 3);
+        System.out.println("SubList [1, 3): " + view);
+
+        // typed toArray
+        Integer[] typedArr = listObj.toArray(new Integer[0]);
+        System.out.println("Typed array: " + Arrays.toString(typedArr));
+
+        // safe removal while iterating using Iterator
+        Iterator<Integer> it = listObj.iterator();
+        while (it.hasNext()) {
+            if (it.next() < 15) {
+                it.remove();
+            }
+        }
+        System.out.println("After removing elements < 15 via Iterator: " + listObj);
 
         // clear
         listObj.clear();
