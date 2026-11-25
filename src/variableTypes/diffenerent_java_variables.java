@@ -1,12 +1,16 @@
+
 import java.util.Arrays;
 
 public class SolutionTest {
 
+    // Stores input details for each test case
     private record TestCase(int[] arr, int target, String note) {}
 
     public static void main(String[] args) {
+
         Solution sol = new Solution();
 
+        // Different test scenarios to verify the solution
         TestCase[] cases = {
             new TestCase(new int[]{5, 3, 8, 2, 6}, 3, "General unsorted array"),
             new TestCase(new int[]{10, 2, 3, 4}, 10, "Valid index at start"),
@@ -31,19 +35,33 @@ public class SolutionTest {
         };
 
         StringBuilder out = new StringBuilder();
-        out.append("========== FIRST STABLE INDEX TESTING ==========\n");
 
+        out.append("============================================\n");
+        out.append("       FIRST STABLE INDEX TESTING\n");
+        out.append("============================================\n");
+
+        // Execute every test case one by one
         for (int i = 0; i < cases.length; i++) {
+
             TestCase tc = cases[i];
+
+            // Call the solution method and store its result
             int result = sol.firstStableIndex(tc.arr(), tc.target());
 
-            out.append("\nTest ").append(i + 1).append(" [").append(tc.note()).append("]\n")
-               .append("Input Array       : ").append(Arrays.toString(tc.arr())).append('\n')
-               .append("Target Value      : ").append(tc.target()).append('\n')
-               .append("First Stable Index: ").append(result).append('\n');
+            out.append("\n--------------------------------------------\n");
+            out.append("Test Case #").append(i + 1).append('\n');
+            out.append("Description       : ").append(tc.note()).append('\n');
+            out.append("Input Array       : ").append(Arrays.toString(tc.arr())).append('\n');
+            out.append("Target Value      : ").append(tc.target()).append('\n');
+            out.append("First Stable Index: ").append(result).append('\n');
         }
 
-        out.append("\n========== ALL TEST CASES EXECUTED ==========\n");
+        out.append("\n============================================\n");
+        out.append("       ALL TEST CASES EXECUTED\n");
+        out.append("       Total Tests: ").append(cases.length).append('\n');
+        out.append("============================================\n");
+
+        // Display the complete testing report
         System.out.print(out);
     }
 }
