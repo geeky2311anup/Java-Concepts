@@ -5,29 +5,30 @@ public class Main {
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
 
-        // Read dimensions of the multiplication table and target value
+        // Read the size of the multiplication table and target number
         int n = sc.nextInt();
         int x = sc.nextInt();
 
         int count = 0;
 
-        // Iterate through all possible row indices
+        // Check every row to find cells containing x
         for (int i = 1; i <= n; i++) {
 
-            // For i * j = x, i must be a divisor of x
+            // A valid pair must satisfy i * j = x
+            // Therefore, x must be divisible by i
             if (x % i == 0) {
 
-                // Find the required column index
+                // Calculate the corresponding column
                 int j = x / i;
 
-                // Check if the calculated column is within table boundaries
+                // Ensure the column lies within the table
                 if (j >= 1 && j <= n) {
-                    count++; // Found one valid cell containing x
+                    count++;
                 }
             }
         }
 
-        // Each valid (i, j) pair represents a separate cell
+        // Print the total number of cells containing x
         System.out.println(count);
 
         sc.close();
